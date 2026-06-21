@@ -16,6 +16,10 @@ import { loadConfig } from './config.js';
 import { initDb } from './db.js';
 import { iniciarWorker } from './worker.js';
 import { processarWebhookZapi } from './handlers/zapiWebhook.js';
+import cors from '@fastify/cors';
+import rateLimit from '@fastify/rate-limit';
+import * as praedium from './integrations/praedium.js';
+import * as brevo from './integrations/brevo.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -44,9 +48,25 @@ async function start() {
     }
   }
 
-  // --- 2) Instancia o Fastify ---
-  const app = Fastify({ logger: { level: process.env.LOG_LEVEL || 'info' } });
+  // --- 2) Instancia o Fastify (trustProxy: IP real do cliente atrás do proxy do Railway) ---
+  const app = Fastify({ logger: { level: process.env.LOG_LEVEL || 'info' }, trustProxy: true });
   await app.register(sensible);
+
+  // CORS para o(s) domínio(s) da landing — o POST /cadastro é chamado do browser.
+  const allowList = (process.env.CADASTRO_ALLOWED_ORIGINS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (allowList.length === 0) {
+    app.log.warn('[cors] CADASTRO_ALLOWED_ORIGINS vazio — CORS aberto a qualquer origem. Defina o domínio da landing em produção.');
+  }
+  await app.register(cors, {
+    origin: allowList.length ? allowList : true, // true = reflete a origem (aberto) até configurar
+    methods: ['GET', 'POST', 'OPTIONS'],
+  });
+
+  // Rate-limit aplicado por rota (config no /cadastro; global desligado).
+  await app.register(rateLimit, { global: false });
 
   // --- 3) Lê e valida as variáveis (depois de o dotenv popular process.env) ---
   const config = loadConfig(app.log);
@@ -92,6 +112,88 @@ async function start() {
     );
     return reply.code(200).send({ received: true });
   });
+
+  // Cadastro vindo da landing (lista VIP). Público (NÃO exige x-webhook-secret,
+  // pois é chamado do browser); protegido por CORS + rate-limit + validação de
+  // campos e de origem.
+  const cadastroSchema = {
+    body: {
+      type: 'object',
+      required: ['nome', 'telefone'],
+      additionalProperties: true, // aceita utm_* e outros campos extras
+      properties: {
+        nome: { type: 'string', minLength: 2, maxLength: 120 },
+        telefone: { type: 'string', minLength: 8, maxLength: 25 },
+        email: { type: 'string', maxLength: 160 },
+        intencao: { type: 'string', maxLength: 40 },
+        empreendimento: { type: 'string', maxLength: 80 },
+        lista: { type: 'string', maxLength: 40 },
+      },
+    },
+  };
+
+  app.post(
+    '/cadastro',
+    { schema: cadastroSchema, config: { rateLimit: { max: 10, timeWindow: '1 minute' } } },
+    async (request, reply) => {
+      // Validação de origem (além do CORS): com allowlist e Origin presente,
+      // recusa se não estiver na lista. Sem Origin (server-to-server/teste), segue.
+      const origin = request.headers.origin;
+      if (allowList.length && origin && !allowList.includes(origin)) {
+        return reply.code(403).send({ ok: false, error: 'origin_not_allowed' });
+      }
+
+      const b = request.body || {};
+      const nome = String(b.nome || '').trim();
+      const telefone = String(b.telefone || '').replace(/\D/g, '');
+      const emailRaw = typeof b.email === 'string' ? b.email.trim() : '';
+      const emailValido = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailRaw);
+
+      if (nome.length < 2 || telefone.length < 8) {
+        return reply.code(400).send({ ok: false, error: 'campos_invalidos', detalhe: 'nome e telefone são obrigatórios' });
+      }
+
+      const empreendimento = String(b.empreendimento || 'botanique-residence').slice(0, 80);
+      const lista = String(b.lista || 'VIP').slice(0, 40);
+      const intencao = b.intencao ? String(b.intencao).slice(0, 40) : null;
+
+      // UTMs e identificadores de origem.
+      const utm = {};
+      for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid']) {
+        if (b[k]) utm[k] = String(b[k]).slice(0, 200);
+      }
+
+      // (1) Cria o lead no Praedium (defensivo: pula se não configurado).
+      const mensagem = `Cadastro ${lista} via landing (${empreendimento}). Intenção: ${intencao || '-'}. UTM: ${JSON.stringify(utm)}`;
+      const praedRes = await praedium.enviarLead({
+        nome,
+        phone: telefone,
+        email: emailValido ? emailRaw : null,
+        origem: `landing:${empreendimento}`,
+        mensagem,
+      });
+
+      // (2) Adiciona à lista VIP do Brevo (lista própria), se houver e-mail válido.
+      let brevoRes = { ok: true, pulado: true, motivo: 'sem_email' };
+      if (emailValido) {
+        brevoRes = await brevo.adicionarContato(emailRaw, nome, process.env.BREVO_LIST_ID_VIP);
+      }
+
+      request.log.info(
+        { empreendimento, lista, intencao, temEmail: emailValido, utm },
+        `[cadastro] lead recebido: ${nome} / ${telefone}`,
+      );
+
+      // Sempre 200 (não perdemos o lead mesmo se um downstream estiver indisponível).
+      return reply.code(200).send({
+        ok: true,
+        received: true,
+        praedium: praedRes?.ok ?? false,
+        brevo: brevoRes?.ok ?? false,
+        brevo_pulado: brevoRes?.pulado ?? false,
+      });
+    },
+  );
 
   // --- 6) Worker da régua de recuperação ---
   iniciarWorker(app.log);

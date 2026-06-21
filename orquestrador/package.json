@@ -12,6 +12,8 @@
     "dev": "node --watch src/server.js"
   },
   "dependencies": {
+    "@fastify/cors": "^10.0.0",
+    "@fastify/rate-limit": "^10.0.0",
     "@fastify/sensible": "^6.0.0",
     "fastify": "^5.0.0",
     "pg": "^8.13.0"

@@ -21,7 +21,7 @@ export async function enviarLead(lead) {
   const payload = {
     nome: lead?.nome ?? null,
     telefone: lead?.phone ?? lead?.telefone ?? null,
-    email: null,
+    email: lead?.email ?? null,
     origem: lead?.origem ?? 'whatsapp',
     mensagem: lead?.mensagem ?? null,
     observacao: 'Lead via WhatsApp/landing',

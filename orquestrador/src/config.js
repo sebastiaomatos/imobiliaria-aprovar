@@ -18,6 +18,7 @@ const SCHEMA = [
   { name: 'WEBHOOK_SECRET',        critical: true,  desc: 'Valida o header x-webhook-secret em POST /webhook/lead' },
 
   { name: 'CORRETOR_WHATSAPP',     critical: false, desc: 'WhatsApp do corretor que recebe as notificações de lead' },
+  { name: 'CADASTRO_ALLOWED_ORIGINS', critical: false, desc: 'Origens (CSV) liberadas no CORS do POST /cadastro; vazio = aberto' },
   { name: 'PRAEDIUM_WEBHOOK_IN_URL', critical: false, desc: 'URL do Webhook de Entrada do Praedium (envio de leads); vazio = pula' },
   { name: 'PRAEDIUM_API_KEY',      critical: false, desc: 'CRM Praedium (API, quando aplicável)' },
   { name: 'ZAPI_INSTANCE_ID',      critical: false, desc: 'Z-API: ID da instância de WhatsApp' },
@@ -25,6 +26,7 @@ const SCHEMA = [
   { name: 'ZAPI_CLIENT_TOKEN',     critical: false, desc: 'Z-API: Client-Token de segurança' },
   { name: 'BREVO_API_KEY',         critical: false, desc: 'Brevo: API key (e-mail/contatos)' },
   { name: 'BREVO_LIST_ID',         critical: false, desc: 'Brevo: ID da lista que dispara a automação de e-mails' },
+  { name: 'BREVO_LIST_ID_VIP',     critical: false, desc: 'Brevo: ID da lista VIP (cadastro da landing /cadastro)' },
   { name: 'GEMINI_API_KEY',        critical: false, desc: 'Google Gemini: geração de laudo' },
   { name: 'META_CAPI_TOKEN',       critical: false, desc: 'Meta CAPI: token de eventos server-side' },
   { name: 'META_PIXEL_ID',         critical: false, desc: 'Meta: ID do Pixel/Dataset' },

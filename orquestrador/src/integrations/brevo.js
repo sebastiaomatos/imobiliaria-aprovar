@@ -5,17 +5,19 @@
 // fetch nativo do Node.
 
 /**
- * Cria/atualiza um contato no Brevo e o adiciona à lista (BREVO_LIST_ID).
+ * Cria/atualiza um contato no Brevo e o adiciona a uma lista.
  * @param {string} email E-mail do lead.
  * @param {string} nome  Nome do lead (vira o atributo NOME).
+ * @param {string|number} [listId] ID da lista; default BREVO_LIST_ID (use
+ *   BREVO_LIST_ID_VIP para o cadastro da landing).
  * @returns {Promise<{ok:boolean, status?:number, data?:any, pulado?:boolean, erro?:string}>}
  */
-export async function adicionarContato(email, nome) {
-  const { BREVO_API_KEY, BREVO_LIST_ID } = process.env;
+export async function adicionarContato(email, nome, listId = process.env.BREVO_LIST_ID) {
+  const { BREVO_API_KEY } = process.env;
 
   // Defensivo: sem credencial/lista, não tentamos (e não quebramos o fluxo).
-  if (!BREVO_API_KEY || !BREVO_LIST_ID) {
-    console.log('[Brevo] não configurado (BREVO_API_KEY/BREVO_LIST_ID ausentes) — pulando.');
+  if (!BREVO_API_KEY || !listId) {
+    console.log('[Brevo] não configurado (BREVO_API_KEY/lista ausentes) — pulando.');
     return { ok: true, pulado: true };
   }
 
@@ -37,7 +39,7 @@ export async function adicionarContato(email, nome) {
       body: JSON.stringify({
         email,
         attributes: { NOME: nome },
-        listIds: [Number(BREVO_LIST_ID)],
+        listIds: [Number(listId)],
         updateEnabled: true,
       }),
     });
@@ -46,7 +48,7 @@ export async function adicionarContato(email, nome) {
       console.error(`[Brevo] falha HTTP ${resp.status} ao adicionar ${email}:`, data);
       return { ok: false, status: resp.status, data };
     }
-    console.log(`[Brevo] contato adicionado/atualizado na lista ${BREVO_LIST_ID}: ${email} (status ${resp.status}).`);
+    console.log(`[Brevo] contato adicionado/atualizado na lista ${listId}: ${email} (status ${resp.status}).`);
     return { ok: true, status: resp.status, data };
   } catch (err) {
     console.error(`[Brevo] erro ao adicionar contato ${email}:`, err?.message || err);
