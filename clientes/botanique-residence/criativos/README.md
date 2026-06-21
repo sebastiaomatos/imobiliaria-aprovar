@@ -1,78 +1,93 @@
-# Criativos — Botanique Residence (Aprovar) · BRIEF
+# Criativos — Botanique Residence (Aprovar)
 
-Briefing-mestre dos criativos de anúncio para captação da **lista VIP**. Regra de ouro:
-**vender a transformação** (o lago, o refúgio, o patrimônio tangível, a casa dos sonhos),
+Material de anúncio para captação da **lista VIP** do Botanique Residence (Urba/Grupo MRV&CO),
+vendido pela **Aprovar Negócios Imobiliários — CRECI 9770J**. Regra de ouro: **vender a
+transformação** (o lago, a praia particular, o refúgio, o patrimônio, a casa dos sonhos),
 nunca o terreno. Branding Aprovar (#F57F17 / #004310 / areia #F7F5EE / WhatsApp #25D366),
-fonte serifada em itálico (Fraunces) para a headline, logo da Aprovar presente em toda peça.
+headline serifada em itálico, **logo transparente** da Aprovar sobre o render.
 
 > Fonte de verdade dos dados: [`../dados/empreendimento.md`](../dados/empreendimento.md) e
-> `../dados/tabela-precos.csv`. **Nunca** inventar preço, metragem, condição ou data.
+> `../dados/tabela-precos.csv`. Nunca inventar preço, metragem, condição ou data.
 
-## Status
+## Estrutura
 
-✅ **Primeira leva produzida** em [`criativos-final/`](criativos-final/) — 6 peças em PNG
-alta + fontes HTML/CSS (editáveis e re-renderizáveis com Playwright). Veja o
-[README de lá](criativos-final/README.md) para a lista e o fluxo de edição.
+| Pasta / arquivo | O que é |
+|---|---|
+| [`estaticos/`](estaticos/) | 6 peças avulsas `c1..c6` (feed 1:1 e story 9:16) |
+| [`carrossel/`](carrossel/) | 5 cards em sequência `card1..5` (4:5) — a ORDEM importa |
+| [`performance-max/`](performance-max/) | 3 imagens p/ Google PMax/Demand Gen (1.91:1, 1:1, 4:5) |
+| [`roteiros-videos.md`](roteiros-videos.md) | 3 roteiros de Reels/vídeo (walkthrough, condições, depoimento) |
+| [`fontes/`](fontes/) | HTML + `_base.css` (estáticos) + `_base2.css` (carrossel/pmax) + `img/` — para regenerar |
 
-| Arquivo | Formato | Ângulo | ICP |
+## Estáticos — `estaticos/`
+
+| Arquivo | Formato (alvo) | Ângulo | ICP |
 |---|---|---|---|
-| c1-story-vip | 9:16 | Escassez / lista VIP | geral |
-| c2-feed-vip | 1:1 | Escassez / lista VIP | geral |
-| c3-story-natureza | 9:16 | Estilo de vida (lago) | família |
-| c4-feed-oferta | 1:1 | Oferta (R$ 312.500) | geral |
-| c5-feed-investidor | 1:1 | Patrimônio tangível | investidor |
-| c6-story-construir | 9:16 | Construir do seu jeito | construir |
+| c1-story-vip | Story 9:16 (1080×1920) | Escassez / lista VIP | geral |
+| c2-feed-vip | Feed 1:1 (1080×1080) | Escassez / lista VIP | geral |
+| c3-story-natureza | Story 9:16 (1080×1920) | Estilo de vida (lago) | família |
+| c4-feed-oferta | Feed 1:1 (1080×1080) | Oferta (R$ 312.500) | geral |
+| c5-feed-investidor | Feed 1:1 (1080×1080) | Patrimônio tangível | investidor |
+| c6-story-construir | Story 9:16 (1080×1920) | Construir do seu jeito | construir |
 
-## Formatos a cobrir (roadmap)
+## Carrossel — `carrossel/` (4:5, 1080×1350) · publicar em ordem card1 → card5
 
-- **Feed 1:1** (1080×1080) — ✅ c2, c4, c5. Cobrir família-morar e construir em 1:1.
-- **Story / Reels 9:16** (1080×1920) — ✅ c1, c3, c6. Cobrir investidor e oferta em 9:16.
-- **Carrossel** (1080×1080, 3–5 cards) — _a produzir_: card 1 gancho (lago) → 2 lazer →
-  3 condições (24x sem juros | plano longo) → 4 escassez VIP → 5 CTA WhatsApp.
-- **Reels / vídeo curto** (roteiro) — _a produzir_: 0–3s gancho aéreo do lago; 3–8s praia +
-  lazer; 8–12s "lista VIP escolhe antes"; 12–15s CTA. Áudio trend + legenda (ver
-  `../copy/copy-botanique.csv`, ganchos TikTok).
-- **PMax / Demand Gen** — _a produzir_: kit de imagens (1.91:1, 1:1, 4:5), 5 headlines
-  (≤30c) + 5 descrições (≤90c) do CSV, logo e nome do negócio.
+1. **card1** — Capa/gancho: "Um lago e uma praia particular. Em Cuiabá." (com "arraste →")
+2. **card2** — A natureza: lago, pier e pôr do sol.
+3. **card3** — O lazer: piscina, quadra, pista de 1,4 km, playground, pet place…
+4. **card4** — As condições: lote a partir de R$ 312.500, entrada, 24x, parcela longa.
+5. **card5** — CTA/VIP: entre na lista VIP, datas 12/07 e 19/07, WhatsApp.
 
-## Ângulos emocionais por ICP (alinhar à landing e ao CSV)
+Publicar como carrossel no Instagram/Facebook (feed 4:5 ou anúncio carrossel). O indicador
+de "arraste" e os pontinhos guiam o usuário.
 
-- **Família / morar:** memórias e domingos à beira do lago, segurança dos filhos,
-  pertencimento, "clube em casa". Imagens: 01 (aéreo lago), 04 (pier pôr do sol),
-  05 (praia), 06 (piscina), 08 (playground).
-- **Investidor:** patrimônio **tangível** (terra que se vê e se pisa), proteção contra a
-  inflação, escolher os melhores lotes antes. **Sem promessa de valorização** — usar
-  "alto potencial de valorização". Imagens: 01, 17 (masterplan), 16 (localização).
-- **Construir:** liberdade do projeto, terreno seu, orgulho/legado. Imagens: 01, 02
-  (entrada), 17 (masterplan), 07 (cooper).
-- **Geral / escassez:** acesso VIP 12/07 antes do lançamento geral 19/07. Imagens: 01, 05.
+## Performance Max / Demand Gen / Display — `performance-max/`
 
-## Imagens (banco em `../imagens/`)
+Texto propositalmente MÍNIMO: no PMax o Google combina a imagem com os títulos/descrições
+cadastrados à parte; imagens limpas performam melhor e evitam recusa por excesso de texto.
 
-Hero limpo: **01-vista-aerea-lago** (sem faixa da Urba). ⚠️ Vários renders trazem **faixa
-verde lateral + rótulo + marca da Urba** — **recortar** antes de usar em peça da Aprovar.
-00-capa é co-branding; evitar em anúncio de captação da Aprovar.
+| Arquivo | Tamanho (alvo) | Proporção | Slot do Google |
+|---|---|---|---|
+| pmax-land | 1200×628 | 1.91:1 | Imagem horizontal (obrigatória) |
+| pmax-sq | 1200×1200 | 1:1 | Imagem quadrada (obrigatória) |
+| pmax-port | 960×1200 | 4:5 | Imagem retrato (recomendada) |
 
-## Logo da Aprovar
+**Faltam (cadastrar à parte no Google Ads):** logos 1:1 (1200×1200) e paisagem 4:1 (1200×300),
+geradas do kit `_templates/branding/` — **TODO**; títulos/descrições do banco
+[`../copy/copy-botanique.csv`](../copy/copy-botanique.csv). Dá para exportar versões SEM texto
+(só render + logo) removendo o `<h1>`/kicker no HTML e re-renderizando.
 
-- Usar a versão **transparente** do kit: `_templates/branding/aprovar-logo-darkbg.png`
-  (sobre fundo escuro) ou `-lightbg.png` (sobre fundo claro); cópia em
-  `criativos-final/fontes/img/aprovar-logo.png`.
-- Sobre render escuro: logo direto com **drop-shadow** para leitura (como nas peças atuais).
-- Sobre área clara: logo dentro de **lockup** (cartão claro arredondado), como no header da landing.
-- Nunca distorcer/recolorir; manter respiro. ⚠️ **TODO:** pedir ao cliente a logo em
-  **SVG/PNG transparente HD** (a atual é baixa-res) — ver `_templates/branding/README.md`.
+## Vídeos — `roteiros-videos.md`
 
-## Conformidade (toda peça)
+3 roteiros prontos (9:16, 15–40s, legendas embutidas, gancho nos 1–2s): **1)** walkthrough do
+lago (estilo de vida), **2)** as condições (oferta), **3)** depoimento-conceito (UGC). Inclui
+brief de produção, ferramentas e B-roll. **TODO:** `{{VIDEO_FLYTHROUGH_URL}}` (vídeo oficial Urba/MRV).
 
-CRECI 9770J sempre visível · "imagens meramente ilustrativas (render)" quando houver render ·
-"valores/condições sujeitos a alteração" **quando a peça mostra preço** · **nunca** prometer
-valorização garantida · datas 12/07 (VIP) e 19/07 (geral) **a confirmar com a Urba**.
-Avisos completos vivem na landing; na peça, só o mínimo e discreto.
+## Logo
 
-## Editar / variar
+Versão **transparente** do kit (`_templates/branding/aprovar-logo-darkbg.png` p/ fundo escuro,
+`-lightbg.png` p/ fundo claro), aplicada **direto sobre o render** com leve drop-shadow para
+leitura — **sem caixa/cartão**. Cópia local em [`fontes/img/aprovar-logo.png`](fontes/img/).
 
-Fontes em [`criativos-final/fontes/`](criativos-final/fontes/) (HTML + `_base.css`). Para uma
-variação: duplicar um `.html`, trocar imagem + headline + chips, renderizar com Playwright
-(viewport = a dimensão; screenshot do `#cap`). A produção de **novos formatos** (carrossel,
-Reels, PMax) pode ser feita aqui (com render-verify) ou no **Claude Desktop**.
+## Avisos legais (mínimos, por peça)
+
+Só o necessário e discreto: **CRECI 9770J sempre**; "imagens ilustrativas (render)"; "valores
+sujeitos a alteração" **apenas quando a peça mostra preço** (ex.: c4, card4, pmax com preço).
+Peças sem preço não levam aviso de valores. Avisos completos vivem na landing.
+
+## Conformidade
+
+CRECI 9770J · **nunca** prometer valorização (investidor usa patrimônio **tangível**, não
+retorno) · render ilustrativo · datas 12/07 (VIP) e 19/07 (geral) **a confirmar com a Urba**.
+
+## Regenerar / variar (fontes/)
+
+HTML + `_base.css` (estáticos) e `_base2.css` (carrossel/pmax). Para variar: duplicar um
+`.html`, trocar imagem + headline + chips, renderizar com Playwright (viewport = dimensão-alvo;
+screenshot do elemento `#cap`).
+
+> ⚠️ **Dimensões dos PNG atuais:** o export está **~48 px mais estreito** que o alvo de cada
+> slot (estáticos 1032 px de largura; carrossel 1032×1350; pmax 1152/912). As proporções ficam
+> levemente fora do exato (1:1, 9:16, 4:5, 1.91:1). Os arquivos são válidos e publicáveis, mas
+> para bater o pixel exato dos slots, **re-renderizar das `fontes/`** ajustando a largura de
+> captura (a largura do `#cap`/viewport) — atenção que isso pode reposicionar quebras de texto.
