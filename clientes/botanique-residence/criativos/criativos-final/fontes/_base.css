@@ -1,0 +1,78 @@
+/* ===== Sistema de criativos — Botanique Residence (Aprovar) ===== */
+:root{
+  --forest:#004310; --forest-deep:#00300b; --sand:#F7F5EE;
+  --gold:#C8A24B; --gold-2:#E3C572; --orange:#F57F17; --wa:#25D366; --ink:#1c1c14;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#222;display:flex;flex-wrap:wrap;gap:24px;padding:24px;font-family:'Manrope',system-ui,sans-serif}
+
+.creative{position:relative;overflow:hidden;color:var(--sand);font-family:'Manrope',sans-serif;isolation:isolate}
+.story{width:1080px;height:1920px}
+.feed{width:1080px;height:1080px}
+
+.bg{position:absolute;inset:0;z-index:-3;background-size:cover;background-repeat:no-repeat}
+/* gradiente verde para legibilidade: topo levemente escuro, base sólida */
+.scrim{position:absolute;inset:0;z-index:-2;
+  background:linear-gradient(180deg,rgba(0,32,8,.62) 0%,rgba(0,32,8,.12) 28%,rgba(0,32,8,.18) 50%,rgba(0,40,12,.82) 78%,rgba(0,32,8,.96) 100%)}
+.vignette{position:absolute;inset:0;z-index:-1;box-shadow:inset 0 0 240px 60px rgba(0,20,5,.55)}
+
+.frame{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between}
+.story .frame{padding:64px 64px 58px}
+.feed .frame{padding:54px 56px 50px}
+
+/* topo */
+.top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.kicker{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(100deg,var(--gold-2),var(--gold));
+  color:var(--forest-deep);font-weight:800;letter-spacing:3px;text-transform:uppercase;border-radius:999px}
+.story .kicker{font-size:23px;padding:13px 26px}
+.feed .kicker{font-size:18px;padding:10px 20px}
+.brand-logo{display:block;width:auto;filter:drop-shadow(0 2px 12px rgba(0,12,3,.75))}
+.story .brand-logo{height:62px}.feed .brand-logo{height:48px}
+
+/* bloco inferior */
+.bottom{display:flex;flex-direction:column;gap:0}
+.vip{display:inline-flex;align-items:center;gap:12px;align-self:flex-start;
+  background:rgba(0,40,12,.55);border:1.5px solid var(--gold);border-radius:999px;backdrop-filter:blur(2px)}
+.story .vip{font-size:22px;padding:11px 22px;margin-bottom:26px}
+.feed .vip{font-size:16px;padding:8px 16px;margin-bottom:16px}
+.vip .dot{width:11px;height:11px;border-radius:50%;background:var(--gold-2);box-shadow:0 0 12px var(--gold-2)}
+
+h1.head{font-family:'Fraunces',Georgia,serif;font-weight:600;line-height:1.02;letter-spacing:-.5px;text-shadow:0 4px 30px rgba(0,15,4,.6)}
+.story h1.head{font-size:104px}.feed h1.head{font-size:72px}
+h1.head em{font-style:italic;color:var(--gold-2)}
+.sub{color:#e7eee3;max-width:80%;text-shadow:0 2px 14px rgba(0,15,4,.6)}
+.story .sub{font-size:33px;margin-top:22px;line-height:1.32}
+.feed .sub{font-size:23px;margin-top:14px;line-height:1.3;max-width:90%}
+
+/* chips de oferta */
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.story .chips{margin-top:34px}.feed .chips{margin-top:20px}
+.chip{display:inline-flex;flex-direction:column;background:rgba(247,245,238,.1);border:1px solid rgba(247,245,238,.28);
+  border-radius:16px;backdrop-filter:blur(3px)}
+.story .chip{padding:14px 20px}.feed .chip{padding:10px 15px}
+.chip b{font-family:'Fraunces',serif;font-style:italic;color:var(--gold-2);line-height:1}
+.story .chip b{font-size:34px}.feed .chip b{font-size:25px}
+.chip span{color:#d6ddcf;margin-top:5px}
+.story .chip span{font-size:17px}.feed .chip span{font-size:13px}
+
+/* data + cta */
+.dates{display:flex;align-items:center;gap:14px;color:var(--gold-2);font-weight:700}
+.story .dates{font-size:25px;margin-top:34px}.feed .dates{font-size:17px;margin-top:20px}
+.dates .sep{width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+.cta-row{display:flex;align-items:center;gap:18px}
+.story .cta-row{margin-top:30px}.feed .cta-row{margin-top:18px}
+.cta{display:inline-flex;align-items:center;gap:12px;background:var(--orange);color:#fff;font-weight:800;
+  border-radius:999px;box-shadow:0 14px 40px rgba(245,127,23,.45)}
+.story .cta{font-size:30px;padding:22px 42px}.feed .cta{font-size:21px;padding:15px 30px}
+.wa{display:inline-flex;align-items:center;gap:10px;color:#fff;font-weight:700}
+.story .wa{font-size:24px}.feed .wa{font-size:17px}
+.wa .ic{display:inline-flex;align-items:center;justify-content:center;background:var(--wa);border-radius:50%}
+.story .wa .ic{width:50px;height:50px}.feed .wa .ic{width:36px;height:36px}
+.wa svg{width:60%;height:60%;fill:#fff}
+
+/* legal/rodapé */
+/* legal: mínimo e discreto */
+.legal{color:rgba(231,238,227,.5);font-weight:500;letter-spacing:.2px}
+.story .legal{font-size:15px;margin-top:24px}
+.feed .legal{font-size:12px;margin-top:15px}
