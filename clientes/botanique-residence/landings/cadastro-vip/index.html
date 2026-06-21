@@ -25,10 +25,12 @@
 html{scroll-behavior:smooth}
 body{font-family:'Manrope',system-ui,Arial,sans-serif;color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
-h1,h2,h3,h4{line-height:1.14;font-weight:800}
+h1,h2,h3,h4{line-height:1.14;font-weight:800;text-wrap:balance}
 .serif{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600}
 img{max-width:100%;display:block}
 a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold-2);outline-offset:2px}
+.nowrap{white-space:nowrap}
 .center{text-align:center}
 
 /* buttons */
@@ -46,8 +48,9 @@ a{color:inherit}
 /* nav */
 .nav{position:sticky;top:0;z-index:60;background:rgba(0,48,11,.95);backdrop-filter:blur(8px);border-bottom:1px solid rgba(200,162,75,.22)}
 .nav__in{display:flex;align-items:center;justify-content:space-between;padding:13px 0}
-.brand{color:var(--sand);font-weight:800;font-size:1.18rem;text-decoration:none;letter-spacing:.4px;display:flex;flex-direction:column;line-height:1.1}
-.brand small{font-size:.62rem;letter-spacing:2.5px;color:var(--gold-2);font-weight:600;text-transform:uppercase}
+.brand{display:inline-flex;align-items:center;text-decoration:none}
+.logo-lockup{display:inline-flex;align-items:center;background:var(--cream);border-radius:12px;padding:6px 13px;box-shadow:0 4px 14px rgba(0,0,0,.20)}
+.logo-lockup img{height:42px;width:auto;display:block}
 .nav .btn{padding:11px 20px;font-size:.92rem}
 .nav__creci{color:#bcd2bf;font-size:.74rem;margin-right:auto;margin-left:18px;opacity:.85}
 
@@ -82,6 +85,10 @@ a{color:inherit}
 .form-card .invalid{border-color:#c5524a;background:#fdf1f0}
 .form-err{color:#c5524a;font-size:.84rem;margin-bottom:10px}
 .form-note{font-size:.74rem;color:var(--mute);margin-top:12px;text-align:center}
+.form-card .consent{display:flex;flex-direction:row;align-items:flex-start;gap:9px;font-size:.78rem;font-weight:500;color:#4c5246;margin:4px 0 14px;line-height:1.45;cursor:pointer}
+.form-card .consent input{width:auto;margin:3px 0 0;accent-color:var(--orange)}
+.consent a{color:var(--orange);text-decoration:underline}
+.form-card .consent.invalid{color:#c5524a}
 
 /* sections */
 section{padding:72px 0}
@@ -142,6 +149,27 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
   .split{grid-template-columns:1fr}
   .split img{height:240px}
 }
+@media (max-width:600px){
+  .wrap{padding:0 16px}
+  .nav__in{padding:10px 0}
+  .nav__creci{display:none}
+  .nav .btn{padding:9px 15px;font-size:.84rem}
+  .logo-lockup img{height:34px}
+  .hero{padding:42px 0 50px}
+  .hero h1{font-size:clamp(1.85rem,7vw,2.3rem)}
+  .lead{font-size:1.02rem}
+  .specs{gap:18px 26px;margin:20px 0 22px}
+  .specs b{font-size:1.25rem}
+  .hero__cta .btn{width:100%}
+  .card{padding:22px 18px}
+  section{padding:48px 0}
+  .amen{grid-template-columns:repeat(2,1fr);gap:12px}
+  .amen img{height:140px}
+  .cond{grid-template-columns:1fr;gap:12px}
+  .split img{height:200px}
+  .strip__in{flex-direction:column;gap:10px}
+  .foot__in{flex-direction:column;align-items:flex-start}
+}
 </style>
 </head>
 <body>
@@ -149,7 +177,9 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
 <!-- ====== NAV ====== -->
 <nav class="nav">
   <div class="wrap nav__in">
-    <a class="brand" href="#topo">APROVAR <small>Negócios Imobiliários</small></a>
+    <a class="brand" href="#topo" aria-label="Aprovar Negócios Imobiliários — início">
+      <span class="logo-lockup"><img src="img/aprovar-logo.png" alt="Aprovar Negócios Imobiliários" width="72" height="42"></span>
+    </a>
     <span class="nav__creci">CRECI 9770J · imobiliária parceira na venda</span>
     <a class="btn btn--vip" href="#cadastro">Entrar na lista VIP</a>
   </div>
@@ -162,11 +192,11 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
     <div>
       <!-- AJUSTE AS DATAS AQUI: VIP (cadastrados) e lançamento geral -->
       <span class="tagline">Pré-venda exclusiva · acesso VIP 12/07</span>
-      <h1 class="serif">Escolha seu lote no <b>Botanique Residence</b> antes de todo mundo</h1>
-      <p class="lead">Um condomínio fechado cercado pela natureza em Cuiabá — com <b>lago exclusivo</b>, faixa de areia, pista de cooper de 1,4 km e lazer completo. Quem entra na lista VIP escolhe os melhores lotes <b>7 dias antes</b> do lançamento geral.</p>
+      <h1 class="serif">Sua família a poucos passos de um lago com praia particular — no <b>Botanique Residence</b></h1>
+      <p class="lead">Um condomínio fechado em Cuiabá feito pra viver perto da natureza: <b>lago exclusivo</b> com pier e faixa de areia, pista de cooper de 1,4 km e um clube de lazer entregue pronto. Entrar na <b>lista VIP</b> é o único jeito de escolher os melhores lotes — <b>7 dias antes</b> de abrir pra todo mundo.</p>
       <ul class="specs">
         <li><b>250–347 m²</b><span>lotes de</span></li>
-        <li><b>R$ 312.500</b><span>a partir de</span></li>
+        <li><b class="nowrap">R$ 312.500</b><span>a partir de</span></li>
         <li><b>24x</b><span>sem juros no saldo</span></li>
         <li><b>441</b><span>lotes · 17 quadras</span></li>
       </ul>
@@ -179,30 +209,34 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
 
     <!-- FORM CARD -->
     <div class="card form-card" id="cadastro">
-      <span class="vip-pill">Lista VIP · vagas limitadas</span>
-      <h3>Garanta sua prioridade</h3>
-      <p class="card__sub">Preencha e a gente te avisa em primeira mão, com as melhores condições da pré-venda.</p>
+      <span class="vip-pill">Acesso antecipado · vagas limitadas</span>
+      <h3>Falta pouco pra garantir sua prioridade</h3>
+      <p class="card__sub">Preencha em 30 segundos. A gente te chama em primeira mão — com as melhores condições e os melhores lotes, antes do público geral.</p>
       <form id="leadForm" novalidate>
         <label>Nome completo
-          <input type="text" name="nome" placeholder="Seu nome" required>
+          <input type="text" name="nome" placeholder="Seu nome" required aria-required="true" autocomplete="name">
         </label>
         <label>WhatsApp
-          <input type="tel" name="telefone" placeholder="(65) 9 0000-0000" required>
+          <input type="tel" name="telefone" placeholder="(65) 9 0000-0000" required aria-required="true" autocomplete="tel" inputmode="tel">
         </label>
         <label>E-mail
-          <input type="email" name="email" placeholder="voce@email.com" required>
+          <input type="email" name="email" placeholder="voce@email.com" required aria-required="true" autocomplete="email" inputmode="email">
         </label>
-        <label>Seu objetivo
-          <select name="intencao" required>
+        <label>Seu objetivo com o lote
+          <select name="intencao" required aria-required="true">
             <option value="" selected disabled>Selecione…</option>
-            <option>Morar</option>
-            <option>Investir</option>
-            <option>Construir</option>
+            <option value="morar">Morar com a família</option>
+            <option value="investir">Investir / patrimônio</option>
+            <option value="construir">Construir do meu jeito</option>
           </select>
         </label>
-        <p class="form-err" id="formErr" hidden>Preencha os campos destacados.</p>
-        <button type="submit" class="btn btn--vip btn--block btn--lg">Entrar na lista VIP →</button>
-        <p class="form-note">Ao enviar, você concorda em receber contato da Aprovar sobre o Botanique. Sair quando quiser.</p>
+        <label class="consent">
+          <input type="checkbox" name="consentimento" required aria-required="true">
+          <span>Li e concordo com a <a href="{{PRIVACY_URL}}" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo a Aprovar a entrar em contato comigo sobre o Botanique Residence.</span>
+        </label>
+        <p class="form-err" id="formErr" role="alert" aria-live="polite" hidden>Confira os campos destacados — inclusive o aceite da Política de Privacidade.</p>
+        <button type="submit" class="btn btn--vip btn--block btn--lg">Quero minha prioridade VIP →</button>
+        <p class="form-note">🔒 Cadastro gratuito e sem compromisso. Você sai da lista quando quiser.</p>
       </form>
     </div>
   </div>
@@ -221,7 +255,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
   <div class="wrap">
     <p class="eyebrow">Viver cercado pela natureza</p>
     <h2 class="sec-title serif">Um lago só seu, e o pôr do sol todo dia</h2>
-    <p class="sec-lead">O coração do Botanique é a grande área verde com lago — com faixa de areia, pier e vista para emoldurar o fim de tarde. Natureza, exclusividade e alto potencial de valorização no mesmo endereço.</p>
+    <p class="sec-lead">Imagine o fim de tarde: as crianças na faixa de areia, você no pier vendo o sol se pôr na água. O coração do Botanique é essa grande área verde com lago — o tipo de cena que faz a gente querer chegar mais cedo em casa.</p>
     <div class="split">
       <figure><img src="img/04-pier-por-do-sol.jpg" alt="Pier ao pôr do sol no lago do Botanique"><figcaption>Pier ao pôr do sol</figcaption></figure>
       <figure><img src="img/05-faixa-de-areia.jpg" alt="Faixa de areia à beira do lago"><figcaption>Faixa de areia (praia)</figcaption></figure>
@@ -293,7 +327,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
 <footer>
   <div class="wrap">
     <div class="foot__in">
-      <div class="brand" style="color:var(--sand)">APROVAR <small style="color:var(--gold)">Negócios Imobiliários · CRECI 9770J</small></div>
+      <span class="logo-lockup"><img src="img/aprovar-logo.png" alt="Aprovar Negócios Imobiliários · CRECI 9770J" width="86" height="50"></span>
       <a class="btn btn--wa" data-wa data-msg="Olá! Vim pela página do Botanique Residence.">WhatsApp (65) 99232-6461</a>
     </div>
     <p class="foot__legal">Botanique Residence é um empreendimento da Urba (Grupo MRV&amp;CO). A Aprovar Negócios Imobiliários atua como imobiliária parceira na comercialização. Imagens meramente ilustrativas (renders). Preços, condições e disponibilidade sujeitos a alteração sem aviso prévio. Esta página não constitui oferta nem promessa de valorização.</p>
@@ -304,7 +338,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
 /* ===== Botanique VIP — captação (base: template Imóveis AQV) ===== */
 const CONFIG = {
   phone: "5565992326461",            // WhatsApp da Aprovar (DDI+DDD+número)
-  formEndpoint: "",                  // TODO: URL do orquestrador (cria lead no Praedium + lista VIP no Brevo). Vazio = só WhatsApp.
+  formEndpoint: "https://imobiliaria-aprovar-production.up.railway.app/cadastro", // orquestrador: cria lead no Praedium + lista VIP no Brevo
   redirectToWhatsAppAfterForm: true
 };
 
@@ -331,24 +365,43 @@ const formErr = document.getElementById("formErr");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
+
+  // Validação: campos de texto não vazios + checkbox de consentimento (LGPD) marcado.
   let ok = true;
   form.querySelectorAll("[required]").forEach(f => {
-    const bad = !String(f.value).trim(); f.classList.toggle("invalid", bad); if (bad) ok = false;
+    const bad = f.type === "checkbox" ? !f.checked : !String(f.value).trim();
+    f.classList.toggle("invalid", bad);
+    if (f.type === "checkbox") f.closest(".consent")?.classList.toggle("invalid", bad);
+    if (bad) ok = false;
   });
-  formErr.hidden = ok; if (!ok) return;
+  formErr.hidden = ok;
+  if (!ok) { form.querySelector(".invalid")?.focus?.(); return; }
 
-  const payload = { ...data, empreendimento: "Botanique Residence", lista: "VIP", ...TRACKING, ts: new Date().toISOString() };
+  const btn = form.querySelector("button[type=submit]");
+  const payload = { ...data, consentimento: true, empreendimento: "Botanique Residence", lista: "VIP", ...TRACKING, ts: new Date().toISOString() };
+
+  // A conversão (track) só dispara com CONFIRMAÇÃO de sucesso do servidor.
+  // Sem endpoint configurado, o WhatsApp é o canal e contamos como conversão (fallback).
+  let enviado = false;
   if (CONFIG.formEndpoint){
-    try { await fetch(CONFIG.formEndpoint, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) }); }
-    catch (err){ console.warn("Falha ao enviar lead:", err); }
+    btn.disabled = true; btn.textContent = "Enviando…";
+    try {
+      const resp = await fetch(CONFIG.formEndpoint, { method:"POST", headers:{ "Content-Type":"application/json" }, body: JSON.stringify(payload) });
+      enviado = resp.ok;
+      if (!resp.ok) console.warn("Cadastro respondeu HTTP", resp.status);
+    } catch (err){ console.warn("Falha ao enviar lead:", err); }
+    finally { btn.disabled = false; }
+    if (enviado) track("lead_submit", { intencao: data.intencao, empreendimento: "Botanique", lista: "VIP" });
+  } else {
+    track("lead_submit", { intencao: data.intencao, empreendimento: "Botanique", lista: "VIP", via: "whatsapp_only" });
+    enviado = true;
   }
-  track("lead_submit", { intencao: data.intencao, empreendimento: "Botanique", lista: "VIP" });
 
   const msg = `Oi! Sou ${data.nome}. Quero entrar na lista VIP do Botanique Residence (objetivo: ${data.intencao}). `
             + `Meu WhatsApp: ${data.telefone} · e-mail: ${data.email}.`;
   if (CONFIG.redirectToWhatsAppAfterForm) window.open(waLink(msg), "_blank", "noopener");
   form.reset();
-  form.querySelector("button[type=submit]").textContent = "✓ Cadastrado! Abrindo o WhatsApp…";
+  btn.textContent = enviado ? "✓ Tudo certo! Abrindo o WhatsApp…" : "✓ Recebido! Abrindo o WhatsApp…";
 });
 
 function track(event, params = {}){
