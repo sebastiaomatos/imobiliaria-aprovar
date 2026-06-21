@@ -7,6 +7,7 @@ import * as db from '../db.js';
 import * as zapi from '../integrations/zapi.js';
 import * as praedium from '../integrations/praedium.js';
 import * as metaCapi from '../integrations/metaCapi.js';
+// import * as brevo from '../integrations/brevo.js'; // ativar quando o lead trouxer e-mail
 import { MENSAGENS, AGENDA_RECUPERACAO, OPTOUT_KEYS, AVISTA_KEYS, preencher } from '../regua.js';
 
 /** Decide se devemos ignorar o evento (não é mensagem de texto de uma pessoa). */
@@ -82,6 +83,10 @@ export async function processarWebhookZapi(body, log = console) {
 
       // Envia ao CRM (não bloqueia se não estiver configurado).
       await praedium.enviarLead({ phone, nome, origem: 'whatsapp', mensagem: texto });
+
+      // quando houver e-mail do lead (hoje é WhatsApp-only; ativar quando o e-mail
+      // vier de Lead Ads ou de um campo no formulário):
+      // await brevo.adicionarContato(email, nome);
 
       // Mensagem inicial (M0).
       await zapi.sendText(phone, preencher(MENSAGENS.M0, nome));
