@@ -14,19 +14,23 @@
  *   - desc:     descrição curta (vive só no código; nunca logamos valores).
  */
 const SCHEMA = [
-  { name: 'WEBHOOK_SECRET',      critical: true,  desc: 'Valida o header x-webhook-secret em POST /webhook/lead' },
+  { name: 'DATABASE_URL',          critical: true,  desc: 'PostgreSQL (injetada pelo Railway) — leads, agendamentos, eventos' },
+  { name: 'WEBHOOK_SECRET',        critical: true,  desc: 'Valida o header x-webhook-secret em POST /webhook/lead' },
 
-  { name: 'PRAEDIUM_API_KEY',    critical: false, desc: 'CRM Praedium (leads e estágios do funil)' },
-  { name: 'ZAPI_INSTANCE_ID',    critical: false, desc: 'Z-API: ID da instância de WhatsApp' },
-  { name: 'ZAPI_INSTANCE_TOKEN', critical: false, desc: 'Z-API: token da instância' },
-  { name: 'ZAPI_CLIENT_TOKEN',   critical: false, desc: 'Z-API: Client-Token de segurança' },
-  { name: 'BREVO_API_KEY',       critical: false, desc: 'Brevo: e-mail transacional' },
-  { name: 'GEMINI_API_KEY',      critical: false, desc: 'Google Gemini: geração de laudo' },
-  { name: 'META_CAPI_TOKEN',     critical: false, desc: 'Meta CAPI: token de eventos server-side' },
-  { name: 'META_PIXEL_ID',       critical: false, desc: 'Meta: ID do Pixel/Dataset' },
-  { name: 'META_AD_ACCOUNT_ID',  critical: false, desc: 'Meta: ID da conta de anúncios (act_...)' },
-  { name: 'META_PAGE_ID',        critical: false, desc: 'Meta: ID da página' },
-  { name: 'META_BUSINESS_ID',    critical: false, desc: 'Meta: ID do Business Manager' },
+  { name: 'CORRETOR_WHATSAPP',     critical: false, desc: 'WhatsApp do corretor que recebe as notificações de lead' },
+  { name: 'PRAEDIUM_WEBHOOK_IN_URL', critical: false, desc: 'URL do Webhook de Entrada do Praedium (envio de leads); vazio = pula' },
+  { name: 'PRAEDIUM_API_KEY',      critical: false, desc: 'CRM Praedium (API, quando aplicável)' },
+  { name: 'ZAPI_INSTANCE_ID',      critical: false, desc: 'Z-API: ID da instância de WhatsApp' },
+  { name: 'ZAPI_INSTANCE_TOKEN',   critical: false, desc: 'Z-API: token da instância' },
+  { name: 'ZAPI_CLIENT_TOKEN',     critical: false, desc: 'Z-API: Client-Token de segurança' },
+  { name: 'BREVO_API_KEY',         critical: false, desc: 'Brevo: e-mail transacional' },
+  { name: 'GEMINI_API_KEY',        critical: false, desc: 'Google Gemini: geração de laudo' },
+  { name: 'META_CAPI_TOKEN',       critical: false, desc: 'Meta CAPI: token de eventos server-side' },
+  { name: 'META_PIXEL_ID',         critical: false, desc: 'Meta: ID do Pixel/Dataset' },
+  { name: 'META_GRAPH_VERSION',    critical: false, desc: 'Versão da Graph API (ex.: v21.0); default no código' },
+  { name: 'META_AD_ACCOUNT_ID',    critical: false, desc: 'Meta: ID da conta de anúncios (act_...)' },
+  { name: 'META_PAGE_ID',          critical: false, desc: 'Meta: ID da página' },
+  { name: 'META_BUSINESS_ID',      critical: false, desc: 'Meta: ID do Business Manager' },
 ];
 
 /**

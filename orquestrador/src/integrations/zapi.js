@@ -1,23 +1,28 @@
 // integrations/zapi.js — WhatsApp via Z-API.
 //
 // Usa ZAPI_INSTANCE_ID, ZAPI_INSTANCE_TOKEN e o header Client-Token
-// (ZAPI_CLIENT_TOKEN), lidos de process.env. Usa o fetch nativo do Node.
+// (ZAPI_CLIENT_TOKEN), lidos de process.env. fetch nativo do Node.
 
 /**
- * Envia uma mensagem de texto pelo WhatsApp via Z-API (ex.: a M0 do fluxo).
- * Já está pronta para uso, mas ainda NÃO é chamada em lugar nenhum.
- *
- * @param {string} phone   Telefone do destinatário (ex.: "5565999999999").
+ * Envia uma mensagem de texto pelo WhatsApp via Z-API.
+ * @param {string} phone   Telefone do destinatário (só dígitos, ex.: "5565999999999").
  * @param {string} message Texto da mensagem.
- * @returns {Promise<object|null>} Resposta da Z-API (JSON) ou null em caso de erro.
+ * @returns {Promise<{ok:boolean, status?:number, data?:any, erro?:string}>}
  */
 export async function sendText(phone, message) {
   const { ZAPI_INSTANCE_ID, ZAPI_INSTANCE_TOKEN, ZAPI_CLIENT_TOKEN } = process.env;
+
+  // Defensivo: sem credenciais não tentamos enviar (e não derrubamos o fluxo).
+  if (!ZAPI_INSTANCE_ID || !ZAPI_INSTANCE_TOKEN || !ZAPI_CLIENT_TOKEN) {
+    console.error(`[Z-API sendText] credenciais ausentes — não enviei para ${phone}.`);
+    return { ok: false, erro: 'credenciais_ausentes' };
+  }
 
   // ATENÇÃO: a URL contém o token da instância — NUNCA logar a URL nem os headers.
   const url = `https://api.z-api.io/instances/${ZAPI_INSTANCE_ID}/token/${ZAPI_INSTANCE_TOKEN}/send-text`;
 
   try {
+    // TODO VALIDAR: confirmar formato exato do endpoint/headers/body com a Z-API real.
     const resp = await fetch(url, {
       method: 'POST',
       headers: {
@@ -26,21 +31,16 @@ export async function sendText(phone, message) {
       },
       body: JSON.stringify({ phone, message }),
     });
-
-    // Tenta ler o corpo de resposta como JSON (sem quebrar se vier vazio).
     const data = await resp.json().catch(() => ({}));
-
     if (!resp.ok) {
-      // Loga status + corpo de erro, mas SEM a URL/headers (que contêm tokens).
       console.error(`[Z-API sendText] falha HTTP ${resp.status} ao enviar para ${phone}:`, data);
-      return null;
+      return { ok: false, status: resp.status, data };
     }
-
-    console.log(`[Z-API sendText] mensagem enviada para ${phone} (status ${resp.status}).`);
-    return data;
+    console.log(`[Z-API sendText] enviado para ${phone} (status ${resp.status}).`);
+    return { ok: true, status: resp.status, data };
   } catch (err) {
-    // Erro de rede/execução — loga só a mensagem do erro, nunca a URL com token.
+    // Loga só a mensagem do erro, nunca a URL com token.
     console.error(`[Z-API sendText] erro ao enviar para ${phone}:`, err?.message || err);
-    return null;
+    return { ok: false, erro: err?.message || String(err) };
   }
 }

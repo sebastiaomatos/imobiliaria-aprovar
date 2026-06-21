@@ -1,7 +1,7 @@
 {
   "name": "orquestrador-aqv",
   "version": "0.1.0",
-  "description": "Orquestrador de automação (landing -> Praedium -> Z-API -> Gemini -> Brevo -> Meta CAPI) do sistema Imóveis AQV.",
+  "description": "Orquestrador de automação (landing/WhatsApp -> Praedium -> Z-API -> Brevo -> Meta CAPI) do sistema Imóveis AQV.",
   "type": "module",
   "private": true,
   "engines": {
@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@fastify/sensible": "^6.0.0",
-    "fastify": "^5.0.0"
+    "fastify": "^5.0.0",
+    "pg": "^8.13.0"
   },
   "devDependencies": {
     "dotenv": "^16.4.5"

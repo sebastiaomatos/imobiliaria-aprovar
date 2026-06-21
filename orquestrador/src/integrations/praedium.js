@@ -1,23 +1,56 @@
-// integrations/praedium.js — CRM Praedium (leads e estágios do funil).
+// integrations/praedium.js — envio de lead para o CRM Praedium (Webhook de Entrada).
 //
-// Requer plano com webhooks/LeadSync/API e a credencial PRAEDIUM_API_KEY.
-// Implementar com o fetch nativo do Node (sem node-fetch).
+// fetch nativo. Não bloqueia o fluxo: se não estiver configurado, apenas loga.
 
 /**
- * Cria ou atualiza um lead no CRM.
- * @param {object} lead Dados do lead vindos do POST /webhook/lead.
- * @returns {Promise<void>}
+ * Envia um lead para o Webhook de Entrada do Praedium.
+ * @param {{nome?:string, phone?:string, telefone?:string, origem?:string, mensagem?:string}} lead
+ * @returns {Promise<{ok:boolean, status?:number, pulado?:boolean, erro?:string}>}
  */
-export async function upsertLead(lead) {
-  // TODO(0.7): chamar a API do Praedium para criar/atualizar o lead.
+export async function enviarLead(lead) {
+  const url = process.env.PRAEDIUM_WEBHOOK_IN_URL;
+
+  // Sem URL configurada → não bloqueia o fluxo.
+  if (!url) {
+    console.log('[Praedium] não configurado ainda (PRAEDIUM_WEBHOOK_IN_URL vazio) — pulando.');
+    return { ok: true, pulado: true };
+  }
+
+  // TODO VALIDAR: ajustar os nomes dos campos ao formato exato do Webhook de
+  // Entrada do Praedium (confirmar no painel deles).
+  const payload = {
+    nome: lead?.nome ?? null,
+    telefone: lead?.phone ?? lead?.telefone ?? null,
+    email: null,
+    origem: lead?.origem ?? 'whatsapp',
+    mensagem: lead?.mensagem ?? null,
+    observacao: 'Lead via WhatsApp/landing',
+  };
+
+  try {
+    const resp = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!resp.ok) {
+      console.error(`[Praedium] falha HTTP ${resp.status} ao enviar lead.`);
+      return { ok: false, status: resp.status };
+    }
+    console.log(`[Praedium] lead enviado (status ${resp.status}).`);
+    return { ok: true, status: resp.status };
+  } catch (err) {
+    // Não logar a URL (pode conter token no path/query).
+    console.error('[Praedium] erro ao enviar lead:', err?.message || err);
+    return { ok: false, erro: err?.message || String(err) };
+  }
 }
 
 /**
- * Move o lead para um estágio do funil (ex.: "Visita agendada").
+ * Atualiza o estágio do lead no Praedium (stub para o 0.7).
  * @param {string} leadId
  * @param {string} stage
- * @returns {Promise<void>}
  */
-export async function updateLeadStage(leadId, stage) {
-  // TODO(0.7): chamar a API do Praedium para atualizar o estágio do lead.
+export async function atualizarEstagio(leadId, stage) {
+  // TODO VALIDAR: implementar quando a API/credencial do Praedium estiver definida.
 }
