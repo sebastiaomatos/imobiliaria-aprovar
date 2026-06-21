@@ -15,7 +15,7 @@ import { loadConfig } from './config.js';
 
 // Integrações (stubs) — serão acionadas no 0.7:
 // import { upsertLead } from './integrations/praedium.js';
-// import { sendWhatsAppMessage } from './integrations/zapi.js';
+// import { sendText } from './integrations/zapi.js';
 // import { sendTransactionalEmail } from './integrations/brevo.js';
 // import { sendConversionEvent } from './integrations/metaCapi.js';
 
@@ -86,11 +86,40 @@ async function start() {
 
     // TODO(0.7): orquestrar o fluxo completo a partir do lead:
     //   1. praedium.upsertLead(lead)             -> cria/atualiza o lead no CRM
-    //   2. zapi.sendWhatsAppMessage(...)          -> dispara a mensagem M0
+    //   2. zapi.sendText(...)                     -> dispara a mensagem M0
     //   3. brevo.sendTransactionalEmail(...)      -> e-mail de boas-vindas
     //   4. metaCapi.sendConversionEvent('Lead')   -> evento server-side p/ Meta
     //   (gemini.generatePropertyReport pode enriquecer a copy do imóvel)
 
+    return reply.code(200).send({ received: true });
+  });
+
+  // Webhook da Z-API (mensagens/eventos do WhatsApp).
+  // Por enquanto: apenas loga o que chega. SEM validação de secret e SEM
+  // processamento (vamos endurecer e orquestrar depois).
+  app.post('/webhook/zapi', async (request, reply) => {
+    const body = request.body ?? {};
+
+    // Corpo COMPLETO, indentado. O payload da Z-API não contém nossos segredos.
+    console.log('\n[Z-API webhook] corpo recebido:');
+    console.log(JSON.stringify(body, null, 2));
+
+    // Campos em destaque (um por linha), apenas os que vierem preenchidos.
+    const texto = body?.text?.message ?? body?.message ?? null;
+    const campos = {
+      phone: body?.phone,
+      senderName: body?.senderName ?? body?.chatName,
+      fromMe: body?.fromMe,
+      type: body?.type,
+      texto,
+    };
+    for (const [chave, valor] of Object.entries(campos)) {
+      if (valor !== undefined && valor !== null) {
+        console.log(`[Z-API webhook] ${chave}: ${typeof valor === 'object' ? JSON.stringify(valor) : valor}`);
+      }
+    }
+
+    // Sempre 200 (não processa nada além de logar, por enquanto).
     return reply.code(200).send({ received: true });
   });
 
