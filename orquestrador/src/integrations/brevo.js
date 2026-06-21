@@ -42,6 +42,7 @@ export async function adicionarContato(email, nome, listId = process.env.BREVO_L
         listIds: [Number(listId)],
         updateEnabled: true,
       }),
+      signal: AbortSignal.timeout(8000), // não bloquear o /cadastro se o Brevo travar
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {

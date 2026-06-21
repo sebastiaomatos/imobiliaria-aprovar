@@ -56,10 +56,15 @@ export async function initDb() {
       estagio text DEFAULT 'novo',
       prioridade boolean DEFAULT false,
       optout boolean DEFAULT false,
+      fonte text,
+      consentimento_em timestamptz,
       criado_em timestamptz DEFAULT now(),
       atualizado_em timestamptz DEFAULT now()
     );
   `);
+  // Migração defensiva: garante as colunas novas em bancos já existentes.
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS fonte text;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS consentimento_em timestamptz;`);
   await p.query(`
     CREATE TABLE IF NOT EXISTS agendamentos (
       id serial PRIMARY KEY,
@@ -79,7 +84,16 @@ export async function initDb() {
       criado_em timestamptz DEFAULT now()
     );
   `);
-  console.log('[db] tabelas verificadas/criadas: leads, agendamentos, eventos.');
+  // Idempotência: registra os messageId já processados do webhook da Z-API.
+  await p.query(`
+    CREATE TABLE IF NOT EXISTS mensagens_processadas (
+      message_id text PRIMARY KEY,
+      criado_em timestamptz DEFAULT now()
+    );
+  `);
+  // Índice que acelera a varredura do worker (status + horário de envio).
+  await p.query(`CREATE INDEX IF NOT EXISTS idx_agendamentos_due ON agendamentos (status, enviar_em);`);
+  console.log('[db] tabelas/índices verificados: leads, agendamentos, eventos, mensagens_processadas.');
 }
 
 /** Busca um lead pelo telefone (ou null). */
@@ -97,20 +111,25 @@ export async function createLead(dados) {
     intencao = null,
     pagamento = null,
     estagio = 'novo',
+    fonte = null,
+    consentimentoEm = null,
   } = dados || {};
   const { rows } = await getPool().query(
-    `INSERT INTO leads (phone, nome, origem, intencao, pagamento, estagio)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     ON CONFLICT (phone) DO UPDATE SET atualizado_em = now()
+    `INSERT INTO leads (phone, nome, origem, intencao, pagamento, estagio, fonte, consentimento_em)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     ON CONFLICT (phone) DO UPDATE SET
+       atualizado_em = now(),
+       fonte = COALESCE(leads.fonte, EXCLUDED.fonte),
+       consentimento_em = COALESCE(leads.consentimento_em, EXCLUDED.consentimento_em)
      RETURNING *`,
-    [phone, nome, origem, intencao, pagamento, estagio],
+    [phone, nome, origem, intencao, pagamento, estagio, fonte, consentimentoEm],
   );
   return rows[0];
 }
 
 /** Atualiza apenas os campos informados (ignora indefinidos). */
 export async function updateLead(phone, campos) {
-  const permitidos = ['nome', 'origem', 'intencao', 'pagamento', 'estagio', 'prioridade', 'optout'];
+  const permitidos = ['nome', 'origem', 'intencao', 'pagamento', 'estagio', 'prioridade', 'optout', 'fonte', 'consentimento_em'];
   const sets = [];
   const valores = [];
   let i = 1;
@@ -133,12 +152,21 @@ export async function updateLead(phone, campos) {
 /** Agenda mensagens da régua. lista: [{ etapa, enviar_em }]. */
 export async function agendarMensagens(phone, lista) {
   if (!Array.isArray(lista) || lista.length === 0) return;
-  const p = getPool();
-  for (const item of lista) {
-    await p.query(
-      `INSERT INTO agendamentos (lead_phone, etapa, enviar_em) VALUES ($1, $2, $3)`,
-      [phone, item.etapa, item.enviar_em],
-    );
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    for (const item of lista) {
+      await client.query(
+        `INSERT INTO agendamentos (lead_phone, etapa, enviar_em) VALUES ($1, $2, $3)`,
+        [phone, item.etapa, item.enviar_em],
+      );
+    }
+    await client.query('COMMIT');
+  } catch (err) {
+    await client.query('ROLLBACK').catch(() => {});
+    throw err;
+  } finally {
+    client.release();
   }
 }
 
@@ -173,4 +201,19 @@ export async function registrarEvento(phone, tipo, payload = {}) {
     `INSERT INTO eventos (lead_phone, tipo, payload) VALUES ($1, $2, $3)`,
     [phone, tipo, JSON.stringify(payload ?? {})],
   );
+}
+
+/**
+ * Idempotência do webhook: tenta registrar um messageId.
+ * @param {string} messageId
+ * @returns {Promise<boolean>} true se é NOVO (deve processar); false se já visto.
+ */
+export async function registrarMensagemProcessada(messageId) {
+  if (!messageId) return true; // sem id confiável: processa (não bloqueia)
+  const { rowCount } = await getPool().query(
+    `INSERT INTO mensagens_processadas (message_id) VALUES ($1)
+     ON CONFLICT (message_id) DO NOTHING`,
+    [String(messageId)],
+  );
+  return rowCount > 0;
 }

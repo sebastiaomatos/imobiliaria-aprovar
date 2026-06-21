@@ -30,6 +30,7 @@ export async function sendText(phone, message) {
         'Client-Token': ZAPI_CLIENT_TOKEN,
       },
       body: JSON.stringify({ phone, message }),
+      signal: AbortSignal.timeout(8000), // não pendurar o fluxo se a Z-API travar
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {

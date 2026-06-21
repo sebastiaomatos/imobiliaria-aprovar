@@ -46,6 +46,7 @@ export async function enviarEvento(eventName, { phone } = {}) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(8000), // evento de conversão não pode pendurar o fluxo
     });
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {

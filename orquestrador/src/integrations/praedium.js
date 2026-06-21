@@ -32,6 +32,7 @@ export async function enviarLead(lead) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(8000), // não bloquear o /cadastro se o CRM travar
     });
     if (!resp.ok) {
       console.error(`[Praedium] falha HTTP ${resp.status} ao enviar lead.`);

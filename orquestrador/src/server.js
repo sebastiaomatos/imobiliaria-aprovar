@@ -14,6 +14,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { loadConfig } from './config.js';
 import { initDb } from './db.js';
+import * as db from './db.js';
 import { iniciarWorker } from './worker.js';
 import { processarWebhookZapi } from './handlers/zapiWebhook.js';
 import cors from '@fastify/cors';
@@ -22,6 +23,10 @@ import * as praedium from './integrations/praedium.js';
 import * as brevo from './integrations/brevo.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
+
+// Idempotência leve do /cadastro: evita leads duplicados por duplo-clique/reenvio.
+const cadastroRecente = new Map(); // telefone -> timestamp(ms)
+const CADASTRO_TTL_MS = 60 * 1000;
 
 /**
  * Compara dois segredos em tempo constante (mitiga timing attacks).
@@ -106,12 +111,16 @@ async function start() {
 
   // Webhook da Z-API (mensagens do WhatsApp). Responde rápido e processa em
   // background para não estourar o timeout do webhook.
-  app.post('/webhook/zapi', async (request, reply) => {
-    processarWebhookZapi(request.body, request.log).catch((err) =>
-      request.log.error(`[server] erro no processamento async do /webhook/zapi: ${err?.message || err}`),
-    );
-    return reply.code(200).send({ received: true });
-  });
+  app.post(
+    '/webhook/zapi',
+    { config: { rateLimit: { max: 120, timeWindow: '1 minute' } } },
+    async (request, reply) => {
+      processarWebhookZapi(request.body, request.log).catch((err) =>
+        request.log.error(`[server] erro no processamento async do /webhook/zapi: ${err?.message || err}`),
+      );
+      return reply.code(200).send({ received: true });
+    },
+  );
 
   // Cadastro vindo da landing (lista VIP). Público (NÃO exige x-webhook-secret,
   // pois é chamado do browser); protegido por CORS + rate-limit + validação de
@@ -134,7 +143,17 @@ async function start() {
 
   app.post(
     '/cadastro',
-    { schema: cadastroSchema, config: { rateLimit: { max: 10, timeWindow: '1 minute' } } },
+    {
+      schema: cadastroSchema,
+      config: { rateLimit: { max: 10, timeWindow: '1 minute' } },
+      // Guard de Content-Type ANTES da validação do schema: aceitamos apenas JSON.
+      preValidation: async (request, reply) => {
+        const ct = String(request.headers['content-type'] || '');
+        if (!ct.includes('application/json')) {
+          return reply.code(415).send({ ok: false, error: 'content_type_invalido' });
+        }
+      },
+    },
     async (request, reply) => {
       // Validação de origem (além do CORS): com allowlist e Origin presente,
       // recusa se não estiver na lista. Sem Origin (server-to-server/teste), segue.
@@ -153,9 +172,38 @@ async function start() {
         return reply.code(400).send({ ok: false, error: 'campos_invalidos', detalhe: 'nome e telefone são obrigatórios' });
       }
 
+      // Idempotência leve: mesmo telefone em janela curta → não reprocessa downstream
+      // (evita lead duplicado por duplo-clique/reenvio do formulário).
+      const agora = Date.now();
+      const ultimoEnvio = cadastroRecente.get(telefone);
+      if (ultimoEnvio && agora - ultimoEnvio < CADASTRO_TTL_MS) {
+        return reply.code(200).send({ ok: true, received: true, duplicado: true });
+      }
+      cadastroRecente.set(telefone, agora);
+      if (cadastroRecente.size > 5000) {
+        for (const [k, t] of cadastroRecente) if (agora - t > CADASTRO_TTL_MS) cadastroRecente.delete(k);
+      }
+
       const empreendimento = String(b.empreendimento || 'botanique-residence').slice(0, 80);
       const lista = String(b.lista || 'VIP').slice(0, 40);
       const intencao = b.intencao ? String(b.intencao).slice(0, 40) : null;
+      const consentiu = b.consentimento === true || b.consentimento === 'true' || b.consentimento === 'on';
+
+      // Persiste o lead no nosso banco com a fonte e o consentimento (LGPD).
+      // Defensivo: se o banco estiver indisponível, não perdemos o lead (segue p/ CRM).
+      try {
+        await db.createLead({
+          phone: telefone,
+          nome,
+          origem: `landing:${empreendimento}`,
+          intencao,
+          estagio: 'novo',
+          fonte: `landing:${empreendimento}:${lista}`,
+          consentimentoEm: consentiu ? new Date().toISOString() : null,
+        });
+      } catch (err) {
+        request.log.warn(`[cadastro] não consegui persistir o lead no banco: ${err?.message || err}`);
+      }
 
       // UTMs e identificadores de origem.
       const utm = {};

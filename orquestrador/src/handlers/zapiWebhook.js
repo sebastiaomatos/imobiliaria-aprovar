@@ -8,7 +8,9 @@ import * as zapi from '../integrations/zapi.js';
 import * as praedium from '../integrations/praedium.js';
 import * as metaCapi from '../integrations/metaCapi.js';
 // import * as brevo from '../integrations/brevo.js'; // ativar quando o lead trouxer e-mail
-import { MENSAGENS, AGENDA_RECUPERACAO, OPTOUT_KEYS, AVISTA_KEYS, preencher } from '../regua.js';
+import { MENSAGENS, AGENDA_RECUPERACAO, OPTOUT_KEYS, AVISTA_KEYS, ESCALADA_KEYS, preencher } from '../regua.js';
+
+const MAX_TEXTO = 4000; // trunca textos absurdamente longos antes de processar/logar
 
 /** Decide se devemos ignorar o evento (não é mensagem de texto de uma pessoa). */
 function deveIgnorar(body) {
@@ -53,14 +55,21 @@ export async function processarWebhookZapi(body, log = console) {
       return;
     }
 
-    // 3) Extrai campos.
+    // 3) Extrai campos (trunca texto muito longo).
     const phone = body.phone;
     const nome = body.senderName || body.chatName || 'tudo bem';
-    const texto = body.text.message;
-    const textoLower = String(texto).toLowerCase();
+    const texto = String(body.text.message).slice(0, MAX_TEXTO);
+    const textoLower = texto.toLowerCase();
 
     if (!phone) {
       log.warn?.('[zapiWebhook] sem phone no corpo — ignorando.');
+      return;
+    }
+
+    // 3.1) Idempotência: ignora reentregas do mesmo messageId (a Z-API pode reenviar).
+    const novo = await db.registrarMensagemProcessada(body.messageId);
+    if (!novo) {
+      log.info?.(`[zapiWebhook] messageId ${body.messageId} já processado — ignorando reentrega.`);
       return;
     }
 
@@ -74,12 +83,34 @@ export async function processarWebhookZapi(body, log = console) {
       return;
     }
 
+    // 4.1) Escalada humana (COFECI): lead pede corretor/atendente → handoff imediato.
+    if (contemAlguma(textoLower, ESCALADA_KEYS)) {
+      const existente = await db.getLeadByPhone(phone);
+      if (!existente) {
+        await db.createLead({ phone, nome, origem: 'whatsapp', estagio: 'em_atendimento', fonte: 'whatsapp' });
+      } else {
+        await db.updateLead(phone, { estagio: 'em_atendimento' });
+      }
+      await db.cancelarAgendamentosPendentes(phone);
+      const rEsc = await zapi.sendText(phone, preencher(MENSAGENS.ESCALADA, nome));
+      if (!rEsc?.ok) log.warn?.(`[zapiWebhook] falha ao enviar ESCALADA para ${phone}: ${rEsc?.erro || rEsc?.status}`);
+      const corretorEsc = process.env.CORRETOR_WHATSAPP;
+      if (corretorEsc) {
+        await zapi.sendText(corretorEsc, `🙋 ESCALADA HUMANA pedida! Nome: ${nome} | WhatsApp: ${phone} | Msg: "${texto}". Assuma agora.`);
+      } else {
+        log.warn?.('[zapiWebhook] CORRETOR_WHATSAPP não definido — não avisei sobre a escalada.');
+      }
+      await db.registrarEvento(phone, 'escalada_humana', { texto });
+      log.info?.(`[zapiWebhook] escalada humana para ${phone} — humano assume.`);
+      return;
+    }
+
     // 5) Lead novo x lead existente.
     const lead = await db.getLeadByPhone(phone);
 
     if (!lead) {
       // ===== LEAD NOVO =====
-      await db.createLead({ phone, nome, origem: 'whatsapp', estagio: 'novo' });
+      await db.createLead({ phone, nome, origem: 'whatsapp', estagio: 'novo', fonte: 'whatsapp' });
 
       // Envia ao CRM (não bloqueia se não estiver configurado).
       await praedium.enviarLead({ phone, nome, origem: 'whatsapp', mensagem: texto });
@@ -88,8 +119,12 @@ export async function processarWebhookZapi(body, log = console) {
       // vier de Lead Ads ou de um campo no formulário):
       // await brevo.adicionarContato(email, nome);
 
-      // Mensagem inicial (M0).
-      await zapi.sendText(phone, preencher(MENSAGENS.M0, nome));
+      // Mensagem inicial (M0). Confere o retorno para auditoria.
+      const rM0 = await zapi.sendText(phone, preencher(MENSAGENS.M0, nome));
+      if (!rM0?.ok) {
+        log.warn?.(`[zapiWebhook] falha ao enviar M0 para ${phone}: ${rM0?.erro || rM0?.status}`);
+        await db.registrarEvento(phone, 'envio_falhou', { etapa: 'M0', erro: rM0?.erro || rM0?.status || 'desconhecido' });
+      }
 
       // Agenda a régua de recuperação (R1..R5b).
       await db.agendarMensagens(phone, montarAgenda());
