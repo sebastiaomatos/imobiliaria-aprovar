@@ -11,22 +11,27 @@
     "ENTRADA": "R$ 31.250",
     "PARCELAS_SEM_JUROS": "24x sem juros",
     "PARCELA_DESDE": "R$ 3.204/mês",
-    "_obs": "ACESSO_VIP/LANCAMENTO_GERAL a confirmar com a Urba. PARCELAS_SEM_JUROS (saldo curto) e PARCELA_DESDE (plano 180x) são planos DIFERENTES."
+    "VIDEO_URL": "",
+    "_obs": "ACESSO_VIP/LANCAMENTO_GERAL e VIDEO_URL (URL absoluta) a confirmar com a Urba. PARCELAS_SEM_JUROS (saldo curto) e PARCELA_DESDE (plano 180x) são planos DIFERENTES."
   },
   "config": {
     "janela_resposta_humana_min": 5,
     "opt_out_keywords": ["parar", "sair", "pare", "stop", "cancelar", "descadastrar"],
     "prioridade_keywords": ["à vista", "a vista", "avista", "dinheiro", "recurso próprio"],
+    "escalada_keywords": ["corretor", "humano", "atendente", "pessoa de verdade", "falar com alguém", "advogado", "ligar", "me liga", "telefone"],
     "regra_parada": "Qualquer resposta do lead pausa a régua e notifica o corretor (humano assume).",
-    "regra_prioridade": "Se a mensagem do lead contém prioridade_keywords -> prioridade alta + notificar corretor imediatamente."
+    "regra_prioridade": "Se a mensagem do lead contém prioridade_keywords -> prioridade alta + notificar corretor imediatamente.",
+    "regra_escalada": "Se a mensagem contém escalada_keywords -> envia ESCALADA + notifica corretor imediatamente + pausa automação (COFECI 1.551/2025).",
+    "compliance": "COFECI 1.551/2025: a M0 identifica a IA como assistente virtual, mantém o CRECI visível e oferece escalada humana."
   },
   "nodes": [
     {
       "id": "M0",
       "tipo": "mensagem",
       "atraso": "0min",
-      "texto": "Oi, {{nome}}! 👋 Aqui é da Aprovar (CRECI 9770J), no lançamento do Botanique Residence — condomínio fechado de lotes com lago, praia e lazer completo em Cuiabá. Você pensa no lote pra MORAR, INVESTIR ou CONSTRUIR? E você já está na lista VIP? 🔑 Quem é VIP entra no acesso antecipado em {{ACESSO_VIP}}, antes do lançamento geral ({{LANCAMENTO_GERAL}}), e escolhe os melhores lotes primeiro.",
-      "quick_replies": ["Morar", "Investir", "Construir"],
+      "texto": "Oi, {{nome}}! 👋 Aqui é a assistente virtual da Aprovar (CRECI 9770J), no lançamento do Botanique Residence — condomínio fechado de lotes com lago, praia e lazer completo em Cuiabá. Você pensa no lote pra MORAR, INVESTIR ou CONSTRUIR? E você já está na lista VIP? 🔑 Quem é VIP entra no acesso antecipado em {{ACESSO_VIP}}, antes do lançamento geral ({{LANCAMENTO_GERAL}}), e escolhe os melhores lotes primeiro. Se preferir falar agora com um corretor de verdade, é só dizer \"corretor\".",
+      "quick_replies": ["Morar", "Investir", "Construir", "Falar com corretor"],
+      "compliance": "COFECI 1.551/2025: IA se identifica + CRECI visível + oferta de escalada humana.",
       "set": { "intencao": "{resposta}" },
       "on_reply": "M1",
       "on_no_reply": { "apos": "10min", "ir_para": "R1" },
@@ -62,7 +67,7 @@
       "tipo": "mensagem",
       "atraso": "10min",
       "texto": "Ah, {{nome}}, deixa eu te mostrar por que o Botanique chama tanta atenção 👇 Lago exclusivo com pier e faixa de areia (praia), pista de cooper de 1,4 km e lazer completo (piscina, pool bar, quadras, pet place e mais). As vagas do acesso antecipado VIP ({{ACESSO_VIP}}) são poucas — quer que eu garanta a sua antes do lançamento geral?",
-      "midia": "video_botanique",
+      "midia": { "tipo": "video", "url": "{{VIDEO_URL}}", "_obs": "URL absoluta — TODO confirmar com a Urba/produção" },
       "on_reply": "M1",
       "on_no_reply": { "apos": "2d", "ir_para": "R2" }
     },
@@ -88,14 +93,21 @@
       "atraso": "7d",
       "texto": "{{nome}}, não quero te encher 🙂 Depois de {{LANCAMENTO_GERAL}} os lotes abrem pra todo mundo, e os melhores costumam ir rápido. Quer que eu mantenha sua prioridade VIP e te mande as opções no seu perfil (tamanho/quadra)?",
       "on_reply": "M1",
-      "on_no_reply": { "apos": "8d", "ir_para": "R5" }
+      "on_no_reply": { "apos": "8d", "ir_para": "R5a" }
     },
     {
-      "id": "R5",
+      "id": "R5a",
       "tipo": "mensagem",
       "atraso": "15d",
-      "repetir_em": "30d",
-      "texto": "Oi, {{nome}}! Surgiu novidade no Botanique (novas unidades/condição). Como você demonstrou interesse, quis te avisar primeiro. Vale dar uma olhada? Posso te mandar o vídeo do empreendimento.",
+      "texto": "Oi, {{nome}}! 🌿 Lembrei de você: o Botanique segue evoluindo e ainda dá tempo de garantir um bom lote à beira do lago. Quer que eu te mande o vídeo e as condições atualizadas? Sem compromisso.",
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "15d", "ir_para": "R5b" }
+    },
+    {
+      "id": "R5b",
+      "tipo": "mensagem",
+      "atraso": "30d",
+      "texto": "{{nome}}, última passada por aqui 🙂 Se ainda tiver vontade de ter um endereço perto do lago em Cuiabá, me chama que eu te atualizo do que mudou no Botanique (novas unidades e condições). Se preferir não receber mais, é só responder \"parar\".",
       "on_reply": "M1",
       "on_no_reply": { "acao": ["crm_estagio:Frio", "campanha:Meta BOFU reengajamento"], "fim": true }
     },
@@ -103,8 +115,16 @@
       "id": "OPTOUT",
       "tipo": "mensagem",
       "gatilho": "opt_out_keywords",
-      "texto": "Tudo bem, {{nome}}! Não te mando mais mensagens automáticas. Quando quiser, é só chamar aqui. 🙏",
+      "texto": "Tudo bem, {{nome}}! Não te mando mais mensagens automáticas. Quando quiser falar sobre o Botanique, é só chamar aqui. 🙏 Aprovar · CRECI 9770J.",
       "acao": ["optout", "cancelar_agendamentos_pendentes"],
+      "fim": true
+    },
+    {
+      "id": "ESCALADA",
+      "tipo": "mensagem",
+      "gatilho": "escalada_keywords",
+      "texto": "Claro, {{nome}}! 🙂 Já estou avisando um corretor da Aprovar pra te atender aqui mesmo. Em instantes ele assume a conversa. (Aprovar · CRECI 9770J)",
+      "acao": ["notificar_corretor_imediato", "pausar_automacao"],
       "fim": true
     }
   ]
