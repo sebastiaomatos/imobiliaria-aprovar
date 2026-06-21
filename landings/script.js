@@ -3,8 +3,8 @@
    CONFIGURE AQUI antes de publicar:
    ===================================================================== */
 const CONFIG = {
-  phone: "5582990000000",                 // DDI + DDD + número (só dígitos)
-  formEndpoint: "",                       // URL do seu CRM/webhook (POST). Vazio = só WhatsApp.
+  phone: "5565992326461",                 // Aprovar (DDI + DDD + número, só dígitos)
+  formEndpoint: "",                       // ligado à URL do orquestrador no passo 0.7
   redirectToWhatsAppAfterForm: true       // após enviar o form, abre o WhatsApp
 };
 
