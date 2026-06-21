@@ -1,0 +1,111 @@
+{
+  "fluxo": "Botanique Residence - Lançamento de lotes + lista VIP (WhatsApp)",
+  "versao": "1.0",
+  "cliente": "botanique-residence",
+  "base_template": "_templates/whatsapp/fluxo-whatsapp.json",
+  "variaveis": ["nome", "intencao", "vip", "pagamento", "horario"],
+  "variaveis_lancamento": {
+    "ACESSO_VIP": "12/07",
+    "LANCAMENTO_GERAL": "19/07",
+    "LOTE_A_PARTIR": "R$ 312.500",
+    "ENTRADA": "R$ 31.250",
+    "PARCELAS_SEM_JUROS": "24x sem juros",
+    "PARCELA_DESDE": "R$ 3.204/mês",
+    "_obs": "ACESSO_VIP/LANCAMENTO_GERAL a confirmar com a Urba. PARCELAS_SEM_JUROS (saldo curto) e PARCELA_DESDE (plano 180x) são planos DIFERENTES."
+  },
+  "config": {
+    "janela_resposta_humana_min": 5,
+    "opt_out_keywords": ["parar", "sair", "pare", "stop", "cancelar", "descadastrar"],
+    "prioridade_keywords": ["à vista", "a vista", "avista", "dinheiro", "recurso próprio"],
+    "regra_parada": "Qualquer resposta do lead pausa a régua e notifica o corretor (humano assume).",
+    "regra_prioridade": "Se a mensagem do lead contém prioridade_keywords -> prioridade alta + notificar corretor imediatamente."
+  },
+  "nodes": [
+    {
+      "id": "M0",
+      "tipo": "mensagem",
+      "atraso": "0min",
+      "texto": "Oi, {{nome}}! 👋 Aqui é da Aprovar (CRECI 9770J), no lançamento do Botanique Residence — condomínio fechado de lotes com lago, praia e lazer completo em Cuiabá. Você pensa no lote pra MORAR, INVESTIR ou CONSTRUIR? E você já está na lista VIP? 🔑 Quem é VIP entra no acesso antecipado em {{ACESSO_VIP}}, antes do lançamento geral ({{LANCAMENTO_GERAL}}), e escolhe os melhores lotes primeiro.",
+      "quick_replies": ["Morar", "Investir", "Construir"],
+      "set": { "intencao": "{resposta}" },
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "10min", "ir_para": "R1" },
+      "acao": ["evento:conversa_iniciada"]
+    },
+    {
+      "id": "M1",
+      "tipo": "mensagem",
+      "texto": "Show, {{nome}}! E como você pretende adquirir: À VISTA, FINANCIAMENTO ou PARCELAMENTO DIRETO? Dá pra começar com entrada de {{ENTRADA}} e o saldo em {{PARCELAS_SEM_JUROS}} — ou um plano mais longo com parcelas a partir de {{PARCELA_DESDE}}.",
+      "quick_replies": ["À vista", "Financiamento", "Parcelamento direto"],
+      "set": { "pagamento": "{resposta}" },
+      "on_reply": "M2",
+      "acao": ["se_prioridade_keyword:prioridade_alta+notificar_corretor_imediato"]
+    },
+    {
+      "id": "M2",
+      "tipo": "mensagem",
+      "texto": "Perfeito. Os lotes do acesso antecipado são limitados e saem por ordem de cadastro. Posso garantir sua prioridade na lista VIP e já te mandar a planta com os lotes disponíveis? Prefere falar com um corretor HOJE ou AMANHÃ DE MANHÃ? 🗓️",
+      "quick_replies": ["Hoje", "Amanhã de manhã", "Outro horário"],
+      "set": { "horario": "{resposta}" },
+      "on_reply": "M3",
+      "on_no_reply": { "apos": "1d", "ir_para": "R2" },
+      "acao": ["notificar_corretor", "pausar_automacao", "crm_estagio:VIP priorizado", "evento:vaga_vip_priorizada"]
+    },
+    {
+      "id": "M3",
+      "tipo": "mensagem",
+      "texto": "Combinado, {{nome}}! Te coloquei na prioridade da lista VIP e um corretor da Aprovar vai falar com você. Já te mando a planta e a tabela. Qualquer dúvida, chama aqui. 🙌",
+      "fim": true
+    },
+    {
+      "id": "R1",
+      "tipo": "mensagem",
+      "atraso": "10min",
+      "texto": "Ah, {{nome}}, deixa eu te mostrar por que o Botanique chama tanta atenção 👇 Lago exclusivo com pier e faixa de areia (praia), pista de cooper de 1,4 km e lazer completo (piscina, pool bar, quadras, pet place e mais). As vagas do acesso antecipado VIP ({{ACESSO_VIP}}) são poucas — quer que eu garanta a sua antes do lançamento geral?",
+      "midia": "video_botanique",
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "2d", "ir_para": "R2" }
+    },
+    {
+      "id": "R2",
+      "tipo": "mensagem",
+      "atraso": "2d",
+      "texto": "{{nome}}, fiz uma conta rápida: dá pra começar com entrada de {{ENTRADA}} e o saldo em {{PARCELAS_SEM_JUROS}}, ou parcelas a partir de {{PARCELA_DESDE}} no plano longo — lote a partir de {{LOTE_A_PARTIR}}. 👀 Quer que eu te mande a simulação no seu nome?",
+      "on_reply": "M2",
+      "on_no_reply": { "apos": "2d", "ir_para": "R3" }
+    },
+    {
+      "id": "R3",
+      "tipo": "mensagem",
+      "atraso": "4d",
+      "texto": "Passando pra avisar: o acesso antecipado VIP vai de {{ACESSO_VIP}} até o lançamento geral em {{LANCAMENTO_GERAL}}, e as unidades reservadas pra lista são limitadas. Se ainda fizer sentido pra você, me avisa que eu seguro um lote no seu nome. 🔑",
+      "on_reply": "M2",
+      "on_no_reply": { "apos": "3d", "ir_para": "R4" }
+    },
+    {
+      "id": "R4",
+      "tipo": "mensagem",
+      "atraso": "7d",
+      "texto": "{{nome}}, não quero te encher 🙂 Depois de {{LANCAMENTO_GERAL}} os lotes abrem pra todo mundo, e os melhores costumam ir rápido. Quer que eu mantenha sua prioridade VIP e te mande as opções no seu perfil (tamanho/quadra)?",
+      "on_reply": "M1",
+      "on_no_reply": { "apos": "8d", "ir_para": "R5" }
+    },
+    {
+      "id": "R5",
+      "tipo": "mensagem",
+      "atraso": "15d",
+      "repetir_em": "30d",
+      "texto": "Oi, {{nome}}! Surgiu novidade no Botanique (novas unidades/condição). Como você demonstrou interesse, quis te avisar primeiro. Vale dar uma olhada? Posso te mandar o vídeo do empreendimento.",
+      "on_reply": "M1",
+      "on_no_reply": { "acao": ["crm_estagio:Frio", "campanha:Meta BOFU reengajamento"], "fim": true }
+    },
+    {
+      "id": "OPTOUT",
+      "tipo": "mensagem",
+      "gatilho": "opt_out_keywords",
+      "texto": "Tudo bem, {{nome}}! Não te mando mais mensagens automáticas. Quando quiser, é só chamar aqui. 🙏",
+      "acao": ["optout", "cancelar_agendamentos_pendentes"],
+      "fim": true
+    }
+  ]
+}
