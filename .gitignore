@@ -11,3 +11,6 @@ build/
 *.log
 .vscode/
 .idea/
+
+# arquivos compactados de origem (o conteúdo extraído é o que versionamos)
+*.zip
