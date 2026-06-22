@@ -1,7 +1,10 @@
 # Ficha de configuração das campanhas — Botanique (Meta + Google)
 
 > Para montar **em rascunho/pausado**. Tudo dimensionado para a verba real de **R$ 2.000/30 dias**.
-> Conformidade: preços "a partir de", sem promessa de valorização, CRECI 9770J.
+> Conformidade: preços "a partir de" e "sujeitos a alteração"; nunca GARANTIR/PROMETER valorização
+> ou retorno (sem %, prazos, "valorização garantida"); valorização só de forma descritiva/hedge
+> ancorada em fato ("região em expansão", "potencial de valorização", proximidade de UFMT /
+> Shopping 3 Américas), de preferência no ângulo investidor; CRECI 9770J.
 >
 > ⚠️ **Correção de estratégia (importante):** com R$ 2.000 NÃO se usa um conjunto por ICP (fragmenta
 > demais e não sai do aprendizado). A estrutura abaixo concentra a verba em **poucos conjuntos
@@ -27,7 +30,7 @@
 | Google · Search | **15** | 15 | 20 |
 | Google · Performance Max | **0** (liga na Fase 1) | 10 | 15 |
 | **Total/dia** | **~73** | ~110 | ~143 |
-Janela ~30 d: **Fase 0 ~20 d (até 11/07) a R$ 73/dia constante ≈ R$ 1.460** · Fase 1 7 d (12–18/07) ≈ R$ 770 · Fase 2 na janela ~3 d (19–21/07) ≈ R$ 429 · **total ≈ R$ 2.660** (a Fase 2 segue depois).
+Janela ~30 d: **Fase 0 ~22 d (até 14/07) a R$ 73/dia ≈ R$ 1.600** · Fase 1 **4 d (15–18/07)** ≈ R$ 440 · Fase 2 ~3 d (19–21/07) ≈ R$ 429 · **total ≈ R$ 2.470** (parte da Fase 2 segue após a janela).
 
 ---
 

@@ -5,7 +5,12 @@
 > caractere de cada plataforma e em conformidade.
 >
 > **Conformidade (vale para TODA a copy):** preços "a partir de" e condições/disponibilidade
-> "sujeitos a alteração"; **nunca prometer valorização**; CRECI 9770J presente no anúncio (ou no
+> "sujeitos a alteração"; **nunca GARANTIR/PROMETER valorização ou retorno** (sem %, prazos,
+> "valorização garantida" ou "lucro certo") — mas valorização **pode** ser citada de forma
+> **descritiva/hedge, ancorada em fato verdadeiro** ("região em expansão", "potencial de
+> valorização", proximidade de UFMT / Shopping 3 Américas), de preferência no ângulo investidor;
+> toda afirmação deve ser verdadeira e sustentável (o ônus da prova é do anunciante);
+> CRECI 9770J presente no anúncio (ou no
 > nome/extensão); a Aprovar é a imobiliária parceira na venda (Botanique é da Urba / Grupo MRV&CO).
 > Dados do empreendimento: lotes de 250–347 m², a partir de **R$ 312.500**, entrada de **10%**,
 > **24x sem juros** ou plano longo a partir de **R$ 3.204/mês**. Acesso VIP **15/07** (provisório —
@@ -31,8 +36,10 @@
 **Conjunto · INVESTIDOR** (criativos: c5-feed-investidor, c1-story-vip)
 - Texto 1: *Dinheiro parado perde valor. Terra em região nobre de Cuiabá continua sendo terra. 📍 O Botanique Residence — condomínio fechado com lago e estrutura de clube — abre lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Garanta a melhor posição entrando na lista VIP antes da abertura geral.*
 - Texto 2: *Ativo real, no seu nome, em um dos endereços mais bem pensados de Cuiabá. 🌳 Lotes de 250 a 347 m² no Botanique Residence, a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores lotes primeiro.*
+- Texto 3: *O Coxipó é uma das regiões que mais crescem em Cuiabá — perto da UFMT, do Shopping 3 Américas e de uma malha de comércio em expansão. Um lote em condomínio fechado aqui é patrimônio real, com potencial de valorização. Botanique Residence: lotes a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores primeiro.*
 - Título A: `Seu patrimônio em terra, em Cuiabá`
 - Título B: `Lotes a partir de R$ 312.500`
+- Título C: `Coxipó: região em expansão`
 - Descrição: `Lista VIP · escolha primeiro`
 
 **Conjunto · CONSTRUIR** (criativos: c6-story-construir, c4-feed-oferta)
@@ -59,7 +66,7 @@
 - Texto 2: *Os melhores lotes do Botanique — os de frente pro lago — saem primeiro. Ainda dá tempo de entrar na lista VIP e escolher antes da abertura geral. 👇*
 - Título A: `Ainda dá tempo de entrar na VIP`
 - Título B: `Os melhores lotes saem primeiro`
-- Descrição: `Escolha o seu antes do geral`
+- Descrição: `Escolha antes da abertura geral`
 
 ---
 
