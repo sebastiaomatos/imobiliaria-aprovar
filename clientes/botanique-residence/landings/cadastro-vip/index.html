@@ -232,7 +232,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0;font-size:.88rem}
         </label>
         <label class="consent">
           <input type="checkbox" name="consentimento" required aria-required="true">
-          <span>Li e concordo com a <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo a Aprovar a entrar em contato comigo sobre o Botanique Residence.</span>
+          <span>Sim! Autorizo a Aprovar (CRECI 9770J) a me enviar o material e falar comigo por <strong>WhatsApp</strong> e e-mail sobre o Botanique Residence. Sem spam — saio quando quiser. <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
         </label>
         <p class="form-err" id="formErr" role="alert" aria-live="polite" hidden>Confira os campos destacados — inclusive o aceite da Política de Privacidade.</p>
         <button type="submit" class="btn btn--vip btn--block btn--lg">Quero minha prioridade VIP →</button>
@@ -366,7 +366,7 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const data = Object.fromEntries(new FormData(form).entries());
 
-  // Validação: campos de texto não vazios + checkbox de consentimento (LGPD) marcado.
+  // Validação: campos de texto não vazios + caixa de opt-in (LGPD + WhatsApp/e-mail) marcada.
   let ok = true;
   form.querySelectorAll("[required]").forEach(f => {
     const bad = f.type === "checkbox" ? !f.checked : !String(f.value).trim();
@@ -378,7 +378,9 @@ form.addEventListener("submit", async (e) => {
   if (!ok) { form.querySelector(".invalid")?.focus?.(); return; }
 
   const btn = form.querySelector("button[type=submit]");
-  const payload = { ...data, consentimento: true, empreendimento: "Botanique Residence", lista: "VIP", ...TRACKING, ts: new Date().toISOString() };
+  // A caixa é obrigatória e já validada acima: marcá-la = consentimento LGPD + opt-in
+  // de WhatsApp/e-mail (a M0 ativa e a notificação ao corretor dependem de whatsapp_optin).
+  const payload = { ...data, consentimento: true, whatsapp_optin: true, empreendimento: "Botanique Residence", lista: "VIP", ...TRACKING, ts: new Date().toISOString() };
 
   // A conversão (track) só dispara com CONFIRMAÇÃO de sucesso do servidor.
   // Sem endpoint configurado, o WhatsApp é o canal e contamos como conversão (fallback).

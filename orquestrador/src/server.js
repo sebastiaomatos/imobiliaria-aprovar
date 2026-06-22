@@ -136,6 +136,8 @@ async function start() {
         intencao: { type: 'string', maxLength: 40 },
         empreendimento: { type: 'string', maxLength: 80 },
         lista: { type: 'string', maxLength: 40 },
+        // Opt-in de WhatsApp (caixa value-framed da landing). Aceita boolean ou string.
+        whatsapp_optin: { type: ['boolean', 'string'] },
       },
     },
   };
@@ -186,6 +188,14 @@ async function start() {
       const lista = String(b.lista || 'VIP').slice(0, 40);
       const intencao = b.intencao ? String(b.intencao).slice(0, 40) : null;
       const consentiu = b.consentimento === true || b.consentimento === 'true' || b.consentimento === 'on';
+      // Opt-in de WhatsApp: usa o campo explícito da landing quando presente; se ausente
+      // (clientes antigos), cai no consentimento LGPD (a caixa única cobre os dois).
+      const optinWhats =
+        b.whatsapp_optin === true || b.whatsapp_optin === 'true' || b.whatsapp_optin === 'on'
+          ? true
+          : b.whatsapp_optin === undefined
+            ? consentiu
+            : false;
 
       // UTMs e identificadores de origem.
       const utm = {};
@@ -206,9 +216,9 @@ async function start() {
           origem: `landing:${empreendimento}`,
           fonte: `landing:${empreendimento}:${lista}`,
           consentimentoEm: consentiu ? new Date().toISOString() : null,
-          // Na landing, o consentimento LGPD (contato) é também o opt-in de WhatsApp:
-          // habilita a M0 ativa + notificação ao corretor (gated por opt-in).
-          whatsapp_optin: consentiu,
+          // Opt-in de WhatsApp da caixa value-framed da landing (gateia a M0 ativa +
+          // notificação ao corretor). Fallback p/ o consentimento LGPD se não vier.
+          whatsapp_optin: optinWhats,
           mensagemCrm: mensagem,
           brevoListId: process.env.BREVO_LIST_ID_VIP,
         },
