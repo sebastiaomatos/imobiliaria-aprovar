@@ -1,8 +1,5 @@
-// test/metaLeadWebhook.test.js — testes do webhook do Meta Lead Ads e do serviço
-// compartilhado processarLead (que é o coração do /cadastro após o refactor).
-//
-// Sem banco e sem rede: as dependências (db, integrations) são injetadas. Rode com:
-//   npm test   (=> node --test test/)
+// test/metaLeadWebhook.test.js — webhook do Meta Lead Ads: assinatura, mapeamento
+// (incl. opt-in), idempotência e o roteamento persistir→200 / downstream.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -13,7 +10,12 @@ import {
   mapearFieldData,
   processarLeadgen,
 } from '../src/handlers/metaLeadWebhook.js';
-import { processarLead, normalizarTelefoneBR, soDigitos } from '../src/services/processarLead.js';
+import { normalizarTelefoneBR, soDigitos } from '../src/services/processarLead.js';
+import { criarDbFake, criarIntegracoesFake, ehM0Ativa, ehNotificacaoCorretor } from './_fakes.js';
+
+process.env.CORRETOR_WHATSAPP = '5565992326461';
+delete process.env.M0_ATIVA_ENABLED;
+const silencioso = { info() {}, warn() {}, error() {} };
 
 // ------------------------------------------------------------------ //
 // 1) Assinatura X-Hub-Signature-256 sobre o corpo CRU                 //
@@ -26,20 +28,19 @@ test('assinatura válida sobre o corpo cru (Buffer)', () => {
   assert.equal(assinaturaValida(raw, header, secret), true);
 });
 
-test('assinatura inválida → false (header errado, ausente, sem secret)', () => {
+test('assinatura inválida → false (header errado, ausente, sem secret, sem corpo)', () => {
   const raw = Buffer.from('{"object":"page"}', 'utf8');
   assert.equal(assinaturaValida(raw, 'sha256=deadbeef', 'app-secret-xyz'), false);
   assert.equal(assinaturaValida(raw, undefined, 'app-secret-xyz'), false);
-  assert.equal(assinaturaValida(raw, 'sha256=abc', ''), false); // sem secret → fail-closed
-  assert.equal(assinaturaValida(null, 'sha256=abc', 's'), false); // sem corpo
+  assert.equal(assinaturaValida(raw, 'sha256=abc', ''), false);
+  assert.equal(assinaturaValida(null, 'sha256=abc', 's'), false);
 });
 
 test('assinatura falha se o corpo foi adulterado após assinar', () => {
   const secret = 's3cr3t';
   const raw = Buffer.from('{"a":1}', 'utf8');
   const header = 'sha256=' + createHmac('sha256', secret).update(raw).digest('hex');
-  const adulterado = Buffer.from('{"a":2}', 'utf8');
-  assert.equal(assinaturaValida(adulterado, header, secret), false);
+  assert.equal(assinaturaValida(Buffer.from('{"a":2}', 'utf8'), header, secret), false);
 });
 
 // ------------------------------------------------------------------ //
@@ -48,229 +49,153 @@ test('assinatura falha se o corpo foi adulterado após assinar', () => {
 
 test('normalizarTelefoneBR: prefixa 55 em número nacional e preserva DDI', () => {
   assert.equal(normalizarTelefoneBR('+55 65 99999-1234'), '5565999991234');
-  assert.equal(normalizarTelefoneBR('(65) 98888-0000'), '5565988880000'); // 11 díg → +55
-  assert.equal(normalizarTelefoneBR('6532230000'), '556532230000');        // 10 díg (fixo) → +55
-  assert.equal(soDigitos('(65) 9 9999-0000'), '65999990000');             // só dígitos, sem DDI
+  assert.equal(normalizarTelefoneBR('(65) 98888-0000'), '5565988880000');
+  assert.equal(normalizarTelefoneBR('6532230000'), '556532230000');
+  assert.equal(soDigitos('(65) 9 9999-0000'), '65999990000');
 });
 
 // ------------------------------------------------------------------ //
-// 3) Mapeamento do field_data do Graph                                //
+// 3) Mapeamento do field_data (incl. opt-in)                          //
 // ------------------------------------------------------------------ //
 
-test('mapeia full_name / phone / email / objetivo + atribuição', () => {
+test('mapeia full_name / phone / email / objetivo / opt-in + atribuição', () => {
   const data = {
-    id: 'L1',
-    created_time: '2026-06-22T10:00:00+0000',
-    ad_id: 'AD123',
-    form_id: 'FORM9',
+    id: 'L1', created_time: '2026-06-22T10:00:00+0000', ad_id: 'AD123', form_id: 'FORM9',
     field_data: [
       { name: 'full_name', values: ['João da Silva'] },
       { name: 'phone_number', values: ['+55 65 99999-1234'] },
       { name: 'email', values: ['joao@exemplo.com'] },
       { name: 'objetivo', values: ['Investir'] },
+      { name: 'optin', values: ['true'] },
     ],
   };
-  const m = mapearFieldData(data, { objetivoKey: 'objetivo' });
+  const m = mapearFieldData(data, { objetivoKey: 'objetivo', optinKey: 'optin' });
   assert.equal(m.nome, 'João da Silva');
   assert.equal(m.telefone, '5565999991234');
   assert.equal(m.email, 'joao@exemplo.com');
   assert.equal(m.intencao, 'Investir');
+  assert.equal(m.whatsappOptin, true);
   assert.equal(m.adId, 'AD123');
   assert.equal(m.formId, 'FORM9');
-  assert.ok(m.consentimentoEm, 'consentimentoEm deve vir do created_time');
+  assert.ok(m.consentimentoEm);
 });
 
-test('mapeia first_name + last_name quando não há full_name', () => {
-  const data = {
-    field_data: [
-      { name: 'first_name', values: ['Maria'] },
-      { name: 'last_name', values: ['Souza'] },
-      { name: 'phone_number', values: ['65 98888-0000'] },
-    ],
-  };
+test('mapeia first_name + last_name; opt-in ausente → false (LGPD-safe)', () => {
+  const data = { field_data: [
+    { name: 'first_name', values: ['Maria'] },
+    { name: 'last_name', values: ['Souza'] },
+    { name: 'phone_number', values: ['65 98888-0000'] },
+  ] };
   const m = mapearFieldData(data, { objetivoKey: 'objetivo' });
   assert.equal(m.nome, 'Maria Souza');
   assert.equal(m.telefone, '5565988880000');
+  assert.equal(m.whatsappOptin, false);
 });
 
-test('campo "objetivo" via key custom do env (fallback gracioso)', () => {
-  const data = { field_data: [{ name: 'qual_o_seu_objetivo', values: ['Morar'] }] };
-  assert.equal(mapearFieldData(data, { objetivoKey: 'qual_o_seu_objetivo' }).intencao, 'Morar');
-  // sem a key custom, ainda acha por fallback se o campo se chamar "objetivo":
-  const data2 = { field_data: [{ name: 'objetivo', values: ['Construir'] }] };
-  assert.equal(mapearFieldData(data2, { objetivoKey: 'inexistente' }).intencao, 'Construir');
+test('objetivo via key custom + opt-in por fallback (consentimento=sim)', () => {
+  const data = { field_data: [
+    { name: 'qual_o_seu_objetivo', values: ['Morar'] },
+    { name: 'consentimento', values: ['sim'] },
+  ] };
+  const m = mapearFieldData(data, { objetivoKey: 'qual_o_seu_objetivo' });
+  assert.equal(m.intencao, 'Morar');
+  assert.equal(m.whatsappOptin, true);
+});
+
+test('opt-in com valor negativo → false', () => {
+  const data = { field_data: [{ name: 'optin', values: ['nao'] }] };
+  assert.equal(mapearFieldData(data, { optinKey: 'optin' }).whatsappOptin, false);
 });
 
 // ------------------------------------------------------------------ //
-// 4) Idempotência por leadgen_id (mesmo lead 2x → processa 1x)        //
+// 4) processarLeadgen: idempotência, persist→200, falhas→500           //
 // ------------------------------------------------------------------ //
 
-function fakeDeps({ createLeadThrows = false } = {}) {
-  const processados = new Set();
-  const createLeadCalls = [];
-  const eventos = [];
-  const fakeDb = {
-    leadgenJaProcessado: async (id) => processados.has(id),
-    marcarLeadgenProcessado: async (id) => { processados.add(id); },
-    createLead: async (d) => {
-      if (createLeadThrows) throw new Error('db indisponível');
-      createLeadCalls.push(d);
-      return { ...d, id: createLeadCalls.length };
-    },
-    registrarEvento: async (phone, tipo, payload) => { eventos.push({ phone, tipo, payload }); },
-  };
-  const fakePraedium = { enviarLead: async () => ({ ok: true }) };
-  const fakeBrevo = { adicionarContato: async () => ({ ok: true }) };
-  const fakeMetaLeads = {
-    buscarLead: async () => ({
-      ok: true,
-      data: {
-        id: 'L1',
-        created_time: '2026-06-22T10:00:00+0000',
-        field_data: [
-          { name: 'full_name', values: ['Lead Teste'] },
-          { name: 'phone_number', values: ['+5565999990000'] },
-          { name: 'email', values: ['lead@x.com'] },
-        ],
-      },
-    }),
-  };
-  // injeta as fakes também dentro do processarLead real:
-  const wrappedProcessarLead = (lead, o) =>
-    processarLead(lead, { ...o, deps: { db: fakeDb, praedium: fakePraedium, brevo: fakeBrevo } });
+function montarDeps({ db, integr, graph }) {
   return {
-    deps: { db: fakeDb, metaLeads: fakeMetaLeads, processarLead: wrappedProcessarLead },
-    createLeadCalls, eventos, processados,
+    db,
+    metaLeads: { buscarLead: async () => graph },
+    praedium: integr.praedium,
+    brevo: integr.brevo,
+    zapi: integr.zapi,
   };
 }
 
-test('idempotência: mesmo leadgen_id processado só uma vez', async () => {
-  const f = fakeDeps();
+const graphComOptin = {
+  ok: true,
+  data: {
+    id: 'L1', created_time: '2026-06-22T10:00:00+0000', ad_id: 'A', form_id: 'F',
+    field_data: [
+      { name: 'full_name', values: ['Lead Teste'] },
+      { name: 'phone_number', values: ['+5565999990000'] },
+      { name: 'email', values: ['lead@x.com'] },
+      { name: 'objetivo', values: ['Investir'] },
+      { name: 'optin', values: ['true'] },
+    ],
+  },
+};
+
+test('idempotência: mesmo leadgen_id processa 1x (createLead único)', async () => {
+  const db = criarDbFake();
+  const integr = criarIntegracoesFake();
+  const deps = montarDeps({ db, integr, graph: graphComOptin });
   const value = { leadgen_id: 'L1', ad_id: 'A', form_id: 'F' };
-  const r1 = await processarLeadgen(value, { deps: f.deps });
-  const r2 = await processarLeadgen(value, { deps: f.deps });
-  assert.equal(f.createLeadCalls.length, 1, 'createLead chamado uma única vez');
+
+  const r1 = await processarLeadgen(value, { deps, log: silencioso });
+  await r1.downstream;
+  const r2 = await processarLeadgen(value, { deps, log: silencioso });
+
   assert.equal(r1.ok, true);
   assert.equal(r2.duplicate, true);
+  assert.equal(db._leads.size, 1);
 });
 
-test('processarLeadgen grava fonte=meta_form e evento de atribuição', async () => {
-  const f = fakeDeps();
-  await processarLeadgen({ leadgen_id: 'L1', ad_id: 'A', form_id: 'F' }, { deps: f.deps });
-  assert.equal(f.createLeadCalls[0].fonte, 'meta_form');
-  assert.equal(f.createLeadCalls[0].phone, '5565999990000');
-  const ev = f.eventos.find((e) => e.tipo === 'lead_meta_form');
-  assert.ok(ev, 'deve registrar evento lead_meta_form');
-  assert.equal(ev.payload.meta.adId, 'A');
+test('lead Meta com opt-in: fonte=meta_form + M0 ativa + corretor', async () => {
+  const db = criarDbFake();
+  const integr = criarIntegracoesFake();
+  const deps = montarDeps({ db, integr, graph: graphComOptin });
+
+  const r = await processarLeadgen({ leadgen_id: 'L1', ad_id: 'A', form_id: 'F' }, { deps, log: silencioso });
+  await r.downstream;
+
+  const lead = await db.getLeadByPhone('5565999990000');
+  assert.equal(lead.fonte, 'meta_form');
+  assert.equal(lead.whatsapp_optin, true);
+  assert.equal(integr.calls.praedium.length, 1);
+  assert.equal(integr.calls.brevoAdd.length, 1);
+  assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 1, 'M0 ativa enviada 1x');
+  assert.equal(integr.calls.zapi.filter(ehNotificacaoCorretor).length, 1, 'corretor notificado 1x');
+  const ev = db._eventos.find((e) => e.tipo === 'lead_meta_form');
+  assert.ok(ev, 'evento de atribuição registrado');
 });
 
-test('processarLeadgen lança (→500) quando a persistência falha', async () => {
-  const f = fakeDeps({ createLeadThrows: true });
-  await assert.rejects(
-    () => processarLeadgen({ leadgen_id: 'L1' }, { deps: f.deps }),
-    /persistencia_falhou/,
-  );
-  // não marcou idempotência → o reenvio do Meta vai reprocessar
-  assert.equal(f.processados.has('L1'), false);
+test('lead Meta SEM opt-in: NÃO envia M0 ativa, mas notifica corretor', async () => {
+  const graphSemOptin = JSON.parse(JSON.stringify(graphComOptin));
+  graphSemOptin.data.field_data = graphSemOptin.data.field_data.filter((f) => f.name !== 'optin');
+  const db = criarDbFake();
+  const integr = criarIntegracoesFake();
+  const deps = montarDeps({ db, integr, graph: graphSemOptin });
+
+  const r = await processarLeadgen({ leadgen_id: 'L2' }, { deps, log: silencioso });
+  await r.downstream;
+
+  assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 0, 'sem opt-in → sem M0 ativa');
+  assert.equal(integr.calls.zapi.filter(ehNotificacaoCorretor).length, 1, 'corretor sempre notificado');
 });
 
-test('processarLeadgen lança (→500) quando o Graph não responde', async () => {
-  const f = fakeDeps();
-  f.deps.metaLeads = { buscarLead: async () => ({ ok: false, erro: 'token_expirado', status: 400 }) };
-  await assert.rejects(
-    () => processarLeadgen({ leadgen_id: 'L1' }, { deps: f.deps }),
-    /graph_fetch_falhou/,
-  );
+test('persistência falha → lança (→500) e NÃO marca idempotência', async () => {
+  const db = criarDbFake();
+  db.createLead = async () => { throw new Error('db down'); };
+  const integr = criarIntegracoesFake();
+  const deps = montarDeps({ db, integr, graph: graphComOptin });
+
+  await assert.rejects(() => processarLeadgen({ leadgen_id: 'L9' }, { deps, log: silencioso }), /persistencia_falhou/);
+  assert.equal(await db.leadgenJaProcessado('L9'), false);
 });
 
-// ------------------------------------------------------------------ //
-// 5) processarLead — regressão do /cadastro (mesma lógica downstream) //
-// ------------------------------------------------------------------ //
-
-function leadDeps() {
-  const calls = { createLead: 0, praedium: 0, brevo: 0, lastCreate: null, lastPraedium: null };
-  const deps = {
-    db: { createLead: async (d) => { calls.createLead++; calls.lastCreate = d; return d; } },
-    praedium: { enviarLead: async (p) => { calls.praedium++; calls.lastPraedium = p; return { ok: true }; } },
-    brevo: { adicionarContato: async () => { calls.brevo++; return { ok: true }; } },
-  };
-  return { deps, calls };
-}
-
-test('/cadastro: e-mail válido → createLead + Praedium + Brevo; shape de retorno', async () => {
-  const { deps, calls } = leadDeps();
-  const r = await processarLead(
-    {
-      nome: 'Ana', telefone: '(65) 99999-0000', email: 'ana@x.com',
-      intencao: 'morar', origem: 'landing:botanique-residence',
-      fonte: 'landing:botanique-residence:VIP', consentimentoEm: '2026-06-22T00:00:00.000Z',
-      mensagemCrm: 'Cadastro VIP via landing', brevoListId: 7,
-    },
-    { deps },
-  );
-  assert.equal(calls.createLead, 1);
-  assert.equal(calls.praedium, 1);
-  assert.equal(calls.brevo, 1);
-  assert.equal(r.ok, true);
-  assert.equal(r.persistido, true);
-  assert.equal(r.emailValido, true);
-  // o /cadastro mapeia r.praedium?.ok e r.brevo?.ok no corpo da resposta:
-  assert.equal(r.praedium.ok, true);
-  assert.equal(r.brevo.ok, true);
-  // telefone persistido só com dígitos (comportamento histórico do /cadastro):
-  assert.equal(calls.lastCreate.phone, '65999990000');
-  assert.equal(calls.lastCreate.fonte, 'landing:botanique-residence:VIP');
-});
-
-test('/cadastro: sem e-mail → Brevo pulado, Praedium recebe email null', async () => {
-  const { deps, calls } = leadDeps();
-  const r = await processarLead(
-    { nome: 'Bob', telefone: '5565999990000', origem: 'landing:x', fonte: 'landing:x:VIP' },
-    { deps },
-  );
-  assert.equal(calls.brevo, 0);
-  assert.equal(r.brevo.pulado, true);
-  assert.equal(r.emailValido, false);
-  assert.equal(calls.lastPraedium.email, null);
-});
-
-test('/cadastro: e-mail inválido não vaza para Brevo nem Praedium', async () => {
-  const { deps, calls } = leadDeps();
-  const r = await processarLead(
-    { nome: 'Cau', telefone: '5565999990000', email: 'nao-eh-email', origem: 'x', fonte: 'y' },
-    { deps },
-  );
-  assert.equal(calls.brevo, 0);
-  assert.equal(r.emailValido, false);
-  assert.equal(calls.lastPraedium.email, null);
-});
-
-test('processarLead NÃO lança quando o banco cai (persistido=false, segue downstream)', async () => {
-  const calls = { praedium: 0 };
-  const deps = {
-    db: { createLead: async () => { throw new Error('db down'); } },
-    praedium: { enviarLead: async () => { calls.praedium++; return { ok: true }; } },
-    brevo: { adicionarContato: async () => ({ ok: true }) },
-  };
-  const r = await processarLead(
-    { nome: 'Dan', telefone: '5565999990000', email: 'dan@x.com', origem: 'x', fonte: 'y' },
-    { deps },
-  );
-  assert.equal(r.ok, true);
-  assert.equal(r.persistido, false); // ← o que faz o webhook do Meta devolver 500
-  assert.equal(calls.praedium, 1, 'mesmo sem persistir, o /cadastro segue para o CRM (comportamento histórico)');
-});
-
-test('processarLead NÃO registra evento de atribuição sem metadado meta (paridade /cadastro)', async () => {
-  const eventos = [];
-  const deps = {
-    db: {
-      createLead: async (d) => d,
-      registrarEvento: async (p, t) => { eventos.push(t); },
-    },
-    praedium: { enviarLead: async () => ({ ok: true }) },
-    brevo: { adicionarContato: async () => ({ ok: true }) },
-  };
-  await processarLead({ nome: 'Eva', telefone: '5565999990000', origem: 'x', fonte: 'landing:x:VIP' }, { deps });
-  assert.equal(eventos.length, 0, '/cadastro não passa meta → nenhum evento extra gravado');
+test('Graph não responde → lança (→500)', async () => {
+  const db = criarDbFake();
+  const integr = criarIntegracoesFake();
+  const deps = montarDeps({ db, integr, graph: { ok: false, erro: 'token_expirado', status: 400 } });
+  await assert.rejects(() => processarLeadgen({ leadgen_id: 'L1' }, { deps, log: silencioso }), /graph_fetch_falhou/);
 });
