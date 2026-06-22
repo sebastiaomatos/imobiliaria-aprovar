@@ -4,22 +4,19 @@
 // CRU para a assinatura; aqui ficam as funções puras/testáveis:
 //   - assinaturaValida(): valida X-Hub-Signature-256 sobre os bytes crus (HMAC).
 //   - mapearFieldData(): converte o field_data do Graph no nosso formato de lead.
-//   - processarLeadgen(): idempotência → busca no Graph → processa pelo fluxo único.
+//   - processarLeadgen(): idempotência → busca no Graph → PERSISTE (decide 200×500)
+//     → marca idempotência → dispara o downstream em background.
 //
 // Injeção de dependências (`opts.deps`) é só para os testes.
 
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import * as db from '../db.js';
 import * as metaLeads from '../integrations/metaLeads.js';
-import { processarLead, normalizarTelefoneBR } from '../services/processarLead.js';
+import { persistirLead, executarDownstream, normalizarTelefoneBR } from '../services/processarLead.js';
 
 /**
  * Valida a assinatura `X-Hub-Signature-256` sobre o CORPO CRU (bytes), não sobre
  * o JSON reparseado. Compara em tempo constante (timingSafeEqual).
- * @param {Buffer|string} rawBody  bytes crus exatamente como o Meta enviou
- * @param {string} header          valor do header (ex.: "sha256=abcd...")
- * @param {string} appSecret       META_APP_SECRET
- * @returns {boolean}
  */
 export function assinaturaValida(rawBody, header, appSecret) {
   if (!appSecret || typeof header !== 'string' || rawBody == null) return false;
@@ -27,7 +24,7 @@ export function assinaturaValida(rawBody, header, appSecret) {
   const esperado = 'sha256=' + createHmac('sha256', appSecret).update(corpo).digest('hex');
   const a = Buffer.from(header);
   const b = Buffer.from(esperado);
-  if (a.length !== b.length) return false; // timingSafeEqual exige mesmo tamanho
+  if (a.length !== b.length) return false;
   return timingSafeEqual(a, b);
 }
 
@@ -44,14 +41,25 @@ function pegarValor(fieldData, ...nomes) {
   return null;
 }
 
+// Tokens que contam como "sim" numa pergunta de opt-in/consentimento.
+const AFIRMATIVOS = new Set(['true', '1', 'sim', 'yes', 'y', 'on', 'checked', 'aceito', 'concordo', 'autorizo']);
+
+/**
+ * Detecta o opt-in de WhatsApp no field_data. Sem um campo de opt-in confirmado
+ * (ou sem valor afirmativo) → false (LGPD-safe: não dispara M0 ativa sem opt-in).
+ */
+function detectarOptin(fieldData, optinKey) {
+  const candidatos = [optinKey, 'optin', 'opt_in', 'consentimento', 'consent', 'whatsapp', 'autorizo', 'concordo', 'aceito'].filter(Boolean);
+  const v = pegarValor(fieldData, ...candidatos);
+  if (v == null) return false;
+  return AFIRMATIVOS.has(String(v).trim().toLowerCase());
+}
+
 /**
  * Mapeia a resposta do Graph (de um leadgen) para o nosso formato de lead.
- * @param {object} graphData         resposta do GET /{leadgen_id}
- * @param {object} [opts]
- * @param {string} [opts.objetivoKey] chave do campo "objetivo" (de env)
- * @returns {{nome:string|null, telefone:string|null, email:string|null,
- *            intencao:string|null, consentimentoEm:string|null,
- *            adId:string|null, formId:string|null}}
+ * @param {object} graphData
+ * @param {{objetivoKey?:string, optinKey?:string}} [opts]
+ * @returns {{nome, telefone, email, intencao, whatsappOptin, consentimentoEm, adId, formId}}
  */
 export function mapearFieldData(graphData, opts = {}) {
   const fd = graphData?.field_data || [];
@@ -66,12 +74,10 @@ export function mapearFieldData(graphData, opts = {}) {
   const telefone = telefoneBruto ? normalizarTelefoneBR(telefoneBruto) : null;
 
   const email = pegarValor(fd, 'email', 'e-mail');
-
-  // Campo "objetivo": chave vinda do env, com fallback gracioso para nomes comuns.
   const intencao = pegarValor(fd, objetivoKey, 'objetivo', 'intencao', 'finalidade');
+  const whatsappOptin = detectarOptin(fd, opts.optinKey);
 
-  // O Instant Form do Meta exige link de política de privacidade para enviar; o
-  // próprio envio é o aceite. Registramos created_time como consentimento (LGPD).
+  // O envio do Instant Form (que exige link de política) é o aceite LGPD.
   const consentimentoEm = graphData?.created_time
     ? new Date(graphData.created_time).toISOString()
     : null;
@@ -81,6 +87,7 @@ export function mapearFieldData(graphData, opts = {}) {
     telefone,
     email,
     intencao,
+    whatsappOptin,
     consentimentoEm,
     adId: graphData?.ad_id || null,
     formId: graphData?.form_id || null,
@@ -88,22 +95,22 @@ export function mapearFieldData(graphData, opts = {}) {
 }
 
 /**
- * Processa UM `value` de leadgen do webhook: idempotência por leadgen_id, busca
- * no Graph, mapeia e roteia pelo fluxo único (processarLead).
+ * Processa UM `value` de leadgen do webhook.
  *
- * LANÇA quando a persistência inicial falha ou o Graph não responde — assim o
- * server devolve 500 e o Meta reenvia. Retorna `{duplicate:true}` se já visto.
+ * LANÇA quando o Graph não responde ou a PERSISTÊNCIA inicial falha — assim o
+ * server devolve 500 e o Meta reenvia. `{duplicate:true}` se já visto. O downstream
+ * (Praedium/Brevo/M0/corretor) roda em BACKGROUND e nunca lança; é exposto em
+ * `.downstream` para os testes aguardarem.
  *
- * @param {{leadgen_id:string, ad_id?:string, form_id?:string, created_time?:number}} value
- * @param {object} [opts]
- * @param {object} [opts.deps]  injeção p/ testes ({db, metaLeads, processarLead})
- * @param {object} [opts.log]
+ * @param {{leadgen_id:string, ad_id?:string, form_id?:string}} value
+ * @param {{deps?:object, log?:object}} [opts]
  */
 export async function processarLeadgen(value, opts = {}) {
   const { deps = {}, log = console } = opts;
   const _db = deps.db || db;
   const _metaLeads = deps.metaLeads || metaLeads;
-  const _processarLead = deps.processarLead || processarLead;
+  const _persistirLead = deps.persistirLead || persistirLead;
+  const _executarDownstream = deps.executarDownstream || executarDownstream;
 
   const leadgenId = value?.leadgen_id;
   if (!leadgenId) {
@@ -111,13 +118,13 @@ export async function processarLeadgen(value, opts = {}) {
     return { ignorado: true };
   }
 
-  // 1) Idempotência: já processado → não refaz.
+  // 1) Idempotência.
   if (await _db.leadgenJaProcessado(leadgenId)) {
     log.info?.(`[meta-lead] leadgen ${leadgenId} já processado — ignorando reentrega.`);
     return { duplicate: true };
   }
 
-  // 2) Busca os dados do lead no Graph. Falha (token/transiente) → lança (→500).
+  // 2) Busca no Graph. Falha (token/transiente) → lança (→500).
   const resp = await _metaLeads.buscarLead(leadgenId);
   if (!resp?.ok) {
     throw new Error(`graph_fetch_falhou: ${resp?.erro || resp?.status || 'desconhecido'}`);
@@ -125,11 +132,9 @@ export async function processarLeadgen(value, opts = {}) {
 
   // 3) Mapeia o formulário.
   const objetivoKey = process.env.META_LEAD_FIELD_OBJETIVO || 'objetivo';
-  const m = mapearFieldData(resp.data, { objetivoKey });
-
+  const optinKey = process.env.META_LEAD_FIELD_OPTIN || '';
+  const m = mapearFieldData(resp.data, { objetivoKey, optinKey });
   if (!m.telefone) {
-    // Sem telefone não há como nutrir pelo WhatsApp; ainda assim persistimos o que
-    // veio (e-mail/nome) para não perder o lead. Marcamos como processado no fim.
     log.warn?.(`[meta-lead] leadgen ${leadgenId} sem telefone — seguindo com os dados disponíveis.`);
   }
 
@@ -138,35 +143,36 @@ export async function processarLeadgen(value, opts = {}) {
     adId: value?.ad_id || m.adId || null,
     formId: value?.form_id || m.formId || null,
   };
-  const mensagemCrm =
-    `Lead via Meta Lead Ads (formulário ${meta.formId || '-'}). ` +
-    `Objetivo: ${m.intencao || '-'}. ad_id: ${meta.adId || '-'}.`;
+  const lead = {
+    nome: m.nome,
+    telefone: m.telefone,
+    email: m.email,
+    intencao: m.intencao,
+    origem: 'meta_lead_ads',
+    fonte: 'meta_form',
+    consentimento_em: m.consentimentoEm,
+    whatsapp_optin: m.whatsappOptin,
+    mensagemCrm:
+      `Lead via Meta Lead Ads (formulário ${meta.formId || '-'}). ` +
+      `Objetivo: ${m.intencao || '-'}. Opt-in WhatsApp: ${m.whatsappOptin ? 'sim' : 'não'}. ad_id: ${meta.adId || '-'}.`,
+    brevoListId: process.env.BREVO_LIST_ID_VIP,
+    meta,
+  };
 
-  // 4) Fluxo único (persistência + Praedium + Brevo).
-  const resultado = await _processarLead(
-    {
-      nome: m.nome,
-      telefone: m.telefone,
-      email: m.email,
-      intencao: m.intencao,
-      origem: 'meta_lead_ads',
-      fonte: 'meta_form',
-      consentimentoEm: m.consentimentoEm,
-      mensagemCrm,
-      brevoListId: process.env.BREVO_LIST_ID_VIP,
-      meta,
-    },
-    { log },
-  );
-
-  // 5) Se a persistência inicial falhou (ex.: DB fora), lança → 500 → Meta reenvia.
-  //    (NÃO marcamos como processado, para o reenvio reprocessar.)
-  if (!resultado.persistido) {
+  // 4) PERSISTE (decide 200×500). Falha → lança → 500 → Meta reenvia (não marcamos).
+  const p = await _persistirLead(lead, { deps, log });
+  if (!p.persistido) {
     throw new Error(`persistencia_falhou: leadgen ${leadgenId}`);
   }
 
-  // 6) Persistiu → marca idempotência. Downstream (Praedium/Brevo) é best-effort.
+  // 5) Persistiu → marca idempotência.
   await _db.marcarLeadgenProcessado(leadgenId);
-  log.info?.(`[meta-lead] leadgen ${leadgenId} processado (fonte=meta_form).`);
-  return { ok: true, telefone: resultado.telefone };
+
+  // 6) Downstream em BACKGROUND (responde 200 rápido). Nunca lança.
+  const downstream = Promise.resolve(_executarDownstream(lead, p.row, { deps, log })).catch((err) =>
+    log.error?.(`[meta-lead] erro no downstream do leadgen ${leadgenId}: ${err?.message || err}`),
+  );
+
+  log.info?.(`[meta-lead] leadgen ${leadgenId} persistido (fonte=meta_form); downstream em background.`);
+  return { ok: true, telefone: p.telefone, downstream };
 }

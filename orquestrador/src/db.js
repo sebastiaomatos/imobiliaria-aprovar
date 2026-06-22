@@ -65,6 +65,11 @@ export async function initDb() {
   // Migração defensiva: garante as colunas novas em bancos já existentes.
   await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS fonte text;`);
   await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS consentimento_em timestamptz;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS email text;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS whatsapp_optin boolean DEFAULT false;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS m0_ativa_enviada boolean DEFAULT false;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS whatsapp_optout_em timestamptz;`);
+  await p.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS corretor_notificado boolean DEFAULT false;`);
   await p.query(`
     CREATE TABLE IF NOT EXISTS agendamentos (
       id serial PRIMARY KEY,
@@ -113,23 +118,31 @@ export async function createLead(dados) {
     estagio = 'novo',
     fonte = null,
     consentimentoEm = null,
+    email = null,
+    whatsappOptin = false,
   } = dados || {};
   const { rows } = await getPool().query(
-    `INSERT INTO leads (phone, nome, origem, intencao, pagamento, estagio, fonte, consentimento_em)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    `INSERT INTO leads (phone, nome, origem, intencao, pagamento, estagio, fonte, consentimento_em, email, whatsapp_optin)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      ON CONFLICT (phone) DO UPDATE SET
        atualizado_em = now(),
        fonte = COALESCE(leads.fonte, EXCLUDED.fonte),
-       consentimento_em = COALESCE(leads.consentimento_em, EXCLUDED.consentimento_em)
+       consentimento_em = COALESCE(leads.consentimento_em, EXCLUDED.consentimento_em),
+       email = COALESCE(leads.email, EXCLUDED.email),
+       -- opt-in é monotônico: uma vez true, permanece true.
+       whatsapp_optin = (leads.whatsapp_optin OR EXCLUDED.whatsapp_optin)
      RETURNING *`,
-    [phone, nome, origem, intencao, pagamento, estagio, fonte, consentimentoEm],
+    [phone, nome, origem, intencao, pagamento, estagio, fonte, consentimentoEm, email, whatsappOptin === true],
   );
   return rows[0];
 }
 
 /** Atualiza apenas os campos informados (ignora indefinidos). */
 export async function updateLead(phone, campos) {
-  const permitidos = ['nome', 'origem', 'intencao', 'pagamento', 'estagio', 'prioridade', 'optout', 'fonte', 'consentimento_em'];
+  const permitidos = [
+    'nome', 'origem', 'intencao', 'pagamento', 'estagio', 'prioridade', 'optout', 'fonte',
+    'consentimento_em', 'email', 'whatsapp_optin', 'm0_ativa_enviada', 'whatsapp_optout_em', 'corretor_notificado',
+  ];
   const sets = [];
   const valores = [];
   let i = 1;

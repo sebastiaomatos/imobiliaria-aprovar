@@ -12,9 +12,27 @@ export const MENSAGENS = {
   R4: '{{nome}}, prometo não te encher 🙂 quando o lançamento abrir pro público geral, os melhores lotes (perto do lago e da área de lazer) costumam ir rápido. Quer que eu mantenha sua *prioridade VIP* e te mande as opções no seu perfil?',
   R5a: 'Oi, {{nome}}! 🌿 Lembrei de você: o *Botanique* segue evoluindo e ainda dá tempo de garantir um bom lote à beira do lago. Quer que eu te mande o vídeo e as condições atualizadas? Sem compromisso.',
   R5b: '{{nome}}, última passada por aqui 🙂 se ainda tiver vontade de ter um endereço perto do lago em Cuiabá, me chama que eu te atualizo do que mudou no Botanique. Se preferir não receber mais, é só responder *"parar"*.',
-  OPTOUT: 'Tudo bem, {{nome}}! Não te mando mais mensagens automáticas. Quando quiser falar sobre o Botanique, é só chamar aqui. 🙏 Aprovar · CRECI 9770J.',
+  // Confirmação de opt-out (lead pediu SAIR/PARAR/CANCELAR).
+  OPTOUT: 'Pronto, não te chamo mais por aqui. Se mudar de ideia, é só me chamar. 🙂',
   // Resposta imediata quando o lead pede atendimento humano (COFECI: escalada).
   ESCALADA: 'Claro, {{nome}}! 🙂 Já estou avisando um corretor da Aprovar pra te atender aqui mesmo. Em instantes ele assume a conversa. (Aprovar · CRECI 9770J)',
+  // M0 ATIVA — primeira mensagem PROATIVA (outbound) ao lead que opta-in (site/Meta).
+  // Cumpre a COFECI 1.551/2025 (IA se identifica, CRECI visível, oferece corretor humano)
+  // e a LGPD (oferece opt-out imediato por "SAIR"). Difere da M0 inbound (régua).
+  M0_ATIVA:
+    'Oi, {{nome}}! 👋 Aqui é a assistente virtual da Aprovar Negócios Imobiliários (CRECI 9770J), parceira na venda do Botanique Residence. Que bom te ter na lista VIP! 🌳\n\n' +
+    'Posso te enviar agora o mapa dos lotes disponíveis e as condições de lançamento (entrada de 10%, 24x sem juros)? Pra eu te ajudar melhor: você pensa em morar, investir ou construir?\n\n' +
+    'Se preferir falar com um corretor humano, é só pedir que eu chamo. E se não quiser mais receber mensagens, responda SAIR que eu paro na hora. 🙂',
+  // Notificação interna ao corretor de TODO lead novo (site/Meta). Tokens via aplicar().
+  NOTIFICACAO_CORRETOR:
+    '🔔 Novo lead VIP — Botanique\n' +
+    'Nome: {{nome}}\n' +
+    'WhatsApp: {{telefone}} → https://wa.me/{{telefone}}\n' +
+    'E-mail: {{email}}\n' +
+    'Objetivo: {{objetivo}}\n' +
+    'Origem: {{fonte}}\n' +
+    'Opt-in WhatsApp: {{optin}} · {{consentimento_em}}\n' +
+    'Assuma quando puder.',
 };
 
 // Agenda da régua de recuperação (minutos a partir da criação do lead).
@@ -42,4 +60,18 @@ export function textoDaEtapa(etapa) {
 /** Substitui {{nome}} no texto (fallback "tudo bem" se o nome vier vazio). */
 export function preencher(texto, nome) {
   return String(texto || '').replaceAll('{{nome}}', nome || 'tudo bem');
+}
+
+/**
+ * Substitui múltiplos tokens {{chave}} a partir de um mapa. Valores vazios/nulos
+ * viram "-" (usado na notificação ao corretor).
+ * @param {string} texto @param {Record<string,unknown>} mapa
+ */
+export function aplicar(texto, mapa = {}) {
+  let out = String(texto || '');
+  for (const [chave, valor] of Object.entries(mapa)) {
+    const v = valor == null || valor === '' ? '-' : String(valor);
+    out = out.replaceAll(`{{${chave}}}`, v);
+  }
+  return out;
 }

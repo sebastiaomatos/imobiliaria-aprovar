@@ -40,6 +40,10 @@ const SCHEMA = [
   { name: 'META_VERIFY_TOKEN',       critical: false, desc: 'Meta: token de verificação do handshake GET (string aleatória que você escolhe)' },
   { name: 'META_PAGE_ACCESS_TOKEN',  critical: false, desc: 'Meta: Page Access Token long-lived (permissão leads_retrieval) p/ buscar o lead' },
   { name: 'META_LEAD_FIELD_OBJETIVO', critical: false, desc: 'Key do campo "objetivo" no Instant Form (fallback: "objetivo")' },
+  { name: 'META_LEAD_FIELD_OPTIN',   critical: false, desc: 'Key da pergunta de opt-in WhatsApp no Instant Form; sem valor afirmativo → optin=false (não envia M0)' },
+
+  // M0 ativa proativa (outbound) ao lead com opt-in.
+  { name: 'M0_ATIVA_ENABLED',        critical: false, desc: "Liga/desliga a M0 ativa proativa ('true'/'false'; default 'true')" },
 ];
 
 /**

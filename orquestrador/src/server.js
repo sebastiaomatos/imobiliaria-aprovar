@@ -206,6 +206,9 @@ async function start() {
           origem: `landing:${empreendimento}`,
           fonte: `landing:${empreendimento}:${lista}`,
           consentimentoEm: consentiu ? new Date().toISOString() : null,
+          // Na landing, o consentimento LGPD (contato) é também o opt-in de WhatsApp:
+          // habilita a M0 ativa + notificação ao corretor (gated por opt-in).
+          whatsapp_optin: consentiu,
           mensagemCrm: mensagem,
           brevoListId: process.env.BREVO_LIST_ID_VIP,
         },
