@@ -217,3 +217,34 @@ export async function registrarMensagemProcessada(messageId) {
   );
   return rowCount > 0;
 }
+
+// Idempotência do webhook do Meta Lead Ads: reusa a tabela mensagens_processadas
+// com um prefixo de namespace, para não colidir com os messageId da Z-API.
+const LEADGEN_PREFIX = 'metalead:';
+
+/**
+ * Já processamos este leadgen_id? (consulta, não marca).
+ * @param {string} leadgenId
+ * @returns {Promise<boolean>}
+ */
+export async function leadgenJaProcessado(leadgenId) {
+  if (!leadgenId) return false;
+  const { rowCount } = await getPool().query(
+    `SELECT 1 FROM mensagens_processadas WHERE message_id = $1`,
+    [LEADGEN_PREFIX + leadgenId],
+  );
+  return rowCount > 0;
+}
+
+/**
+ * Marca um leadgen_id como processado (após persistir o lead com sucesso).
+ * @param {string} leadgenId
+ */
+export async function marcarLeadgenProcessado(leadgenId) {
+  if (!leadgenId) return;
+  await getPool().query(
+    `INSERT INTO mensagens_processadas (message_id) VALUES ($1)
+     ON CONFLICT (message_id) DO NOTHING`,
+    [LEADGEN_PREFIX + leadgenId],
+  );
+}

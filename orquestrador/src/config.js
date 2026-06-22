@@ -32,8 +32,14 @@ const SCHEMA = [
   { name: 'META_PIXEL_ID',         critical: false, desc: 'Meta: ID do Pixel/Dataset' },
   { name: 'META_GRAPH_VERSION',    critical: false, desc: 'Versão da Graph API (ex.: v21.0); default no código' },
   { name: 'META_AD_ACCOUNT_ID',    critical: false, desc: 'Meta: ID da conta de anúncios (act_...)' },
-  { name: 'META_PAGE_ID',          critical: false, desc: 'Meta: ID da página' },
+  { name: 'META_PAGE_ID',          critical: false, desc: 'Meta: ID da página (Botanique: 104610745886365)' },
   { name: 'META_BUSINESS_ID',      critical: false, desc: 'Meta: ID do Business Manager' },
+
+  // Webhook do Meta Lead Ads (formulário nativo → /webhook/meta-lead).
+  { name: 'META_APP_SECRET',         critical: false, desc: 'Meta: App Secret p/ validar X-Hub-Signature-256 (sem ele, POST do webhook → 403)' },
+  { name: 'META_VERIFY_TOKEN',       critical: false, desc: 'Meta: token de verificação do handshake GET (string aleatória que você escolhe)' },
+  { name: 'META_PAGE_ACCESS_TOKEN',  critical: false, desc: 'Meta: Page Access Token long-lived (permissão leads_retrieval) p/ buscar o lead' },
+  { name: 'META_LEAD_FIELD_OBJETIVO', critical: false, desc: 'Key do campo "objetivo" no Instant Form (fallback: "objetivo")' },
 ];
 
 /**

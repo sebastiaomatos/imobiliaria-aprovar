@@ -14,13 +14,12 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { loadConfig } from './config.js';
 import { initDb } from './db.js';
-import * as db from './db.js';
 import { iniciarWorker } from './worker.js';
 import { processarWebhookZapi } from './handlers/zapiWebhook.js';
+import { processarLead } from './services/processarLead.js';
+import { assinaturaValida, processarLeadgen } from './handlers/metaLeadWebhook.js';
 import cors from '@fastify/cors';
 import rateLimit from '@fastify/rate-limit';
-import * as praedium from './integrations/praedium.js';
-import * as brevo from './integrations/brevo.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -166,7 +165,6 @@ async function start() {
       const nome = String(b.nome || '').trim();
       const telefone = String(b.telefone || '').replace(/\D/g, '');
       const emailRaw = typeof b.email === 'string' ? b.email.trim() : '';
-      const emailValido = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emailRaw);
 
       if (nome.length < 2 || telefone.length < 8) {
         return reply.code(400).send({ ok: false, error: 'campos_invalidos', detalhe: 'nome e telefone são obrigatórios' });
@@ -189,46 +187,33 @@ async function start() {
       const intencao = b.intencao ? String(b.intencao).slice(0, 40) : null;
       const consentiu = b.consentimento === true || b.consentimento === 'true' || b.consentimento === 'on';
 
-      // Persiste o lead no nosso banco com a fonte e o consentimento (LGPD).
-      // Defensivo: se o banco estiver indisponível, não perdemos o lead (segue p/ CRM).
-      try {
-        await db.createLead({
-          phone: telefone,
-          nome,
-          origem: `landing:${empreendimento}`,
-          intencao,
-          estagio: 'novo',
-          fonte: `landing:${empreendimento}:${lista}`,
-          consentimentoEm: consentiu ? new Date().toISOString() : null,
-        });
-      } catch (err) {
-        request.log.warn(`[cadastro] não consegui persistir o lead no banco: ${err?.message || err}`);
-      }
-
       // UTMs e identificadores de origem.
       const utm = {};
       for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'fbclid', 'gclid']) {
         if (b[k]) utm[k] = String(b[k]).slice(0, 200);
       }
 
-      // (1) Cria o lead no Praedium (defensivo: pula se não configurado).
+      // Processa pelo fluxo ÚNICO (persistência + Praedium + Brevo) — o mesmo
+      // serviço que o webhook do Meta Lead Ads usa. Comportamento idêntico ao
+      // que o /cadastro já fazia (persistência defensiva, sempre responde 200).
       const mensagem = `Cadastro ${lista} via landing (${empreendimento}). Intenção: ${intencao || '-'}. UTM: ${JSON.stringify(utm)}`;
-      const praedRes = await praedium.enviarLead({
-        nome,
-        phone: telefone,
-        email: emailValido ? emailRaw : null,
-        origem: `landing:${empreendimento}`,
-        mensagem,
-      });
-
-      // (2) Adiciona à lista VIP do Brevo (lista própria), se houver e-mail válido.
-      let brevoRes = { ok: true, pulado: true, motivo: 'sem_email' };
-      if (emailValido) {
-        brevoRes = await brevo.adicionarContato(emailRaw, nome, process.env.BREVO_LIST_ID_VIP);
-      }
+      const r = await processarLead(
+        {
+          nome,
+          telefone,
+          email: emailRaw,
+          intencao,
+          origem: `landing:${empreendimento}`,
+          fonte: `landing:${empreendimento}:${lista}`,
+          consentimentoEm: consentiu ? new Date().toISOString() : null,
+          mensagemCrm: mensagem,
+          brevoListId: process.env.BREVO_LIST_ID_VIP,
+        },
+        { log: request.log },
+      );
 
       request.log.info(
-        { empreendimento, lista, intencao, temEmail: emailValido, utm },
+        { empreendimento, lista, intencao, temEmail: r.emailValido, utm },
         `[cadastro] lead recebido: ${nome} / ${telefone}`,
       );
 
@@ -236,12 +221,81 @@ async function start() {
       return reply.code(200).send({
         ok: true,
         received: true,
-        praedium: praedRes?.ok ?? false,
-        brevo: brevoRes?.ok ?? false,
-        brevo_pulado: brevoRes?.pulado ?? false,
+        praedium: r.praedium?.ok ?? false,
+        brevo: r.brevo?.ok ?? false,
+        brevo_pulado: r.brevo?.pulado ?? false,
       });
     },
   );
+
+  // Webhook do Meta Lead Ads (formulário nativo). Encapsulado em um contexto
+  // próprio para registrar um content-type parser que RETÉM o corpo CRU (bytes)
+  // — necessário para validar a assinatura HMAC sem reparse. Esse parser fica
+  // restrito a este escopo: /cadastro e /webhook/zapi seguem com o parser JSON
+  // seguro padrão do Fastify.
+  await app.register(async (metaScope) => {
+    metaScope.addContentTypeParser('application/json', { parseAs: 'buffer' }, (req, body, done) => {
+      req.rawBody = body; // Buffer com os bytes exatos recebidos
+      try {
+        done(null, body && body.length ? JSON.parse(body.toString('utf8')) : {});
+      } catch (err) {
+        err.statusCode = 400;
+        done(err, undefined);
+      }
+    });
+
+    // GET — handshake de verificação do Meta (Webhooks → Verify).
+    metaScope.get('/webhook/meta-lead', async (request, reply) => {
+      const q = request.query || {};
+      const desafio = q['hub.challenge'];
+      if (q['hub.mode'] === 'subscribe' && secretsMatch(q['hub.verify_token'], config.META_VERIFY_TOKEN)) {
+        return reply.code(200).type('text/plain').send(String(desafio ?? ''));
+      }
+      request.log.warn('[meta-lead] verificação falhou (hub.mode/hub.verify_token).');
+      return reply.code(403).send({ ok: false, error: 'verify_token_invalido' });
+    });
+
+    // POST — recebe os leadgen. SEGURANÇA PRIMEIRO: valida a assinatura sobre o
+    // corpo cru; assinatura inválida → 403 (não processa).
+    metaScope.post(
+      '/webhook/meta-lead',
+      { config: { rateLimit: { max: 120, timeWindow: '1 minute' } } },
+      async (request, reply) => {
+        if (!assinaturaValida(request.rawBody, request.headers['x-hub-signature-256'], config.META_APP_SECRET)) {
+          request.log.warn('[meta-lead] X-Hub-Signature-256 ausente/inválida — rejeitado (403).');
+          return reply.code(403).send({ ok: false, error: 'assinatura_invalida' });
+        }
+
+        const body = request.body || {};
+        if (body.object !== 'page') {
+          return reply.code(200).send({ ok: true, ignorado: 'objeto_nao_page' });
+        }
+
+        // Coleta os value de cada change com field "leadgen".
+        const valores = [];
+        for (const entry of Array.isArray(body.entry) ? body.entry : []) {
+          for (const ch of Array.isArray(entry?.changes) ? entry.changes : []) {
+            if (ch?.field === 'leadgen' && ch?.value?.leadgen_id) valores.push(ch.value);
+          }
+        }
+
+        // Processa cada leadgen. Se a PERSISTÊNCIA falhar (DB fora) ou o Graph não
+        // responder, processarLeadgen lança → respondemos 500 e o Meta reenvia.
+        let falha = false;
+        for (const v of valores) {
+          try {
+            await processarLeadgen(v, { log: request.log });
+          } catch (err) {
+            falha = true;
+            request.log.error(`[meta-lead] erro ao processar leadgen ${v.leadgen_id}: ${err?.message || err}`);
+          }
+        }
+
+        if (falha) return reply.code(500).send({ ok: false, error: 'erro_processamento' });
+        return reply.code(200).send({ ok: true, recebidos: valores.length });
+      },
+    );
+  });
 
   // --- 6) Worker da régua de recuperação ---
   iniciarWorker(app.log);
