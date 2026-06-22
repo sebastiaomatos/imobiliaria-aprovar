@@ -5,14 +5,14 @@
   "base_template": "_templates/whatsapp/fluxo-whatsapp.json",
   "variaveis": ["nome", "intencao", "vip", "pagamento", "horario"],
   "variaveis_lancamento": {
-    "ACESSO_VIP": "12/07",
+    "ACESSO_VIP": "15/07",
     "LANCAMENTO_GERAL": "19/07",
     "LOTE_A_PARTIR": "R$ 312.500",
     "ENTRADA": "R$ 31.250",
     "PARCELAS_SEM_JUROS": "24x sem juros",
     "PARCELA_DESDE": "R$ 3.204/mês",
     "VIDEO_URL": "",
-    "_obs": "ACESSO_VIP/LANCAMENTO_GERAL e VIDEO_URL (URL absoluta) a confirmar com a Urba. PARCELAS_SEM_JUROS (saldo curto) e PARCELA_DESDE (plano 180x) são planos DIFERENTES."
+    "_obs": "Datas provisórias: ACESSO_VIP=15/07 -> LANCAMENTO_GERAL=19/07 (a confirmar com a Urba). VIDEO_URL (URL absoluta) é TODO. PARCELAS_SEM_JUROS (saldo curto) e PARCELA_DESDE (plano 180x) são planos DIFERENTES."
   },
   "config": {
     "janela_resposta_humana_min": 5,

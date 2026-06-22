@@ -1,7 +1,7 @@
 # Plano de mídia — Lançamento Botanique Residence (Aprovar)
 
 > Campanhas pagas em **rascunho/pausadas** até o "play" simultâneo. Objetivo nº 1 da fase
-> atual: **encher a lista VIP** de cadastros qualificados antes de 12/07.
+> atual: **encher a lista VIP** de cadastros qualificados antes de 15/07.
 > Vendido pela Aprovar Negócios Imobiliários — CRECI 9770J. Empreendimento Urba (Grupo MRV&CO).
 >
 > ⚠️ As metas de CPL/CAC/ROAS abaixo são **alvos para validar no ar**, não garantias. Imóvel
@@ -10,8 +10,8 @@
 ## 1. Visão geral
 - **Campanha:** "Botanique VIP — Lançamento".
 - **Objetivo primário (SMART):** gerar o máximo de **cadastros VIP qualificados** na landing
-  entre hoje e 11/07, ao menor CPL viável (alvo de referência ~R$12), alimentando a fase VIP
-  (12–18/07) e o lançamento geral (19/07+).
+  entre hoje e 14/07, ao menor CPL viável (alvo de referência ~R$12), alimentando a fase VIP
+  (15–18/07) e o lançamento geral (19/07+).
 - **Secundário:** iniciar **conversas no WhatsApp** (atendimento humano + régua) e construir
   públicos de retargeting para as fases seguintes.
 
@@ -29,9 +29,9 @@
 
 ## 3. Mensagens-núcleo (já refletidas nos criativos/copy)
 - Núcleo: **"Um condomínio fechado com lago e praia particular chegou a Cuiabá — e quem entra
-  na lista VIP escolhe os melhores lotes 7 dias antes."**
+  na lista VIP escolhe os melhores lotes 4 dias antes."**
 - Apoios: (1) lago/praia/lazer pronto; (2) condições de lançamento (a partir de R$ 312.500,
-  10% entrada, 24x sem juros); (3) escassez real da fase VIP (12/07 vs geral 19/07);
+  10% entrada, 24x sem juros); (3) escassez real da fase VIP (15/07 vs geral 19/07);
   (4) ângulo por ICP.
 
 ## 4. Rastreamento de conversão (FAZER ANTES de tudo — é o que torna a otimização possível)
@@ -113,14 +113,14 @@ Verba total **R$ 2.000** (~R$ 67/dia de média), repartida **por fase** (o peso 
 
 | Fase | Período | Dias | Verba | Diário médio | Foco |
 |---|---|---|---|---|---|
-| 0 — Captação VIP | hoje → 11/07 | ~21 | **R$ 1.150** | ~R$ 55 | encher a lista (aquisição fria) |
-| 1 — Fase VIP | 12 → 18/07 | ~7 | **R$ 450** | ~R$ 64 | retargeting + WhatsApp (converter VIP) |
+| 0 — Captação VIP | hoje → 14/07 | ~22 | **R$ 1.150** | ~R$ 52 | encher a lista (aquisição fria) |
+| 1 — Fase VIP | 15 → 18/07 | ~4 | **R$ 450** | ~R$ 112 | retargeting + WhatsApp (converter VIP) |
 | 2 — Lançamento geral | 19/07 em diante | ~3+ na janela | **R$ 300** | ~R$ 100 | oferta/urgência + retargeting |
 | Reserva | — | — | **R$ 100** | — | reforçar o que tiver melhor custo |
 
-**Split por plataforma na Fase 0 (R$ 55/dia):** Meta **75%** (~R$ 41) · Google **25%** (~R$ 14).
-- **Meta (~R$ 41/dia):** Cadastro VIP ~R$ 28 · CTWA ~R$ 9 · Retargeting ~R$ 4.
-- **Google (~R$ 14/dia):** Search ~R$ 10 · Performance Max ~R$ 4.
+**Split por plataforma na Fase 0 (~R$ 52/dia):** Meta **75%** (~R$ 39) · Google **25%** (~R$ 13).
+- **Meta (~R$ 39/dia):** Cadastro VIP ~R$ 27 · CTWA ~R$ 8 · Retargeting ~R$ 4.
+- **Google (~R$ 13/dia):** Search ~R$ 9 · Performance Max ~R$ 4.
 
 **Princípio com verba enxuta:** não pulverizar. Concentrar no **Meta** (Cadastro VIP + CTWA),
 que é o melhor motor para encher a lista; manter **Google Search** só na intenção quente
@@ -134,10 +134,10 @@ cadastros qualificados. O número real aparece nos 3 primeiros dias — então r
 conforme o custo observado.
 
 ## 11. Calendário por fase
-- **Fase 0 — hoje → 11/07 (captação VIP):** todas as campanhas de aquisição ON. KPI: cadastros.
+- **Fase 0 — hoje → 14/07 (captação VIP):** todas as campanhas de aquisição ON. KPI: cadastros.
   E-mails 1–3 e régua nutrem os cadastrados.
-- **Fase 1 — 12 → 18/07 (fase VIP):** reduzir aquisição fria; **intensificar retargeting +
-  CTWA** para converter os cadastrados; escassez. E-mail 4 (12/07) e 5 (reta final).
+- **Fase 1 — 15 → 18/07 (fase VIP):** reduzir aquisição fria; **intensificar retargeting +
+  CTWA** para converter os cadastrados; escassez. E-mail 4 (15/07) e 5 (reta final).
 - **Fase 2 — 19/07+ (lançamento geral):** reativar aquisição com **criativos de oferta/urgência**
   (c4) e "últimas unidades"; retargeting forte. E-mail 6 (19/07).
 - **Refresh criativo** a cada 2–3 semanas ou quando a frequência passar de ~2,5.
@@ -176,5 +176,5 @@ chaves rotacionadas + webhook Praedium recriado; data oficial confirmada com a U
 
 ## 15. Próximos passos
 - Gerar **logos PMax** (1:1 e 4:1) a partir do kit de marca (posso fazer no Desktop).
-- Confirmar **data oficial** (12/07 vs 15/07) e **{{VAGAS_VIP}}** com a Urba.
+- Confirmar **data oficial** (usando **15/07** provisório) e **{{VAGAS_VIP}}** com a Urba.
 - Montar as campanhas em rascunho (este documento) — posso te guiar tela a tela quando for a hora.

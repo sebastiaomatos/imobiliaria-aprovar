@@ -36,7 +36,7 @@ headline serifada em itálico, **logo transparente** da Aprovar sobre o render.
 2. **card2** — A natureza: lago, pier e pôr do sol.
 3. **card3** — O lazer: piscina, quadra, pista de 1,4 km, playground, pet place…
 4. **card4** — As condições: lote a partir de R$ 312.500, entrada, 24x, parcela longa.
-5. **card5** — CTA/VIP: entre na lista VIP, datas 12/07 e 19/07, WhatsApp.
+5. **card5** — CTA/VIP: entre na lista VIP, datas 15/07 e 19/07, WhatsApp.
 
 Publicar como carrossel no Instagram/Facebook (feed 4:5 ou anúncio carrossel). O indicador
 de "arraste" e os pontinhos guiam o usuário.
@@ -78,7 +78,7 @@ Peças sem preço não levam aviso de valores. Avisos completos vivem na landing
 ## Conformidade
 
 CRECI 9770J · **nunca** prometer valorização (investidor usa patrimônio **tangível**, não
-retorno) · render ilustrativo · datas 12/07 (VIP) e 19/07 (geral) **a confirmar com a Urba**.
+retorno) · render ilustrativo · datas 15/07 (VIP) e 19/07 (geral, provisórias) **a confirmar com a Urba**.
 
 ## Regenerar / variar (fontes/)
 

@@ -33,9 +33,9 @@
 > ⚠️ Conformidade: "Preços, condições, correções e atualizações sujeitos a alteração sem aviso prévio; unidades dependem da disponibilidade de estoque." Não prometer valorização garantida — usar "alto potencial de valorização" como expectativa, nunca promessa.
 
 ## Datas do lançamento (CONFIRMAR com a Urba)
-- **Fase VIP (clientes cadastrados, com unidades reservadas):** a partir de **12/07** (7 dias antes do geral)
+- **Fase VIP (clientes cadastrados, com unidades reservadas):** a partir de **15/07** (4 dias antes do geral) — _provisório_
 - **Lançamento geral (todos os clientes):** **19/07**
-- ⚠️ **Divergência a confirmar:** o criativo da concorrente (Kátia Cruz) anuncia "acesso antecipado 15/07". Antes de publicar, confirmar a data oficial da Aprovar/Urba. Por ora, usamos 12/07 (VIP) → 19/07 (geral) conforme sua instrução.
+- ⚠️ **Datas provisórias (a confirmar com a Urba):** por ora usamos **15/07** (VIP) → **19/07** (geral). O criativo da concorrente (Kátia Cruz) também cita "acesso antecipado 15/07". Quando a Urba confirmar a data oficial, atualizar landing, e-mails (brevo-ready), régua, plano e criativos.
 
 ## Conceito / diferenciais (ganchos de venda)
 - **Viver cercado pela natureza, com exclusividade e alto potencial de valorização**

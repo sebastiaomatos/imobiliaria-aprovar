@@ -9,7 +9,7 @@ Brevo**:
 | `{{IMG_BASE}}` | `https://imobiliaria-aprovar.netlify.app/email-img` |
 | `{{nome}}` | `{{contact.NOME}}` (atributo de contato do Brevo) |
 | `{{UNSUB}}` | `{{ unsubscribe }}` (tag de descadastro do Brevo) |
-| `{{ACESSO_VIP}}` | `12/07` |
+| `{{ACESSO_VIP}}` | `15/07` |
 | `{{LANCAMENTO_GERAL}}` | `19/07` |
 
 ## Como publicar no Brevo
@@ -36,7 +36,7 @@ Brevo**:
 | 1 | Imediato (boas-vindas VIP) | `email-1-boasvindas-vip.html` |
 | 2 | D1 (diferenciais) | `email-2-diferenciais.html` |
 | 3 | D2 (condições — masterplan + 2 blocos) | `email-3-condicoes.html` |
-| 4 | 12/07 (acesso antecipado) | `email-4-acesso-antecipado.html` |
+| 4 | 15/07 (acesso antecipado) | `email-4-acesso-antecipado.html` |
 | 5 | 1–2 dias antes do geral (escassez) | `email-5-escassez.html` |
 | 6 | 19/07 (lançamento geral) | `email-6-lancamento-geral.html` |
 
@@ -44,7 +44,7 @@ Detalhes de cada peça (assunto/preheader/objetivo) em [`../README.md`](../READM
 
 ## ⚠️ Antes de disparar
 
-- **Datas:** 12/07 (VIP) e 19/07 (geral) estão **hardcoded** aqui. Se a Urba confirmar outra
-  data (há divergência 12/07 vs 15/07), **regere estes arquivos** dos canônicos ou ajuste à mão.
+- **Datas:** 15/07 (VIP) e 19/07 (geral) estão **hardcoded** aqui (15/07 é **provisório**). Se a
+  Urba confirmar outra data, **regere estes arquivos** dos canônicos ou ajuste à mão.
 - Para **regenerar** após editar os canônicos: reaplique as substituições da tabela acima.
 - Faça um **envio de teste** (para você mesmo) e confira no celular antes do disparo real.

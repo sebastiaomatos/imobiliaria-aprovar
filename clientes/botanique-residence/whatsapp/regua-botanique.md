@@ -8,7 +8,7 @@
 
 | Variável | Valor | Uso |
 |---|---|---|
-| `{{ACESSO_VIP}}` | **12/07** | Início do acesso antecipado (lista VIP) |
+| `{{ACESSO_VIP}}` | **15/07** | Início do acesso antecipado (lista VIP) — provisório |
 | `{{LANCAMENTO_GERAL}}` | **19/07** | Abertura para o público geral |
 | `{{LOTE_A_PARTIR}}` | **R$ 312.500** | Lote de 250 m² (faixa inicial; vai até R$ 434.200) |
 | `{{ENTRADA}}` | **R$ 31.250** | Entrada de 10% no lote de 250 m² |
@@ -17,7 +17,7 @@
 | `{{VIDEO_URL}}` | _(TODO)_ | URL **absoluta** do vídeo/render enviado na `R1` (confirmar com a Urba/produção) |
 | `{{nome}}` | (do lead) | Primeiro nome do lead |
 
-> ⚠️ **Datas a confirmar com a Urba** antes de disparar (há divergência com criativo concorrente que cita 15/07). Por ora: 12/07 (VIP) → 19/07 (geral).
+> ⚠️ **Datas provisórias — a confirmar com a Urba** antes de disparar. Por ora: **15/07** (VIP) → **19/07** (geral).
 > ⚠️ `24x sem juros` e `R$ 3.204/mês` são **planos diferentes** (saldo curto sem juros **ou** plano longo de 180x). Nunca apresentar como a mesma coisa.
 
 ## Princípios
