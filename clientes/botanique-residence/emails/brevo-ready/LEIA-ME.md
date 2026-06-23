@@ -25,17 +25,17 @@ Brevo**:
    nos HTML para `{{contact.SEU_ATRIBUTO}}`.
 5. O **descadastro** usa a tag nativa `{{ unsubscribe }}` do Brevo — funciona automaticamente
    ao enviar pela plataforma.
-6. As **imagens** vêm do host público (Netlify, pasta `/email-img`). Confirme que o deploy
-   da landing está no ar (as imagens limpas ficam em
-   `landings/cadastro-vip/email-img/`, publicadas junto com a landing).
+6. As **imagens** (e a **logo do header**, `logo-aprovar.png`) vêm do host público
+   (Netlify, pasta `/email-img`). Confirme que o deploy da landing está no ar (os arquivos
+   ficam em `landings/cadastro-vip/email-img/`, publicados junto com a landing).
 
 ## Cadência (resumo)
 
 | # | Disparo | Arquivo |
 |---|---|---|
-| 1 | Imediato (boas-vindas VIP) | `email-1-boasvindas-vip.html` |
+| 1 | Imediato (boas-vindas VIP) | `email-1-boasvindas.html` |
 | 2 | D1 (diferenciais) | `email-2-diferenciais.html` |
-| 3 | D2 (condições — masterplan + 2 blocos) | `email-3-condicoes.html` |
+| 3 | ~D+2 (condições / financiamento) | `email-3-financiamento.html` |
 | 4 | 15/07 (acesso antecipado) | `email-4-acesso-antecipado.html` |
 | 5 | 1–2 dias antes do geral (escassez) | `email-5-escassez.html` |
 | 6 | 19/07 (lançamento geral) | `email-6-lancamento-geral.html` |
