@@ -46,6 +46,34 @@
 - **Portaria/fortaria social** e **alameda comercial** interna
 - Localização com bom acesso (mapa no book — pág. de localização)
 
+## Equipamentos / lazer — masterplan oficial (31 itens)
+> Lista **canônica** de equipamentos (fonte: legenda oficial do masterplan). A prosa de
+> "Conceito / diferenciais" acima é um recorte curado para venda; esta é a referência completa.
+> **Números oficiais:** **17 quadras** · **441 lotes** (unidades) · lotes de **250 a 347 m²**.
+
+| # | Equipamento | # | Equipamento |
+|---|---|---|---|
+| 01 | Portaria social e de serviço | 17 | Deck |
+| 02 | Administração | 18 | Piscina |
+| 03 | Apoio | 19 | Pool bar |
+| 04 | Estar com pergolato | 20 | Pier |
+| 05 | Praça para food truck | 21 | Área de piquenique |
+| 06 | Espaço para eventos | 22 | Pomar |
+| 07 | Bicicletário | 23 | Quadras de areia |
+| 08 | Playground A | 24 | Playground B |
+| 09 | Espaço gourmet | 25 | Pet place |
+| 10 | Campo de futebol | 26 | Estar contemplativo |
+| 11 | Churrasqueira A | 27 | Mirante |
+| 12 | Quadra poliesportiva | 28 | Abrigo de lixo |
+| 13 | Quadra de tênis | 29 | Estação elevatória de esgoto |
+| 14 | Espaço wellness | 30 | Pista de cooper (1,4 km) |
+| 15 | Smart conveniência | 31 | Churrasqueira B |
+| 16 | Academia | | |
+
+> Para criativos/copy: escolher **3–5 itens por peça** conforme o ângulo (ver "Banco de
+> amenidades" em [`../midia-paga/anuncios-copy.md`](../midia-paga/anuncios-copy.md)). **Nunca**
+> listar os 31 num anúncio. Selo de robustez permitido: "estrutura de resort com 31 itens de lazer".
+
 ## Banco de imagens (em `imagens/`)
 - `00-capa-botanique.png` — capa/identidade (co-branding)
 - `01-vista-aerea-lago.jpg` — **HERO** (render aéreo limpo do lago)
