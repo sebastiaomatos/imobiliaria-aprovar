@@ -14,3 +14,9 @@ build/
 
 # arquivos compactados de origem (o conteúdo extraído é o que versionamos)
 *.zip
+
+# vídeos-fonte dos criativos (grandes; o GitHub rejeita arquivos > 100 MB).
+# Versionamos só os contact sheets em _frames/ e o catálogo nos .md; hospedar os
+# vídeos externamente (Netlify/Drive/cloud) para o time.
+clientes/botanique-residence/criativos/videos/*.mp4
+clientes/botanique-residence/criativos/videos/*.mov

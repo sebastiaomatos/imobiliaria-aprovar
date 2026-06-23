@@ -52,6 +52,8 @@ Janela ~30 d: **Fase 0 ~22 d (até 14/07) a R$ 73/dia ≈ R$ 1.600** · Fase 1 *
 - **Estratégia de lance:** maior volume. **Público:** AMPLO (Cuiabá + Várzea Grande + raio 30 km; 28–60;
   PT; Advantage+). **Posicionamentos:** Advantage+.
 - **Anúncios (em ambos os conjuntos):** criativos por ICP (c2–c6 + carrossel) + copy `anuncios-copy.md`.
+  - **Vídeos:** `video-naturalmente` (hook do lago, 16:9 → **reenquadrar 9:16** p/ Reels/Stories) e
+    `video-maquete-aprovar` (showcase do masterplan, 9:16; cortar p/ 15–20s) para públicos engajados.
 - **Decisão:** julgar por **custo por lead QUALIFICADO** (responde no WhatsApp / agenda visita), **não**
   pelo CPL puro. Após ~5–7 dias, migrar a verba para o vencedor (form costuma ganhar volume; site, qualidade).
 
@@ -59,7 +61,7 @@ Janela ~30 d: **Fase 0 ~22 d (até 14/07) a R$ 73/dia ≈ R$ 1.600** · Fase 1 *
 - **Objetivo:** Engajamento → **Mensagens**, destino **WhatsApp** (número (65) 99232-6461).
 - **Orçamento:** R$ 15/dia (Fase 0). **Otimização:** conversas iniciadas. **Lance:** maior volume.
 - **Conjunto único "AMPLO":** mesma localização/idade/idioma da Campanha A; segmentação aberta. Posicionamentos Advantage+.
-- **Anúncios:** c1 e c3 + copy da seção Meta · Campanha B. CTA **Enviar mensagem**. Mensagem de saudação automática puxando o lead para a régua.
+- **Anúncios:** c1 e c3 + **vídeo `video-naturalmente`** (hook do lago, 9:16) + copy da seção Meta · Campanha B. CTA **Enviar mensagem**. Mensagem de saudação automática puxando o lead para a régua.
 
 ### Campanha C — Retargeting
 - **Objetivo:** Leads (mesmo pixel/evento da Campanha A).
@@ -68,6 +70,8 @@ Janela ~30 d: **Fase 0 ~22 d (até 14/07) a R$ 73/dia ≈ R$ 1.600** · Fase 1 *
   - Visitantes da landing **30 dias** **EXCLUINDO** quem já converteu (`lead_submit`);
   - Engajou IG/FB **365 dias**; quem viu **25%+** dos vídeos.
 - **Posicionamentos:** Advantage+. **Anúncios:** c4 (oferta) e c1 (VIP) + copy da seção Meta · Campanha C.
+  - **Vídeos:** `video-filmagem` (prova/autenticidade — portaria e obra reais, 9:16) e
+    `video-maquete-aprovar` (showcase do masterplan, 9:16) — fortes para quem já visitou/engajou.
 - ⚠️ Público de retargeting começa pequeno (pouco tráfego no início) — pode levar uns dias para encher.
 
 ---

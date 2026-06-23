@@ -17,6 +17,7 @@ headline serifada em itálico, **logo transparente** da Aprovar sobre o render.
 | [`carrossel/`](carrossel/) | 5 cards em sequência `card1..5` (4:5) — a ORDEM importa |
 | [`performance-max/`](performance-max/) | 3 imagens p/ Google PMax/Demand Gen (1.91:1, 1:1, 4:5) |
 | [`roteiros-videos.md`](roteiros-videos.md) | 3 roteiros de Reels/vídeo (walkthrough, condições, depoimento) |
+| [`videos/`](videos/) | 3 vídeos REAIS (hook / showcase / prova) — catálogo abaixo. Fontes locais (fora do git por tamanho); contact sheets versionados em `videos/_frames/` |
 | [`fontes/`](fontes/) | HTML + `_base.css` (estáticos) + `_base2.css` (carrossel/pmax) + `img/` — para regenerar |
 
 ## Estáticos — `estaticos/`
@@ -57,11 +58,23 @@ geradas do kit `_templates/branding/` — **TODO**; títulos/descrições do ban
 [`../copy/copy-botanique.csv`](../copy/copy-botanique.csv). Dá para exportar versões SEM texto
 (só render + logo) removendo o `<h1>`/kicker no HTML e re-renderizando.
 
-## Vídeos — `roteiros-videos.md`
+## Vídeos — roteiros + peças reais
 
-3 roteiros prontos (9:16, 15–40s, legendas embutidas, gancho nos 1–2s): **1)** walkthrough do
-lago (estilo de vida), **2)** as condições (oferta), **3)** depoimento-conceito (UGC). Inclui
-brief de produção, ferramentas e B-roll. **TODO:** `{{VIDEO_FLYTHROUGH_URL}}` (vídeo oficial Urba/MRV).
+**Roteiros (para gravar/editar):** [`roteiros-videos.md`](roteiros-videos.md) — 3 roteiros 9:16
+(walkthrough do lago, condições, depoimento-conceito) com brief de produção, ferramentas e B-roll.
+
+**Vídeos REAIS já disponíveis** (`videos/` — fontes locais, fora do git por tamanho; quadros de
+inspeção versionados em [`videos/_frames/`](videos/_frames/)):
+
+| Arquivo | Dur · Resolução · Proporção | Papel no funil | Uso / reenquadre |
+|---|---|---|---|
+| `video-naturalmente-o-seu-melhor-espaco.mp4` | 10s · 1024×576 · **16:9** | **Hook / awareness** — aéreo cinematográfico do lago ao pôr do sol + tagline "Naturalmente, o seu melhor espaço" | Feed/YouTube nativo; **reenquadrar 9:16** p/ Reels/Stories. Curto = ótimo gancho. Sugestão: hero da landing em loop mudo. |
+| `video-maquete-aprovar.mp4` | 24,5s · 2160×3840 · **9:16** (4K) | **Showcase / consideração** — maquete física do masterplan (lago, quadras, clube, lotes), marca Aprovar | Reels/Stories nativo; cortar p/ **15–20s** em anúncio; reenquadrar 1:1/16:9 p/ Feed. ⚠️ **247 MB** — comprimir antes de subir. |
+| `video-filmagem.mov` | 21s · 1080×1920 · **9:16** (HEVC) | **Prova / autenticidade** — filmagem real da portaria/obra + legendas factuais ("Lotes 250–347 m²", "região do Coxipó · Cuiabá") | Reels/Stories, orgânico e **retargeting**. ⚠️ Traz marca **Urba** (sem CRECI/Aprovar) — em anúncio pago, adicionar selo **CRECI 9770J · Aprovar**. Converter HEVC→H.264 p/ compatibilidade. |
+
+> **Conformidade conferida nos quadros** (`_frames/`): sem promessa de valorização, sem preço/erro
+> de data nas legendas. **Áudio não transcrito** — se houver locução com claims, revisar antes de
+> veicular. **TODO:** `{{VIDEO_FLYTHROUGH_URL}}` (flythrough oficial Urba/MRV, se vier).
 
 ## Logo
 

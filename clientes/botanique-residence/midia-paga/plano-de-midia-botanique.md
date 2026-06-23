@@ -99,6 +99,12 @@ equivalente para venda de lote, mas siga as políticas de imóveis.
 | carrossel (5 cards) | 4:5 | Feed/Explorar (Meta) |
 | pmax-land/sq/port | 1.91:1 / 1:1 / 4:5 | Google PMax/Demand Gen |
 | Reels (3 roteiros) | 9:16 | Reels/Stories, Demand Gen (quando produzidos) |
+| **vídeo `naturalmente`** (hook/awareness) | 16:9 → 9:16 | Feed/YouTube; **reenquadrar 9:16** p/ Reels/Stories · Campanhas **A** e **B** · hero da landing (loop mudo) |
+| **vídeo `maquete-aprovar`** (showcase) | 9:16 (4K) | Reels/Stories · públicos engajados (**A**) e **retargeting (C)** · seção "conheça" da landing · cortar 15–20s · comprimir (247 MB) |
+| **vídeo `filmagem`** (prova/autenticidade) | 9:16 | Reels/Stories · **retargeting (C)** e orgânico · marca Urba → somar selo CRECI 9770J · Aprovar |
+
+> Catálogo técnico (duração/resolução/papel) e contact sheets dos vídeos:
+> [`../criativos/README.md`](../criativos/README.md) e `../criativos/videos/_frames/`.
 
 ## 9. Nomenclatura + UTM (rastreio limpo)
 - **Nome:** `PLATAFORMA_BOTANIQUE_OBJETIVO_PUBLICO_FORMATO`

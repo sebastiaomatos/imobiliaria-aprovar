@@ -18,6 +18,16 @@ playground, pet place, entrada, alameda comercial.
 em anúncio, trilha royalty-free. Estilos sugeridos por vídeo abaixo (sem música
 protegida).
 
+## Vídeos REAIS já disponíveis (`videos/`) → uso
+Antes de gravar do zero, aproveite o que já existe (catálogo técnico + contact sheets em
+[`README.md`](README.md) e `videos/_frames/`):
+- **`video-naturalmente-o-seu-melhor-espaco.mp4`** (16:9 · 10s) → já é uma entrega do **Vídeo 1
+  (hook / estilo de vida)**: aéreo do lago ao pôr do sol + tagline. Reenquadrar **9:16** p/ Reels/Stories.
+- **`video-maquete-aprovar.mp4`** (9:16 · 24,5s · 4K) → **showcase do masterplan** (maquete física):
+  peça de consideração e B-roll do **Vídeo 2 (condições)**. Cortar p/ **15–20s** no anúncio; comprimir (247 MB).
+- **`video-filmagem.mov`** (9:16 · 21s) → **prova / autenticidade** (portaria e obra reais): B-roll do
+  **Vídeo 3 (depoimento)** e peça de **retargeting/orgânico**. Traz marca Urba → somar selo CRECI 9770J · Aprovar no pago.
+
 ---
 
 ## 🎬 Vídeo 1 — Walkthrough do lago (estilo de vida) · ~28s · ICP família/geral
