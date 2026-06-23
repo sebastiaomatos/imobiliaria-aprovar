@@ -20,3 +20,5 @@ build/
 # vídeos externamente (Netlify/Drive/cloud) para o time.
 clientes/botanique-residence/criativos/videos/*.mp4
 clientes/botanique-residence/criativos/videos/*.mov
+# saídas de encode (exports/): grandes, derivadas — hospedar no Drive/plataforma, não no git
+clientes/botanique-residence/criativos/videos/exports/
