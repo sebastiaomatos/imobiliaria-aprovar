@@ -59,6 +59,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 /* hero */
 .hero{position:relative;color:var(--sand);padding:70px 0 80px;overflow:hidden}
 .hero__bg{position:absolute;inset:0;background:url('img/01-vista-aerea-lago.jpg') center/cover no-repeat;z-index:-2}
+.hero__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(118deg,rgba(0,42,12,.95) 32%,rgba(0,48,16,.78) 60%,rgba(0,48,16,.5))}
 .hero__grid{display:grid;grid-template-columns:1.08fr .92fr;gap:46px;align-items:center}
@@ -125,6 +126,13 @@ section{padding:70px 0}
 .amen img{width:100%;height:168px;object-fit:cover}
 .amen figcaption{padding:11px 14px;font-size:.9rem;font-weight:700;color:var(--sand)}
 
+/* video embed (maquete) */
+.video-embed{position:relative;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-top:30px;cursor:pointer;background:#0a3a14}
+.video-embed>img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.video-embed__play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:84px;height:84px;border-radius:50%;border:0;background:rgba(245,127,23,.94);color:#fff;font-size:1.7rem;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 12px 32px rgba(0,0,0,.42);transition:transform .12s ease,filter .12s ease}
+.video-embed:hover .video-embed__play{transform:translate(-50%,-50%) scale(1.06);filter:brightness(1.05)}
+.video-embed figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;color:#fff;font-weight:600;font-size:.84rem;background:linear-gradient(transparent,rgba(0,32,8,.82))}
+
 /* authority */
 .auth-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;margin-top:30px;align-items:center}
 .cred{list-style:none;display:grid;gap:14px}
@@ -146,6 +154,10 @@ section{padding:70px 0}
 /* location */
 .loc-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:30px;align-items:center}
 .loc-grid img{border-radius:var(--radius);box-shadow:var(--shadow);width:100%}
+.loc-map{position:relative;margin-top:24px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.loc-map a{display:block}
+.loc-map img{width:100%;display:block;cursor:zoom-in}
+.loc-map figcaption{position:absolute;left:0;right:0;bottom:0;padding:13px 18px;color:#fff;font-weight:600;font-size:.82rem;background:linear-gradient(transparent,rgba(0,32,8,.8))}
 .chips{list-style:none;display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
 .chips li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:.9rem;font-weight:600;color:var(--forest);display:flex;gap:7px;align-items:center}
 .chips li::before{content:"📍";font-size:.85rem}
@@ -220,11 +232,13 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   .vip-gap{width:92px}
   .foot__in{flex-direction:column;align-items:flex-start}
   .sticky-cta{display:block}
+  .loc-map figcaption{font-size:.66rem;padding:9px 12px;line-height:1.32}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   .btn{transition:none}
   .btn:hover{transform:none}
+  .hero__video{display:none}
 }
 </style>
 </head>
@@ -244,6 +258,9 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
 <!-- ====== HERO ====== -->
 <header class="hero">
   <div class="hero__bg" role="presentation"></div>
+  <video class="hero__video" autoplay muted loop playsinline preload="metadata" poster="img/01-vista-aerea-lago.jpg" aria-hidden="true">
+    <source src="naturalmente.mp4" type="video/mp4">
+  </video>
   <div class="wrap hero__grid">
     <div>
       <!-- DATAS: VIP 15/07 (provisório) · geral 19/07. Ajuste aqui se a Urba confirmar outra data. -->
@@ -342,6 +359,20 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   </div>
 </section>
 
+<!-- ====== MAQUETE / TOUR ====== -->
+<section class="bg-sand">
+  <div class="wrap">
+    <p class="eyebrow">Veja em movimento</p>
+    <h2 class="sec-title serif">Conheça o residencial pela maquete</h2>
+    <p class="sec-lead">Um sobrevoo pelo masterplan: as 17 quadras, o lago com pier, a praia e o clube de lazer — para você visualizar onde ficam os melhores lotes antes mesmo da Fase VIP.</p>
+    <figure class="video-embed" id="maqueteEmbed" data-yt="">
+      <img src="img/01-vista-aerea-lago.jpg" alt="Vista do residencial Botanique do alto — tour pela maquete" loading="lazy" decoding="async">
+      <button class="video-embed__play" type="button" aria-label="Ver o tour da maquete">&#9658;</button>
+      <figcaption>Tour pela maquete do masterplan &middot; imagens meramente ilustrativas</figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- ====== AUTORIDADE / PROCEDÊNCIA ====== -->
 <section class="bg-sand">
   <div class="wrap">
@@ -381,21 +412,22 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   <div class="wrap">
     <p class="eyebrow">Onde fica</p>
     <h2 class="sec-title serif">Na região do Coxipó, em Cuiabá — perto do que importa no seu dia a dia</h2>
-    <div class="loc-grid">
-      <div>
-        <p class="sec-lead">Você vive à beira de um lago sem abrir mão da cidade. O Botanique fica no Coxipó, uma das regiões em expansão de Cuiabá, com referências conhecidas no entorno e a comodidade da cidade ao alcance. Na Lista VIP, a gente te envia o mapa de localização junto com o mapa de lotes.</p>
-        <ul class="chips">
-          <li>Região do Coxipó</li>
-          <li>Próximo à UFMT</li>
-          <li>Próximo ao Shopping 3 Américas</li>
-          <li>Próximo ao Parque Tia Nair</li>
-        </ul>
-        <div class="investor">
-          <h3>Para quem pensa em patrimônio: terra em região que cresce</h3>
-          <p>Não prometemos número de valorização — e desconfie de quem promete. O fato: o Coxipó é uma das regiões em expansão de Cuiabá, vizinha de polos como UFMT e Shopping 3 Américas. Um lote em condomínio fechado bem estruturado aqui é um ativo real, no seu nome, com alto potencial de valorização à medida que a região se desenvolve — uma expectativa apoiada no contexto, não uma promessa de retorno. Marque "investir" no cadastro e a Aprovar prepara a leitura da região e dos melhores lotes para o seu objetivo.</p>
-        </div>
-      </div>
-      <img src="img/16-localizacao-mapa.jpg" alt="Mapa de localização do Botanique Residence, região do Coxipó em Cuiabá" loading="lazy" decoding="async">
+    <p class="sec-lead">Você vive à beira de um lago sem abrir mão da cidade. O Botanique fica no Coxipó, uma das regiões em expansão de Cuiabá, com referências conhecidas no entorno e a comodidade da cidade ao alcance. Na Lista VIP, a gente te envia o mapa de localização junto com o mapa de lotes.</p>
+    <ul class="chips">
+      <li>Região do Coxipó</li>
+      <li>Próximo à UFMT</li>
+      <li>Próximo ao Shopping 3 Américas</li>
+      <li>Próximo ao Parque Tia Nair</li>
+    </ul>
+    <figure class="loc-map">
+      <a href="img/mapa-localizacao-entorno.jpg" target="_blank" rel="noopener" aria-label="Abrir o mapa de localização em tamanho ampliado">
+        <img src="img/mapa-localizacao-entorno.jpg" alt="Mapa de localização e entorno do Botanique Residence: UFMT, Shopping 3 Américas, Parque Tia Nair, BigLar e principais vias da região do Coxipó em Cuiabá" loading="lazy" decoding="async">
+      </a>
+      <figcaption>Localização e distâncias aproximadas no entorno — UFMT, Shopping 3 Américas, Parque Tia Nair e mais. Toque para ampliar · imagens ilustrativas.</figcaption>
+    </figure>
+    <div class="investor">
+      <h3>Para quem pensa em patrimônio: terra em região que cresce</h3>
+      <p>Não prometemos número de valorização — e desconfie de quem promete. O fato: o Coxipó é uma das regiões em expansão de Cuiabá, vizinha de polos como UFMT e Shopping 3 Américas. Um lote em condomínio fechado bem estruturado aqui é um ativo real, no seu nome, com alto potencial de valorização à medida que a região se desenvolve — uma expectativa apoiada no contexto, não uma promessa de retorno. Marque "investir" no cadastro e a Aprovar prepara a leitura da região e dos melhores lotes para o seu objetivo.</p>
     </div>
   </div>
 </section>
@@ -470,7 +502,8 @@ const CONFIG = {
   phone: "5565992326461",            // WhatsApp da Aprovar (DDI+DDD+número)
   formEndpoint: "https://imobiliaria-aprovar-production.up.railway.app/cadastro", // orquestrador: cria lead no Praedium + lista VIP no Brevo
   redirectToWhatsAppAfterForm: true,
-  vagasVip: null                     // {{VAGAS_VIP}} — defina um número (ex.: 80) p/ escassez numérica; null = escassez por data
+  vagasVip: null,                    // {{VAGAS_VIP}} — escassez numérica; null = escassez por data
+  maqueteYouTubeId: ""               // ID do vídeo da maquete no YouTube (não listado). Vazio = botão leva ao WhatsApp.
 };
 
 /* Escassez numérica opcional (só se CONFIG.vagasVip for definido). */
@@ -480,6 +513,27 @@ if (CONFIG.vagasVip){
     const tag = rail.querySelector(".vip-node--now .tag");
     if (tag) tag.textContent = `${CONFIG.vagasVip} vagas VIP`;
   }
+}
+
+/* Maquete: se CONFIG.maqueteYouTubeId estiver definido, toca o vídeo inline (click-to-play);
+   enquanto vazio (placeholder), o clique leva ao WhatsApp pedindo o tour. */
+const maqueteFig = document.getElementById("maqueteEmbed");
+if (maqueteFig){
+  const ytId = CONFIG.maqueteYouTubeId || maqueteFig.dataset.yt || "";
+  maqueteFig.addEventListener("click", () => {
+    if (ytId){
+      const ifr = document.createElement("iframe");
+      ifr.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`;
+      ifr.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      ifr.setAttribute("allowfullscreen","");
+      ifr.style.cssText = "position:absolute;inset:0;width:100%;height:100%;border:0";
+      maqueteFig.innerHTML = ""; maqueteFig.appendChild(ifr);
+      track("play_maquete", {});
+    } else {
+      track("click_maquete_wa", {});
+      window.open(waLink("Olá! Quero ver o tour da maquete do Botanique Residence e entrar na Lista VIP."), "_blank", "noopener");
+    }
+  });
 }
 
 function getTracking(){
