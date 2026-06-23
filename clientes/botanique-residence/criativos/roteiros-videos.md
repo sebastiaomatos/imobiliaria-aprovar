@@ -39,7 +39,7 @@ ascendente, ou indie acústico aconchegante.
 **Legenda (caption):**
 > Chegou a Cuiabá um jeito novo de morar perto da natureza. 🌿 Lago, praia particular e
 > lazer completo, num condomínio fechado. A pré-venda começou e quem entra na **lista
-> VIP escolhe os melhores lotes 4 dias antes**. Comenta "QUERO" ou chama no WhatsApp. 📲
+> VIP escolhe os melhores lotes antes da abertura geral**. Comenta "QUERO" ou chama no WhatsApp. 📲
 > *Imagens ilustrativas. CRECI 9770J. Aprovar — parceira na venda.*
 **Hashtags:** #BotaniqueResidence #Cuiabá #CuiabáMT #CondomínioFechado #ImóveisCuiabá #MorarBem #LoteamentoCuiabá #LagoParticular #Aprovar
 
@@ -57,7 +57,7 @@ batida marcada.
 | 6–10s | B-roll lazer | "Entrada de R$ 31.250 (10%)" | — |
 | 10–14s | B-roll | **"Saldo em 24x SEM JUROS"** | acento na batida |
 | 14–18s | B-roll | "ou parcela longa a partir de R$ 3.204/mês" | — |
-| 18–22s | Aéreo | **"Pré-venda · Lista VIP — escolha 4 dias antes"** | tensão sobe |
+| 18–22s | Aéreo | **"Pré-venda · Lista VIP — escolha antes da abertura geral"** | tensão sobe |
 | 22–24s | Lower third + logo | **"Entre na lista VIP"** + WhatsApp + "Acesso VIP 15/07" | CTA seco |
 
 **Disclaimer (rodapé persistente, pequeno):** Imagens ilustrativas · valores sujeitos a
@@ -65,7 +65,7 @@ alteração · CRECI 9770J
 **Legenda (caption):**
 > Um lote em condomínio fechado, à beira de um lago, por **R$ 312.500** — com **24x sem
 > juros**. 👀 A pré-venda já começou e os melhores lotes vão primeiro pra quem está na
-> lista VIP (escolha 4 dias antes do público geral). Chama no WhatsApp que te mando a
+> lista VIP (escolha antes do público geral). Chama no WhatsApp que te mando a
 > planta e os valores. 📲
 > *Imagens ilustrativas. Valores sujeitos a alteração e à disponibilidade. Plano longo
 > com correção (IPCA + juros). CRECI 9770J.*
@@ -85,7 +85,7 @@ olhar na câmera, tom de conversa (não locução).
 | 0–3s | Porta-voz, câmera | "Se você quer morar perto da natureza em Cuiabá, me dá 30 segundos." | — (rosto) |
 | 3–10s | corte | "Chegou o Botanique Residence: condomínio fechado com lago, praia particular e lazer completo, entregue pronto." | lago, piscina, pier |
 | 10–18s | corte | "Os lotes começam em R$ 312.500, com 10% de entrada e 24 vezes sem juros." | entrada, aéreo |
-| 18–26s | corte | "E tem um detalhe importante: quem entra na lista VIP escolhe os melhores lotes 4 dias antes de abrir pro público." | aéreo dos lotes |
+| 18–26s | corte | "E tem um detalhe importante: quem entra na lista VIP escolhe os melhores lotes antes de abrir pro público." | aéreo dos lotes |
 | 26–32s | Porta-voz, câmera | "Os melhores sempre vão primeiro. Quer garantir o seu? Me chama no WhatsApp que eu te mando a planta e os valores." | — (rosto) |
 | 32–35s | Lower third + logo | **"Lista VIP aberta"** + WhatsApp | CRECI 9770J |
 
@@ -124,5 +124,5 @@ CRECI 9770J
   de lapela; teleprompter no app para o porta-voz manter o olhar na câmera.
 
 ## TODO
-{{VIDEO_FLYTHROUGH_URL}} (vídeo oficial Urba/MRV, se existir) · confirmar data 15/07 vs
-15/07 · definir porta-voz do vídeo 3 · trilhas (biblioteca licenciada da plataforma).
+{{VIDEO_FLYTHROUGH_URL}} (vídeo oficial Urba/MRV, se existir) · data do acesso VIP definida: 15/07
+(geral 19/07) · definir porta-voz do vídeo 3 · trilhas (biblioteca licenciada da plataforma).
