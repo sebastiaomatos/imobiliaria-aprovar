@@ -16,6 +16,13 @@
 > **24x sem juros** ou plano longo a partir de **R$ 3.204/mês**. Acesso VIP **15/07** (provisório —
 > confirmar com a Urba), abertura geral **19/07**.
 
+## Banco de amenidades (curado — escolher 3–5 por peça, NUNCA listar os 31)
+> Fonte: masterplan oficial (31 itens) em [`../dados/empreendimento.md`](../dados/empreendimento.md).
+> Use o grupo conforme o ângulo da peça; misturar de leve é ok.
+- **Hook / resort:** lago com pier e mirante · faixa de areia (prainha) · piscina com pool bar · pista de cooper de 1,4 km · pôr do sol no lago
+- **Família / morar:** campo de futebol · quadra poliesportiva · quadra de tênis · quadras de areia · 2 playgrounds · academia · espaço wellness · pet place · smart conveniência · espaço gourmet · espaço para eventos · área de piquenique · pomar
+- **Selo de robustez:** "estrutura de resort com **31 itens de lazer**" · "**17 quadras, 441 lotes** de 250 a 347 m²"
+
 ---
 
 ## META ADS
@@ -27,14 +34,14 @@
 ### Campanha A — Cadastro VIP (objetivo Leads → landing)
 
 **Conjunto · FAMÍLIA** (criativos: c3-story-natureza, c1-story-vip, c4-feed-oferta)
-- Texto 1: *Imagina o fim de tarde: as crianças na faixa de areia, o pôr do sol no pier e a sua casa a poucos passos do lago. 🌅 O Botanique Residence — condomínio fechado com lago, praia particular e clube de lazer completo — está chegando a Cuiabá. Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral. 👇*
+- Texto 1: *Imagina o fim de tarde: as crianças na faixa de areia, o pôr do sol no pier e a sua casa a poucos passos do lago. 🌅 O Botanique Residence — condomínio fechado com lago, praia particular e um clube pronto (piscina com pool bar, quadras e pista de cooper de 1,4 km) — está chegando a Cuiabá. Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral. 👇*
 - Texto 2: *Um lugar para a sua família viver perto da natureza, com segurança de condomínio fechado: lago com praia, piscina, pista de cooper, playground e pet place. 🌳 Botanique Residence, em Cuiabá — lotes a partir de R$ 312.500. A lista VIP escolhe primeiro. Cadastre-se.*
 - Título A: `Lotes à beira de um lago em Cuiabá`
 - Título B: `Sua casa a poucos passos do lago`
 - Descrição: `Lista VIP aberta · CRECI 9770J`
 
 **Conjunto · INVESTIDOR** (criativos: c5-feed-investidor, c1-story-vip)
-- Texto 1: *Dinheiro parado perde valor. Terra em região nobre de Cuiabá continua sendo terra. 📍 O Botanique Residence — condomínio fechado com lago e estrutura de clube — abre lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Garanta a melhor posição entrando na lista VIP antes da abertura geral.*
+- Texto 1: *Dinheiro parado perde valor. Terra em região nobre de Cuiabá continua sendo terra. 📍 O Botanique Residence — condomínio fechado com lago, pier e estrutura de clube (piscina, quadras, academia) — abre lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Garanta a melhor posição entrando na lista VIP antes da abertura geral.*
 - Texto 2: *Ativo real, no seu nome, em um dos endereços mais bem pensados de Cuiabá. 🌳 Lotes de 250 a 347 m² no Botanique Residence, a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores lotes primeiro.*
 - Texto 3: *O Coxipó é uma das regiões que mais crescem em Cuiabá — perto da UFMT, do Shopping 3 Américas e de uma malha de comércio em expansão. Um lote em condomínio fechado aqui é patrimônio real, com potencial de valorização. Botanique Residence: lotes a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores primeiro.*
 - Título A: `Seu patrimônio em terra, em Cuiabá`
@@ -43,13 +50,13 @@
 - Descrição: `Lista VIP · escolha primeiro`
 
 **Conjunto · CONSTRUIR** (criativos: c6-story-construir, c4-feed-oferta)
-- Texto 1: *O terreno é seu. A casa, do seu jeito. 🏡 No Botanique Residence — condomínio fechado com lago, praia e clube de lazer — você escolhe um lote de 250 a 347 m² para construir o lar dos seus sonhos. A partir de R$ 312.500, entrada de 10%, 24x sem juros. Lista VIP aberta: escolha o seu antes da abertura geral.*
+- Texto 1: *O terreno é seu. A casa, do seu jeito. 🏡 No Botanique Residence — condomínio fechado com lago, praia e clube de lazer (piscina, quadras, academia, espaço gourmet) — você escolhe um lote de 250 a 347 m² para construir o lar dos seus sonhos. A partir de R$ 312.500, entrada de 10%, 24x sem juros. Lista VIP aberta: escolha o seu antes da abertura geral.*
 - Título A: `Seu lote para construir em Cuiabá`
 - Título B: `O terreno é seu. A casa, dos sonhos`
 - Descrição: `250–347 m² · entrada de 10%`
 
 **Conjunto · AMPLO / Advantage+** (criativos: c2-feed-vip, c3-story-natureza, carrossel)
-- Texto 1: *Um condomínio fechado com lago, praia particular e clube de lazer completo chegou a Cuiabá. 🌳 Botanique Residence: lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral.*
+- Texto 1: *Um condomínio fechado com lago, praia particular e estrutura de resort — 31 itens de lazer, do pier à pista de cooper de 1,4 km — chegou a Cuiabá. 🌳 Botanique Residence: lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral.*
 - Texto 2: *Lago com praia, pier, piscina, pista de cooper de 1,4 km e um clube entregue pronto. Tudo dentro de um condomínio fechado em Cuiabá. 🌅 Lotes a partir de R$ 312.500. Cadastre-se na lista VIP.*
 - Título A: `Lago, praia e lazer em Cuiabá`
 - Título B: `Condomínio fechado com lago`
@@ -57,7 +64,7 @@
 
 ### Campanha B — Conversas WhatsApp (CTWA · objetivo Conversas → WhatsApp)
 - Texto 1: *Quer conhecer o Botanique Residence antes de todo mundo? Chama no WhatsApp 👉 a gente te manda o mapa dos lotes, as condições de lançamento (entrada de 10%, 24x sem juros) e tira suas dúvidas na hora. Lotes a partir de R$ 312.500.*
-- Texto 2: *Lago, praia particular e clube de lazer em condomínio fechado em Cuiabá. 🌳 Me chama no WhatsApp que eu te mostro os lotes disponíveis e monto a condição que cabe no seu plano.*
+- Texto 2: *Lago com pier, praia particular, piscina, quadras e pista de cooper de 1,4 km — tudo em condomínio fechado em Cuiabá. 🌳 Me chama no WhatsApp que eu te mostro os lotes disponíveis e monto a condição que cabe no seu plano.*
 - Título: `Fale com a Aprovar no WhatsApp`
 - CTA: **Enviar mensagem**
 
