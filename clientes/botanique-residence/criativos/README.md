@@ -17,7 +17,7 @@ headline serifada em itálico, **logo transparente** da Aprovar sobre o render.
 | [`carrossel/`](carrossel/) | 5 cards em sequência `card1..5` (4:5) — a ORDEM importa |
 | [`performance-max/`](performance-max/) | 3 imagens p/ Google PMax/Demand Gen (1.91:1, 1:1, 4:5) |
 | [`roteiros-videos.md`](roteiros-videos.md) | 3 roteiros de Reels/vídeo (walkthrough, condições, depoimento) |
-| [`videos/`](videos/) | 3 vídeos REAIS (hook / showcase / prova) — catálogo abaixo. Fontes locais (fora do git por tamanho); contact sheets versionados em `videos/_frames/` |
+| [`videos/`](videos/) | 3 vídeos REAIS (hook / showcase / prova) — catálogo abaixo. Fontes locais (fora do git por tamanho); contact sheets em `videos/_frames/` + selo `seal-creci-aprovar.png` (overlay) versionados |
 | [`fontes/`](fontes/) | HTML + `_base.css` (estáticos) + `_base2.css` (carrossel/pmax) + `img/` — para regenerar |
 
 ## Estáticos — `estaticos/`
@@ -70,11 +70,14 @@ inspeção versionados em [`videos/_frames/`](videos/_frames/)):
 |---|---|---|---|
 | `video-naturalmente-o-seu-melhor-espaco.mp4` | 10s · 1024×576 · **16:9** | **Hook / awareness** — aéreo cinematográfico do lago ao pôr do sol + tagline "Naturalmente, o seu melhor espaço" | Feed/YouTube nativo; **reenquadrar 9:16** p/ Reels/Stories. Curto = ótimo gancho. Sugestão: hero da landing em loop mudo. |
 | `video-maquete-aprovar.mp4` | 24,5s · 2160×3840 · **9:16** (4K) | **Showcase / consideração** — maquete física do masterplan (lago, quadras, clube, lotes), marca Aprovar | Reels/Stories nativo; cortar p/ **15–20s** em anúncio; reenquadrar 1:1/16:9 p/ Feed. ⚠️ **247 MB** — comprimir antes de subir. |
-| `video-filmagem.mov` | 21s · 1080×1920 · **9:16** (HEVC) | **Prova / autenticidade** — filmagem real da portaria/obra + legendas factuais ("Lotes 250–347 m²", "região do Coxipó · Cuiabá") | Reels/Stories, orgânico e **retargeting**. ⚠️ Traz marca **Urba** (sem CRECI/Aprovar) — em anúncio pago, adicionar selo **CRECI 9770J · Aprovar**. Converter HEVC→H.264 p/ compatibilidade. |
+| `video-filmagem.mov` | 21s · 1080×1920 · **9:16** (HEVC) | **Prova / autenticidade** — filmagem real da portaria/obra + legendas factuais ("Lotes 250–347 m²", "região do Coxipó · Cuiabá") | Reels/Stories, orgânico e **retargeting**. ⚠️ Traz marca **Urba** (sem CRECI/Aprovar) — em anúncio pago, sobrepor o selo **`seal-creci-aprovar.png`** (lower-third 561×108, em `videos/`). Converter HEVC→H.264 p/ compatibilidade. |
 
 > **Conformidade conferida nos quadros** (`_frames/`): sem promessa de valorização, sem preço/erro
 > de data nas legendas. **Áudio não transcrito** — se houver locução com claims, revisar antes de
 > veicular. **TODO:** `{{VIDEO_FLYTHROUGH_URL}}` (flythrough oficial Urba/MRV, se vier).
+>
+> **Selo pronto:** `videos/seal-creci-aprovar.png` (561×108, RGBA, lower-third "Aprovar ·
+> CRECI 9770J") — sobrepor no `video-filmagem` (e em qualquer peça com marca Urba) ao veicular no pago.
 
 ## Logo
 

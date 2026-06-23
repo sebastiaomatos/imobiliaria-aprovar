@@ -26,7 +26,8 @@ Antes de gravar do zero, aproveite o que já existe (catálogo técnico + contac
 - **`video-maquete-aprovar.mp4`** (9:16 · 24,5s · 4K) → **showcase do masterplan** (maquete física):
   peça de consideração e B-roll do **Vídeo 2 (condições)**. Cortar p/ **15–20s** no anúncio; comprimir (247 MB).
 - **`video-filmagem.mov`** (9:16 · 21s) → **prova / autenticidade** (portaria e obra reais): B-roll do
-  **Vídeo 3 (depoimento)** e peça de **retargeting/orgânico**. Traz marca Urba → somar selo CRECI 9770J · Aprovar no pago.
+  **Vídeo 3 (depoimento)** e peça de **retargeting/orgânico**. Traz marca Urba → sobrepor o selo
+  `seal-creci-aprovar.png` (lower-third pronto, em `videos/`) no pago.
 
 ---
 
