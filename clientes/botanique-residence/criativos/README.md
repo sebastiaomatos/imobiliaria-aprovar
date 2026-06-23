@@ -76,8 +76,13 @@ inspeção versionados em [`videos/_frames/`](videos/_frames/)):
 > de data nas legendas. **Áudio não transcrito** — se houver locução com claims, revisar antes de
 > veicular. **TODO:** `{{VIDEO_FLYTHROUGH_URL}}` (flythrough oficial Urba/MRV, se vier).
 >
-> **Selo pronto:** `videos/seal-creci-aprovar.png` (561×108, RGBA, lower-third "Aprovar ·
-> CRECI 9770J") — sobrepor no `video-filmagem` (e em qualquer peça com marca Urba) ao veicular no pago.
+> **Selo CRECI (lower-third 561×108) — 3 variantes em `videos/`:**
+> - `seal-creci-aprovar.png` — fundo verde sólido + borda laranja (selo "fechado", máxima legibilidade).
+> - `seal-creci-aprovar-transp.png` — **fundo transparente**, mantém a borda laranja.
+> - `seal-creci-aprovar-transp-sem-borda.png` — **fundo transparente, sem borda** (só logo + divisória +
+>   "CRECI 9770J"); é o aplicado no export `filmagem-h264-creci.mp4`.
+>
+> Sobrepor no `video-filmagem` (e em qualquer peça com marca Urba) ao veicular no pago.
 
 ## Logo
 
