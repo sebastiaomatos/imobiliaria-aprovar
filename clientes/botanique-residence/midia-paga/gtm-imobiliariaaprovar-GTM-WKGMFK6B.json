@@ -1,0 +1,739 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2026-06-24 09:30:00",
+    "containerVersion": {
+        "path": "accounts/6291192222/containers/217853264/versions/0",
+        "accountId": "6291192222",
+        "containerId": "217853264",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6291192222/containers/217853264",
+            "accountId": "6291192222",
+            "containerId": "217853264",
+            "name": "imobiliariaaprovar.com.br",
+            "publicId": "GTM-WKGMFK6B",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1744775607174",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6291192222/containers/217853264/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-WKGMFK6B"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "5",
+                "name": "GA4",
+                "type": "googtag",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "tagId",
+                        "value": "G-GXQZBRTHHW"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "configSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "send_page_view"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "true"
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1001",
+                "firingTriggerId": [
+                    "2147479573"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "6",
+                "name": "Meta Pixel - Base (All Pages)",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>\n!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');\nfbq('init','{{CONST - Meta Pixel ID}}');\nfbq('track','PageView');\n</script>\n<noscript><img height=\"1\" width=\"1\" style=\"display:none\" src=\"https://www.facebook.com/tr?id={{CONST - Meta Pixel ID}}&ev=PageView&noscript=1\"/></noscript>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1013",
+                "firingTriggerId": [
+                    "2147479553"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "7",
+                "name": "Meta Pixel - Lead",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>fbq('track','Lead',{content_name:'Botanique Residence - Lista VIP',content_category:'{{DLV - intencao}}'});</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1014",
+                "firingTriggerId": [
+                    "30"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "8",
+                "name": "Meta Pixel - Contact (WhatsApp)",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>fbq('track','Contact',{content_name:'Botanique Residence - WhatsApp'});</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1015",
+                "firingTriggerId": [
+                    "32",
+                    "33"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "9",
+                "name": "Meta Pixel - ViewContent (maquete)",
+                "type": "html",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "html",
+                        "value": "<script>fbq('track','ViewContent',{content_name:'Maquete Botanique Residence'});</script>"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "supportDocumentWrite",
+                        "value": "false"
+                    }
+                ],
+                "fingerprint": "1016",
+                "firingTriggerId": [
+                    "31"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "10",
+                "name": "GA4 - lead_submit",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "lead_submit"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "intencao"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - intencao}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "lista"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - lista}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "empreendimento"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DLV - empreendimento}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "G-GXQZBRTHHW"
+                    }
+                ],
+                "fingerprint": "1017",
+                "firingTriggerId": [
+                    "30"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "11",
+                "name": "GA4 - play_maquete",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "play_maquete"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "G-GXQZBRTHHW"
+                    }
+                ],
+                "fingerprint": "1018",
+                "firingTriggerId": [
+                    "31"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "12",
+                "name": "GA4 - click_whatsapp",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "click_whatsapp"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "G-GXQZBRTHHW"
+                    }
+                ],
+                "fingerprint": "1019",
+                "firingTriggerId": [
+                    "32"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "13",
+                "name": "GA4 - click_maquete_wa",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "click_maquete_wa"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "G-GXQZBRTHHW"
+                    }
+                ],
+                "fingerprint": "1020",
+                "firingTriggerId": [
+                    "33"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "tagId": "14",
+                "name": "GA4 - engaged_15s",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "engaged_15s"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementId",
+                        "value": "G-GXQZBRTHHW"
+                    }
+                ],
+                "fingerprint": "1021",
+                "firingTriggerId": [
+                    "34"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "triggerId": "30",
+                "name": "CE - lead_submit",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "lead_submit"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1002"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "triggerId": "31",
+                "name": "CE - play_maquete",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "play_maquete"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1003"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "triggerId": "32",
+                "name": "CE - click_whatsapp",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "click_whatsapp"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1004"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "triggerId": "33",
+                "name": "CE - click_maquete_wa",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "click_maquete_wa"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1005"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "triggerId": "34",
+                "name": "CE - engaged_15s",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "engaged_15s"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1006"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "40",
+                "name": "CONST - Meta Pixel ID",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "1708075710023708"
+                    }
+                ],
+                "fingerprint": "1007"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "41",
+                "name": "DLV - intencao",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "intencao"
+                    }
+                ],
+                "fingerprint": "1008"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "42",
+                "name": "DLV - lista",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "lista"
+                    }
+                ],
+                "fingerprint": "1009"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "43",
+                "name": "DLV - empreendimento",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "empreendimento"
+                    }
+                ],
+                "fingerprint": "1010"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "44",
+                "name": "DLV - via",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "via"
+                    }
+                ],
+                "fingerprint": "1011"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "variableId": "45",
+                "name": "DLV - msg",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "msg"
+                    }
+                ],
+                "fingerprint": "1012"
+            }
+        ],
+        "builtInVariable": [
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "type": "PAGE_URL",
+                "name": "Page URL"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "type": "PAGE_HOSTNAME",
+                "name": "Page Hostname"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "type": "PAGE_PATH",
+                "name": "Page Path"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "type": "REFERRER",
+                "name": "Referrer"
+            },
+            {
+                "accountId": "6291192222",
+                "containerId": "217853264",
+                "type": "EVENT",
+                "name": "Event"
+            }
+        ],
+        "fingerprint": "1782292848100",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6291192222/containers/217853264/versions/0?apiLink=version"
+    }
+}
