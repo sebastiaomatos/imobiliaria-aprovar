@@ -116,12 +116,27 @@ Na criação, o Meta pode pedir para declarar **"Crédito/Habitação"**. Se ped
 idade/gênero/CEP e impõe raio mínimo. Aí a estratégia se apoia em **geo + criativo que qualifica** (a peça
 já fala de preço/condições).
 
-## Nomenclatura + UTM
-- **Nome:** `PLATAFORMA_BOTANIQUE_OBJETIVO_PUBLICO_FORMATO` (ex.: `META_BOTANIQUE_LEAD_AMPLO_MISTO`,
-  `GADS_BOTANIQUE_SEARCH_MARCA`).
-- **UTM (modelo):**
-  - Meta: `?utm_source=meta&utm_medium=paid_social&utm_campaign=botanique_vip&utm_content={{criativo}}`
-  - Google Search: `?utm_source=google&utm_medium=cpc&utm_campaign=botanique_search&utm_term={keyword}`
+## Nomenclatura + UTM (padrão único — alinhado ao runbook-manual-meta.md)
+
+### Nomenclatura (UTM-safe: minúsculas, sem acento, hífens)
+> Regra de ouro: o NOME do anúncio = valor de utm_content (via macro). Nada de espaço/acento.
+- Campanhas: `meta-bot-leads-cadastro-vip` · `meta-bot-msg-conversas` · `meta-bot-leads-retargeting` · `gads-bot-search` · `gads-bot-pmax`
+- Conjuntos: `meta-bot-leads-formulario` · `meta-bot-leads-site` · `meta-bot-msg-amplo` · `meta-bot-leads-rtg-site30d`
+- Anúncios: `ad-<angulo>-<criativo>-<formato>` (ex.: `ad-familia-c3-story`, `ad-investidor-c5-feed`, `ad-amplo-carrossel`)
+- Grupos Search: `ag-marca` · `ag-lote` · `ag-lago` · Grupo de recursos PMax: `rg-botanique`
+
+### UTM (tag fixa por campanha + macros dinâmicos)
+> Onde colar — Meta: Anúncio → Rastreamento → "Parâmetros de URL do site". Google: Campanha → Opções de URL → "Sufixo do URL final" (sem `?`). Auto-tagging do Google ligado.
+| Campanha | UTM |
+|---|---|
+| Meta A-Site | utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-cadastro-vip&utm_content={{ad.name}}&utm_term={{adset.name}} |
+| Meta A-Formulário | (sem URL — atribuição via fonte=meta_form) |
+| Meta B-Conversas | (sem URL — atribuição via referral do CTWA) |
+| Meta C-Retargeting | utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-retargeting&utm_content={{ad.name}}&utm_term={{adset.name}} |
+| Google Search | utm_source=google&utm_medium=cpc&utm_campaign=botanique-search&utm_content={creative}&utm_term={keyword} |
+| Google PMax | utm_source=google&utm_medium=pmax&utm_campaign=botanique-pmax&utm_content={campaignid} |
+
+A landing repassa as UTMs ao `/cadastro` (grava em `fonte`).
 
 ## Ordem de montagem (rascunho)
 1. Conferir pixel/evento `lead_submit` (Meta) e importar conversão (Google).

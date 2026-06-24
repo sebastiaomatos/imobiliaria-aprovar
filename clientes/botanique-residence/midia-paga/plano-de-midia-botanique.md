@@ -46,22 +46,29 @@
    no orquestrador). Padrão de UTM no item 9.
 
 ## 5. Estrutura — Meta Ads
-**Campanha A — Cadastro VIP** · Objetivo **Leads** (conversão `lead_submit` no site) · destino = landing
-- Conjuntos por ICP (orçamento por conjunto ou CBO):
-  - AS1 **Família** — interesses: imóveis, decoração/casa, família, escolas particulares.
-  - AS2 **Investidor** — interesses: investimentos, mercado imobiliário, renda fixa, empreendedorismo.
-  - AS3 **Construir** — interesses: arquitetura, construção civil, casa própria.
-  - AS4 **Amplo / Advantage+** — sem segmentação detalhada, deixa o algoritmo encontrar.
-- Anúncios (por conjunto): **story 9:16 (c1/c3/c6) + feed 1:1 (c2/c4/c5) + carrossel**.
-- Lance: começar **maior volume**; depois **limite de custo** perto do CPL alvo.
+> Estrutura de conjuntos: seguir o `config-campanhas.md` (poucos conjuntos amplos;
+> diferenciar por criativo/copy — NÃO um conjunto por ICP, que fragmenta a verba).
+> Os ICPs abaixo são **ângulos de criativo** dentro do mesmo conjunto amplo.
+
+**Campanha A — Cadastro VIP** · Objetivo **Leads** · destino = landing/formulário
+- **2 conjuntos amplos (ABO):** `meta-bot-leads-formulario` (R$20) + `meta-bot-leads-site` (R$15).
+  Público AMPLO (geo padrão; 28–60; PT; Advantage+); detalhada NENHUMA (Habitação).
+- **Ângulos de criativo (vários anúncios no mesmo conjunto):**
+  - Família — lago/praia, segurança, lazer (c3/c1/c4).
+  - Investidor — patrimônio/região em expansão, sem promessa de valorização (c5/c1).
+  - Construir — "o terreno é seu" (c6/c4).
+  - Amplo — resort/lago, masterplan (c2/c3/carrossel).
+- Formatos por anúncio: **story 9:16 (c1/c3/c6) + feed 1:1 (c2/c4/c5) + carrossel 4:5**.
+- Lance: **maior volume** → depois **limite de custo** perto do CPL alvo.
 
 **Campanha B — Conversas WhatsApp (CTWA)** · Objetivo **Engajamento → conversas** · destino = WhatsApp
-- 1–2 conjuntos (amplo + 1 por ICP). Anúncios: c1, c3 e o depoimento (quando o vídeo existir).
+- **1 conjunto amplo** (`meta-bot-msg-amplo`). Anúncios: c1, c3 + vídeo `naturalmente` (depoimento quando existir).
 - Otimizar para **conversa iniciada**; a régua/atendimento assume.
 
 **Campanha C — Retargeting** · Objetivo **Leads**
-- Públicos: visitantes da landing sem cadastro (7/14/30 dias), engajadores IG/FB, video-viewers
-  25%+, lista de e-mail. Anúncios: oferta/escassez (c4, c1) e depoimento.
+- **1 conjunto** combinando: visitantes da landing **30d excluindo quem converteu** (`lead_submit`),
+  engajadores IG/FB **365d**, video-viewers **25%+ 365d**, lista de e-mail.
+- Anúncios: oferta/escassez (c4, c1) + vídeos `maquete`/`filmagem`.
 
 **Colocações:** Advantage+ (Reels, Stories, Feed, Explorar). Mapa no item 8.
 
@@ -107,12 +114,27 @@ equivalente para venda de lote, mas siga as políticas de imóveis.
 > [`../criativos/README.md`](../criativos/README.md) e `../criativos/videos/_frames/`.
 
 ## 9. Nomenclatura + UTM (rastreio limpo)
-- **Nome:** `PLATAFORMA_BOTANIQUE_OBJETIVO_PUBLICO_FORMATO`
-  (ex.: `META_BOTANIQUE_LEAD_FAMILIA_STORY`, `GADS_BOTANIQUE_SEARCH_MARCA`).
-- **UTM (modelo):**
-  `?utm_source=meta&utm_medium=paid_social&utm_campaign=botanique_vip_lancamento&utm_content={{nome-do-criativo}}`
-  Google Search: `utm_source=google&utm_medium=cpc&utm_campaign=botanique_search&utm_term={keyword}`.
-- A landing deve repassar as UTMs ao `/cadastro` (gravar em `fonte`).
+## Nomenclatura + UTM (padrão único — alinhado ao runbook-manual-meta.md)
+
+### Nomenclatura (UTM-safe: minúsculas, sem acento, hífens)
+> Regra de ouro: o NOME do anúncio = valor de utm_content (via macro). Nada de espaço/acento.
+- Campanhas: `meta-bot-leads-cadastro-vip` · `meta-bot-msg-conversas` · `meta-bot-leads-retargeting` · `gads-bot-search` · `gads-bot-pmax`
+- Conjuntos: `meta-bot-leads-formulario` · `meta-bot-leads-site` · `meta-bot-msg-amplo` · `meta-bot-leads-rtg-site30d`
+- Anúncios: `ad-<angulo>-<criativo>-<formato>` (ex.: `ad-familia-c3-story`, `ad-investidor-c5-feed`, `ad-amplo-carrossel`)
+- Grupos Search: `ag-marca` · `ag-lote` · `ag-lago` · Grupo de recursos PMax: `rg-botanique`
+
+### UTM (tag fixa por campanha + macros dinâmicos)
+> Onde colar — Meta: Anúncio → Rastreamento → "Parâmetros de URL do site". Google: Campanha → Opções de URL → "Sufixo do URL final" (sem `?`). Auto-tagging do Google ligado.
+| Campanha | UTM |
+|---|---|
+| Meta A-Site | utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-cadastro-vip&utm_content={{ad.name}}&utm_term={{adset.name}} |
+| Meta A-Formulário | (sem URL — atribuição via fonte=meta_form) |
+| Meta B-Conversas | (sem URL — atribuição via referral do CTWA) |
+| Meta C-Retargeting | utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-retargeting&utm_content={{ad.name}}&utm_term={{adset.name}} |
+| Google Search | utm_source=google&utm_medium=cpc&utm_campaign=botanique-search&utm_content={creative}&utm_term={keyword} |
+| Google PMax | utm_source=google&utm_medium=pmax&utm_campaign=botanique-pmax&utm_content={campaignid} |
+
+A landing repassa as UTMs ao `/cadastro` (grava em `fonte`).
 
 ## 10. Orçamento — ~R$ 2.480 na janela de ~29 dias (Fase 0 a R$ 73/dia)
 Fase 0 roda a **R$ 73/dia constante** até 14/07; as Fases 1 e 2 escalam a partir daí.
