@@ -3,6 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WKGMFK6B');</script>
+<!-- End Google Tag Manager -->
 <title>Botanique Residence — Lista VIP | Aprovar (CRECI 9770J)</title>
 <meta name="description" content="Lote à beira de um lago com praia e lazer completo, em condomínio fechado em Cuiabá — a partir de R$ 312.500 (tabela de lançamento, sujeito a alteração). Entre na Lista VIP e escolha seu lote antes da abertura geral.">
 <meta name="robots" content="index,follow">
@@ -243,6 +250,9 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
 </style>
 </head>
 <body id="topo">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WKGMFK6B" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ====== NAV ====== -->
 <nav class="nav">
@@ -615,9 +625,9 @@ form.addEventListener("submit", async (e) => {
 });
 
 function track(event, params = {}){
-  if (window.fbq) fbq("trackCustom", event, params);
-  if (window.gtag) gtag("event", event, params);
-  if (window.dataLayer) window.dataLayer.push({ event, ...params });
+  // GTM (GTM-WKGMFK6B) é o dono único das tags: GA4 e Meta Pixel disparam a partir
+  // destes eventos do dataLayer. Não chamar fbq/gtag direto aqui (evita contagem dupla).
+  (window.dataLayer = window.dataLayer || []).push({ event, ...params });
 }
 setTimeout(() => track("engaged_15s", {}), 15000);
 </script>
