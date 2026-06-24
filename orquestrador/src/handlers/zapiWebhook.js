@@ -11,7 +11,7 @@ import * as zapi from '../integrations/zapi.js';
 import * as praedium from '../integrations/praedium.js';
 import * as metaCapi from '../integrations/metaCapi.js';
 import * as brevo from '../integrations/brevo.js';
-import { MENSAGENS, AGENDA_RECUPERACAO, OPTOUT_KEYS, AVISTA_KEYS, ESCALADA_KEYS, preencher } from '../regua.js';
+import { MENSAGENS, OPTOUT_KEYS, AVISTA_KEYS, ESCALADA_KEYS, preencher, montarAgenda } from '../regua.js';
 
 const MAX_TEXTO = 4000; // trunca textos absurdamente longos antes de processar/logar
 
@@ -28,14 +28,6 @@ function deveIgnorar(body) {
 
 function contemAlguma(textoLower, chaves) {
   return chaves.some((k) => textoLower.includes(k));
-}
-
-/** Converte AGENDA_RECUPERACAO em [{etapa, enviar_em}] a partir de agora. */
-function montarAgenda(agoraMs = Date.now()) {
-  return AGENDA_RECUPERACAO.map(({ etapa, minutos }) => ({
-    etapa,
-    enviar_em: new Date(agoraMs + minutos * 60 * 1000).toISOString(),
-  }));
 }
 
 /**
@@ -126,6 +118,16 @@ export async function processarWebhookZapi(body, log = console, deps = {}) {
 
     if (!lead) {
       // ===== LEAD NOVO =====
+      // Captura de inbound desconhecido é OPT-IN por flag. Por padrão (false) NÃO
+      // capturamos números desconhecidos: a automação (criar lead, Praedium, M0, régua)
+      // é só para leads vindos da LP (/cadastro) ou do formulário do Meta. Opt-out e
+      // escalada (acima) seguem funcionando para qualquer número.
+      if (process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED !== 'true') {
+        await _db.registrarEvento(phone, 'inbound_ignorado_sem_captura', { nome, texto });
+        log.info?.(`[zapiWebhook] inbound de número desconhecido ${phone} ignorado (WHATSAPP_INBOUND_CAPTURE_ENABLED=false).`);
+        return;
+      }
+
       await _db.createLead({ phone, nome, origem: 'whatsapp', estagio: 'novo', fonte: 'whatsapp' });
 
       // Envia ao CRM (não bloqueia se não estiver configurado).

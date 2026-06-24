@@ -4,7 +4,7 @@
 // Pipeline (na ordem da spec):
 //   (a) normalizar telefone → (b) PERSISTIR (incl. whatsapp_optin, consentimento_em,
 //   fonte, m0_ativa_enviada=false) → (c) Praedium → (d) Brevo → (e) M0 ativa (opt-in)
-//   → (f) notificar o corretor.
+//   → (f) notificar o corretor → (g) régua R1..R5b (continuação da M0 ativa, opt-in).
 //
 // É exposto em três níveis para permitir respostas rápidas (webhook responde após
 // PERSISTIR e segue o downstream em background):
@@ -19,7 +19,7 @@ import * as db from '../db.js';
 import * as praedium from '../integrations/praedium.js';
 import * as brevo from '../integrations/brevo.js';
 import * as zapi from '../integrations/zapi.js';
-import { MENSAGENS, preencher, aplicar } from '../regua.js';
+import { MENSAGENS, preencher, aplicar, montarAgenda, AGENDA_RECUPERACAO } from '../regua.js';
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
@@ -200,10 +200,31 @@ async function notificarCorretor(lead, row, telefone, emailValido, opts = {}) {
   return { notificado: false, motivo: 'erro_envio' };
 }
 
+// --------------------------------------------------------------------------- //
+// (g) RÉGUA DE RECUPERAÇÃO (R1..R5b) — continuação da M0 ativa (opt-in)         //
+// --------------------------------------------------------------------------- //
+
 /**
- * Downstream completo (Praedium → Brevo → M0 ativa → corretor). NUNCA lança —
+ * Agenda a régua R1..R5b para leads de LP/Meta. Só agenda quando a M0 ativa foi
+ * ENVIADA agora: assim herda o gate de opt-in (a M0 ativa só sai com whatsapp_optin,
+ * sem opt-out, fora de em_atendimento e com a feature ligada) e a idempotência
+ * (m0_ativa_enviada já garante "uma vez só", então não reagenda em reprocessamentos).
+ * Para o inbound, quem agenda a régua é o webhook da Z-API.
+ */
+async function agendarReguaRecuperacao(telefone, m0, opts = {}) {
+  const { deps = {}, log = console } = opts;
+  const _db = deps.db || db;
+  if (!m0?.enviada) return { agendada: false, motivo: m0?.motivo || 'm0_nao_enviada' };
+  await _db.agendarMensagens(telefone, montarAgenda());
+  try { await _db.registrarEvento(telefone, 'regua_agendada', { etapas: AGENDA_RECUPERACAO.map((a) => a.etapa) }); } catch { /* best-effort */ }
+  log.info?.(`[régua] R1..R5b agendada para ${telefone} (continuação da M0 ativa).`);
+  return { agendada: true };
+}
+
+/**
+ * Downstream completo (Praedium → Brevo → M0 ativa → corretor → régua). NUNCA lança —
  * pode rodar em background (webhook) ou aguardado (/cadastro, testes).
- * @returns {Promise<{praedium:object, brevo:object, m0:object, corretor:object}>}
+ * @returns {Promise<{praedium:object, brevo:object, m0:object, corretor:object, regua:object}>}
  */
 export async function executarDownstream(lead, row, opts = {}) {
   const { log = console } = opts;
@@ -220,7 +241,11 @@ export async function executarDownstream(lead, row, opts = {}) {
   try { corretor = await notificarCorretor(lead, row, telefone, emailValido, opts); }
   catch (err) { log.error?.(`[processarLead] erro ao notificar corretor: ${err?.message || err}`); corretor = { notificado: false, motivo: 'excecao' }; }
 
-  return { praedium: praedRes, brevo: brevoRes, m0, corretor };
+  let regua = { agendada: false, motivo: 'nao_avaliada' };
+  try { regua = await agendarReguaRecuperacao(telefone, m0, opts); }
+  catch (err) { log.error?.(`[processarLead] erro ao agendar régua: ${err?.message || err}`); regua = { agendada: false, motivo: 'excecao' }; }
+
+  return { praedium: praedRes, brevo: brevoRes, m0, corretor, regua };
 }
 
 // --------------------------------------------------------------------------- //
@@ -230,7 +255,7 @@ export async function executarDownstream(lead, row, opts = {}) {
 /**
  * Persiste e roda todo o downstream, aguardando tudo.
  * @returns {Promise<{ok:boolean, persistido:boolean, telefone:string, emailValido:string|null,
- *                     praedium:object, brevo:object, m0:object, corretor:object}>}
+ *                     praedium:object, brevo:object, m0:object, corretor:object, regua:object}>}
  */
 export async function processarLead(lead, opts = {}) {
   const p = await persistirLead(lead, opts);

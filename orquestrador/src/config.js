@@ -44,6 +44,9 @@ const SCHEMA = [
 
   // M0 ativa proativa (outbound) ao lead com opt-in.
   { name: 'M0_ATIVA_ENABLED',        critical: false, desc: "Liga/desliga a M0 ativa proativa ('true'/'false'; default 'true')" },
+
+  // Captura de inbound de número desconhecido no WhatsApp (Z-API).
+  { name: 'WHATSAPP_INBOUND_CAPTURE_ENABLED', critical: false, desc: "Captura inbound de número desconhecido no WhatsApp ('true' liga; default 'false' = só LP/Meta viram lead/automação)" },
 ];
 
 /**

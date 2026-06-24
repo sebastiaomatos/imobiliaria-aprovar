@@ -46,6 +46,18 @@ export const AGENDA_RECUPERACAO = [
   { etapa: 'R5b', minutos: 43200 }, // 30 dias
 ];
 
+/**
+ * Converte AGENDA_RECUPERACAO em [{etapa, enviar_em}] a partir de agora.
+ * Compartilhado pelo inbound (webhook Z-API) e pelos leads de LP/Meta (processarLead).
+ * @param {number} [agoraMs=Date.now()] base de tempo (ms).
+ */
+export function montarAgenda(agoraMs = Date.now()) {
+  return AGENDA_RECUPERACAO.map(({ etapa, minutos }) => ({
+    etapa,
+    enviar_em: new Date(agoraMs + minutos * 60 * 1000).toISOString(),
+  }));
+}
+
 // Palavras-chave (comparação em lowercase).
 export const OPTOUT_KEYS = ['parar', 'sair', 'pare', 'stop', 'cancelar', 'descadastrar'];
 export const AVISTA_KEYS = ['à vista', 'a vista', 'avista', 'dinheiro', 'recurso próprio'];

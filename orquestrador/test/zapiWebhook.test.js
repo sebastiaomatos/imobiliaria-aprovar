@@ -62,27 +62,37 @@ test('opt-out bloqueia envio futuro: M0 ativa não é enviada a quem deu opt-out
 
 // ----------------------- Coordenação com a M0 ativa ----------------------- //
 
-test('inbound de lead novo agenda régua e marca m0_ativa_enviada (coordenação)', async () => {
-  const { db, integr, deps } = ambiente();
-  await processarWebhookZapi(inbound('5565999992222', 'Oi, quero conhecer o Botanique', 'm2'), silencioso, deps);
+test('inbound de lead novo (captura LIGADA) agenda régua e marca m0_ativa_enviada (coordenação)', async () => {
+  process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED = 'true';
+  try {
+    const { db, integr, deps } = ambiente();
+    await processarWebhookZapi(inbound('5565999992222', 'Oi, quero conhecer o Botanique', 'm2'), silencioso, deps);
 
-  const lead = await db.getLeadByPhone('5565999992222');
-  assert.ok(lead, 'lead criado');
-  assert.equal(lead.m0_ativa_enviada, true, 'inbound marca m0_ativa_enviada p/ não duplicar');
-  assert.ok(db._agendamentos.some((a) => a.phone === '5565999992222'), 'régua agendada');
-  assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 0, 'inbound usa M0 inbound, não a M0 ativa');
+    const lead = await db.getLeadByPhone('5565999992222');
+    assert.ok(lead, 'lead criado');
+    assert.equal(lead.m0_ativa_enviada, true, 'inbound marca m0_ativa_enviada p/ não duplicar');
+    assert.ok(db._agendamentos.some((a) => a.phone === '5565999992222'), 'régua agendada');
+    assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 0, 'inbound usa M0 inbound, não a M0 ativa');
+  } finally {
+    delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED;
+  }
 });
 
 test('lead que veio do inbound não recebe M0 ativa em cadastro posterior (sem duplicar)', async () => {
-  const { db, integr, deps } = ambiente();
-  await processarWebhookZapi(inbound('5565999992222', 'quero saber das condições', 'm2'), silencioso, deps);
-  const m0AntesDoSite = integr.calls.zapi.filter(ehM0Ativa).length;
+  process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED = 'true';
+  try {
+    const { integr, deps } = ambiente();
+    await processarWebhookZapi(inbound('5565999992222', 'quero saber das condições', 'm2'), silencioso, deps);
+    const m0AntesDoSite = integr.calls.zapi.filter(ehM0Ativa).length;
 
-  await processarLead(
-    { nome: 'Fulano', telefone: '5565999992222', email: 'f@x.com', whatsapp_optin: true, origem: 'landing:x', fonte: 'landing:x:VIP', brevoListId: 7 },
-    { deps, log: silencioso },
-  );
-  assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, m0AntesDoSite, 'nenhuma M0 ativa adicional');
+    await processarLead(
+      { nome: 'Fulano', telefone: '5565999992222', email: 'f@x.com', whatsapp_optin: true, origem: 'landing:x', fonte: 'landing:x:VIP', brevoListId: 7 },
+      { deps, log: silencioso },
+    );
+    assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, m0AntesDoSite, 'nenhuma M0 ativa adicional');
+  } finally {
+    delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED;
+  }
 });
 
 // ----------------------- Não-regressão inbound ----------------------- //
@@ -99,10 +109,55 @@ test('inbound existente (engajou): cancela régua, em_atendimento, evento CAPI',
   assert.equal(integr.calls.metaCapi.length, 1, 'evento conversa_iniciada enviado');
 });
 
-test('idempotência inbound: mesmo messageId não reprocessa', async () => {
+test('idempotência inbound (captura LIGADA): mesmo messageId não reprocessa', async () => {
+  process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED = 'true';
+  try {
+    const { db, deps } = ambiente();
+    await processarWebhookZapi(inbound('5565999994444', 'oi', 'dup-1'), silencioso, deps);
+    const criadosApos1 = db._leads.size;
+    await processarWebhookZapi(inbound('5565999994444', 'oi', 'dup-1'), silencioso, deps);
+    assert.equal(db._leads.size, criadosApos1, 'reentrega ignorada');
+  } finally {
+    delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED;
+  }
+});
+
+// --------- Captura de inbound desligada (flag WHATSAPP_INBOUND_CAPTURE_ENABLED) --------- //
+
+test('captura DESLIGADA (default): inbound de número desconhecido NÃO cria lead/Praedium/régua/M0 — só audita', async () => {
+  delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED; // default = false
   const { db, integr, deps } = ambiente();
-  await processarWebhookZapi(inbound('5565999994444', 'oi', 'dup-1'), silencioso, deps);
-  const criadosApos1 = db._leads.size;
-  await processarWebhookZapi(inbound('5565999994444', 'oi', 'dup-1'), silencioso, deps);
-  assert.equal(db._leads.size, criadosApos1, 'reentrega ignorada');
+
+  await processarWebhookZapi(inbound('5565999998888', 'Oi, vi o anúncio', 'mx1'), silencioso, deps);
+
+  assert.equal(db._leads.size, 0, 'não cria lead');
+  assert.equal(integr.calls.praedium.length, 0, 'não chama Praedium');
+  assert.equal(db._agendamentos.length, 0, 'não agenda régua');
+  assert.equal(integr.calls.zapi.length, 0, 'não envia nenhuma mensagem (nem M0)');
+  assert.ok(db._eventos.some((e) => e.tipo === 'inbound_ignorado_sem_captura'), 'registra evento de auditoria');
+});
+
+test('escalada (pedir corretor) funciona mesmo com captura DESLIGADA', async () => {
+  delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED;
+  const { db, integr, deps } = ambiente();
+
+  await processarWebhookZapi(inbound('5565999997777', 'quero falar com um corretor', 'mx2'), silencioso, deps);
+
+  const lead = await db.getLeadByPhone('5565999997777');
+  assert.ok(lead, 'escalada cria o lead (handoff humano), independe da flag');
+  assert.equal(lead.estagio, 'em_atendimento');
+  assert.ok(integr.calls.zapi.some((m) => /avisando um corretor/i.test(m.message)), 'envia ESCALADA ao lead');
+  assert.ok(integr.calls.zapi.some((m) => /ESCALADA HUMANA/i.test(m.message)), 'avisa o corretor');
+  assert.ok(db._eventos.some((e) => e.tipo === 'escalada_humana'));
+});
+
+test('opt-out funciona mesmo com captura DESLIGADA (número desconhecido)', async () => {
+  delete process.env.WHATSAPP_INBOUND_CAPTURE_ENABLED;
+  const { db, integr, deps } = ambiente();
+
+  await processarWebhookZapi(inbound('5565999996666', 'PARAR', 'mx3'), silencioso, deps);
+
+  assert.equal(db._leads.size, 0, 'opt-out de número desconhecido não cria lead');
+  assert.ok(integr.calls.zapi.some((m) => /não te chamo mais por aqui/i.test(m.message)), 'confirma o opt-out');
+  assert.ok(db._eventos.some((e) => e.tipo === 'optout'), 'registra evento de opt-out');
 });

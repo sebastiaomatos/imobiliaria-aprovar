@@ -124,3 +124,40 @@ test('M0 ativa: lead com opt-out → não envia M0', async () => {
   await processarLead(leadSite(), { deps, log: silencioso });
   assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 0);
 });
+
+// ----------------------- Régua R1..R5b (LP/Meta) ----------------------- //
+
+test('régua: opt-in=true → agenda R1..R5b (continuação da M0 ativa)', async () => {
+  const { db, integr, deps } = ambiente();
+  await processarLead(leadSite(), { deps, log: silencioso });
+  assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 1, 'M0 ativa enviada');
+  assert.deepEqual(
+    db._agendamentos.map((a) => a.etapa),
+    ['R1', 'R2', 'R3', 'R4', 'R5a', 'R5b'],
+    'régua R1..R5b agendada',
+  );
+});
+
+test('régua: opt-in=false → NÃO agenda régua (sem trilho proativo)', async () => {
+  const { db, deps } = ambiente();
+  await processarLead(leadSite({ whatsapp_optin: false }), { deps, log: silencioso });
+  assert.equal(db._agendamentos.length, 0, 'sem opt-in não agenda régua');
+});
+
+test('régua: M0_ATIVA_ENABLED=false → NÃO agenda régua (trilho proativo desligado)', async () => {
+  process.env.M0_ATIVA_ENABLED = 'false';
+  try {
+    const { db, deps } = ambiente();
+    await processarLead(leadSite(), { deps, log: silencioso });
+    assert.equal(db._agendamentos.length, 0, 'régua segue a M0 ativa: desligada → sem régua');
+  } finally {
+    delete process.env.M0_ATIVA_ENABLED;
+  }
+});
+
+test('régua: idempotência — 2ª chamada não reagenda R1..R5b', async () => {
+  const { db, deps } = ambiente();
+  await processarLead(leadSite(), { deps, log: silencioso });
+  await processarLead(leadSite(), { deps, log: silencioso });
+  assert.equal(db._agendamentos.filter((a) => a.etapa === 'R1').length, 1, 'R1 agendada uma única vez');
+});
