@@ -144,6 +144,10 @@ section{padding:70px 0}
 .maquete-grid{display:grid;grid-template-columns:1fr minmax(280px,360px);gap:46px;align-items:center;margin-top:6px}
 .maquete-grid .maquete-copy .sec-lead{margin-bottom:16px}
 .maquete-grid .video-embed{margin:0;max-width:360px;width:100%}
+.maquete-points{list-style:none;display:grid;gap:11px;margin:18px 0 20px}
+.maquete-points li{display:flex;gap:11px;align-items:flex-start;font-size:1.02rem;color:var(--ink)}
+.maquete-points li b{color:var(--forest)}
+.maquete-points .mk{flex:none;width:24px;height:24px;border-radius:50%;background:var(--forest);color:var(--gold-2);display:inline-flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:900;margin-top:2px}
 
 /* zoom + lightbox (imagens de conteúdo) */
 .split img,.amen img,.auth-grid img,.loc-map img{cursor:zoom-in;transition:transform .4s ease}
@@ -159,7 +163,13 @@ section{padding:70px 0}
 .lightbox__nav--prev{left:20px}
 .lightbox__nav--next{right:20px}
 .lightbox__nav svg,.lightbox__close svg{pointer-events:none;display:block}
-@media (max-width:600px){.lightbox__nav{width:46px;height:46px;left:8px}.lightbox__nav--next{right:8px}.lightbox__close{top:10px;right:12px}}
+.lightbox__cap{position:absolute;left:50%;bottom:24px;transform:translateX(-50%);max-width:min(88vw,640px);
+  text-align:center;color:#fff;font-weight:600;font-size:1rem;line-height:1.35;letter-spacing:.2px;
+  padding:11px 22px;border-radius:999px;background:rgba(0,24,8,.6);backdrop-filter:blur(7px);
+  border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 30px rgba(0,0,0,.45);pointer-events:none}
+.lightbox__cap b{color:var(--gold-2);font-weight:700}
+.lightbox__cap:empty{display:none}
+@media (max-width:600px){.lightbox__nav{width:46px;height:46px;left:8px}.lightbox__nav--next{right:8px}.lightbox__close{top:10px;right:12px}.lightbox__cap{bottom:14px;font-size:.9rem;padding:9px 16px;max-width:90vw}}
 
 /* authority */
 .auth-grid{display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;margin-top:30px;align-items:start}
@@ -308,7 +318,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
       <ul class="specs">
         <li><b class="nowrap">R$ 312.500</b><span>lote de 250 m² · a partir de</span></li>
         <li><b class="nowrap">R$ 31.250</b><span>entrada (10%)</span></li>
-        <li><b>24x</b><span>saldo sem juros</span></li>
+        <li><b class="nowrap">até 180x</b><span>direto com a construtora</span></li>
         <li><b>15/07</b><span>você escolhe antes do geral</span></li>
       </ul>
       <div class="hero__cta">
@@ -382,7 +392,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   <div class="wrap">
     <p class="eyebrow">Clube entregue pronto para usar</p>
     <h2 class="sec-title serif">Lazer completo, do lago à praça de food truck — tudo dentro do condomínio</h2>
-    <p class="sec-lead">O lazer não fica na maquete: áreas sociais entregues equipadas, mobiliadas, decoradas e climatizadas, com portaria/fortaria social e alameda comercial interna. É clube de verdade, pronto para o primeiro dia — e o melhor lote para aproveitar tudo isso, você escolhe antes, na Fase VIP.</p>
+    <p class="sec-lead">O lazer não fica na maquete: áreas sociais entregues equipadas, mobiliadas, decoradas e climatizadas, com portaria social e alameda comercial interna. É clube de verdade, pronto para o primeiro dia — e o melhor lote para aproveitar tudo isso, você escolhe antes, na Fase VIP.</p>
     <div class="amen">
       <figure><img src="img/06-piscina.jpg" alt="Piscina" loading="lazy" decoding="async"><figcaption>Piscina &amp; pool bar</figcaption></figure>
       <figure><img src="img/07-pista-cooper-pergolado.jpg" alt="Pista de cooper com pergolado" loading="lazy" decoding="async"><figcaption>Pista de cooper (1,4 km)</figcaption></figure>
@@ -404,8 +414,14 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
       <div class="maquete-copy">
         <p class="eyebrow">Veja em movimento</p>
         <h2 class="sec-title serif">Conheça o residencial pela maquete</h2>
-        <p class="sec-lead">Um sobrevoo pelo masterplan: as 17 quadras, o lago com pier, a praia e o clube de lazer — para você visualizar onde ficam os melhores lotes antes mesmo da Fase VIP.</p>
-        <p class="sec-lead">São <b>441 lotes em 17 quadras</b>, de 250 a 347 m². Veja de cima onde estão os lotes de frente para o lago e ao lado do clube — e entre na Lista VIP para escolher um deles primeiro.</p>
+        <p class="sec-lead">Antes de pisar no terreno, sobrevoe o masterplan inteiro: as 17 quadras, o lago com pier, a praia particular e todo o clube de lazer. Em poucos minutos você entende como o Botanique foi pensado — e enxerga onde estão os lotes que realmente valem a disputa.</p>
+        <p class="sec-lead">Porque nem todo lote é igual. São <b>441 lotes</b>, mas os de <b>frente para o lago</b> e os <b>ao lado do clube</b> são poucos — e costumam ser os primeiros a sair. Na maquete, você vê de cima exatamente quais são.</p>
+        <ul class="maquete-points">
+          <li><span class="mk">✦</span><span><b>Lotes de 250 a 347 m²</b> em condomínio fechado, com infraestrutura completa entregue.</span></li>
+          <li><span class="mk">✦</span><span><b>Identifique os melhores</b> — frente para o lago, vizinhos do clube, esquinas — antes da concorrência.</span></li>
+          <li><span class="mk">✦</span><span><b>Quem está na Lista VIP escolhe primeiro</b>, a partir de 15/07, antes da abertura geral.</span></li>
+        </ul>
+        <p class="sec-lead">A diferença entre o lote dos sonhos e "o que sobrou" é simples: chegar antes. Entre na Lista VIP, receba o mapa de lotes e garanta a sua prioridade de escolha.</p>
         <div class="hero__cta" style="margin-top:6px"><a class="btn btn--vip btn--lg" href="#cadastro">Quero escolher meu lote antes</a></div>
       </div>
       <figure class="video-embed" id="maqueteEmbed" data-yt="">
@@ -552,6 +568,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   <button class="lightbox__nav lightbox__nav--next" type="button" aria-label="Próxima imagem">
     <svg viewBox="0 0 24 24" width="27" height="27" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
   </button>
+  <div class="lightbox__cap" aria-live="polite"></div>
 </div>
 
 <script>
@@ -599,16 +616,22 @@ if (maqueteFig){
   const lb = document.getElementById("lightbox");
   if (!lb) return;
   const lbImg = lb.querySelector("img");
+  const lbCap = lb.querySelector(".lightbox__cap");
   const btnClose = lb.querySelector(".lightbox__close");
   const btnPrev = lb.querySelector(".lightbox__nav--prev");
   const btnNext = lb.querySelector(".lightbox__nav--next");
   const imgs = Array.from(document.querySelectorAll(".split img, .amen img, .auth-grid img, .loc-map img"));
+  const legenda = (el) => {
+    const fc = el.closest("figure")?.querySelector("figcaption");
+    return (fc ? fc.textContent : el.alt || "").replace(/\s+/g, " ").trim();
+  };
   let idx = -1;
   const mostrar = (i) => {
     if (!imgs.length) return;
     idx = (i + imgs.length) % imgs.length;        // navega em loop
     const el = imgs[idx];
     lbImg.src = el.currentSrc || el.src; lbImg.alt = el.alt || "";
+    lbCap.textContent = legenda(el);              // título da foto, posicionado na base
   };
   const abrir = (i) => {
     mostrar(i);
@@ -642,11 +665,16 @@ if (maqueteFig){
   const PADV = 44; // padding vertical do hero no desktop (22 + 22)
   const ajustar = () => {
     if (window.innerWidth <= 880) { grid.style.transform = ""; hero.style.height = ""; return; } // mobile: fluxo natural
-    const livre = window.innerHeight - nav.offsetHeight - strip.offsetHeight; // espaço p/ o hero
+    // medidas fracionárias (getBoundingClientRect) evitam o erro de arredondamento do offsetHeight
+    const navH = nav.getBoundingClientRect().height;
+    const stripH = strip.getBoundingClientRect().height;
+    const livre = window.innerHeight - navH - stripH; // espaço p/ o hero
     const escala = Math.min(1, Math.max((livre - PADV) / grid.offsetHeight, 0.72));
     grid.style.transformOrigin = "center center";
     grid.style.transform = escala < 1 ? `scale(${escala})` : "";
-    hero.style.height = livre + "px";
+    // Math.ceil garante nav+hero+faixa >= viewport: a faixa encosta na base e cobre a
+    // fresta de ~1px (a linha branca do body). O padding de 22px da faixa absorve o overflow.
+    hero.style.height = Math.ceil(livre) + "px";
   };
   ajustar();
   window.addEventListener("resize", ajustar);
