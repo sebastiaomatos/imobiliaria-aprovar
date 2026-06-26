@@ -701,6 +701,27 @@ if (maqueteFig){
   ajustar();
   window.addEventListener("resize", ajustar);
   window.addEventListener("load", ajustar); // re-mede após fontes/imagens
+  // Re-mede após as fontes carregarem (o swap pode mudar a altura do nav/faixa e abrir fresta/sobra).
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(ajustar);
+  // Re-mede se o nav ou a faixa mudarem de altura por qualquer reflow tardio.
+  if ("ResizeObserver" in window) {
+    let raf; const remedir = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(ajustar); };
+    const ro = new ResizeObserver(remedir); ro.observe(nav); ro.observe(strip);
+  }
+})();
+
+/* Âncoras "#cadastro" (Entrar/Quero na Lista VIP): no DESKTOP levam a página TODA ao topo
+   — o formulário já está no hero — em vez de parar com o form sob o nav fixo (deixando o
+   hero cortado e fresta acima da faixa). No mobile, mantém o padrão (rola até o formulário). */
+(function(){
+  document.querySelectorAll('a[href="#cadastro"]').forEach((a) => {
+    a.addEventListener("click", (e) => {
+      if (window.innerWidth <= 880) return; // mobile: comportamento nativo (form fica abaixo do hero)
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
+    });
+  });
 })();
 
 /* Sticky CTA (mobile): só aparece DEPOIS que o 1º CTA do hero rola pra cima e some da tela. */
