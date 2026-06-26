@@ -181,8 +181,8 @@ section{padding:70px 0}
 @media (max-width:600px){.lightbox__nav{width:46px;height:46px;left:8px}.lightbox__nav--next{right:8px}.lightbox__close{top:10px;right:12px}.lightbox__cap{bottom:14px;font-size:.9rem;padding:9px 16px;max-width:90vw}}
 
 /* authority */
-.auth-grid{display:grid;grid-template-columns:0.74fr 1.26fr;gap:36px;margin-top:30px;align-items:center}
-.cred{list-style:none;display:grid;gap:14px}
+.auth-grid{display:grid;grid-template-columns:0.9fr 1.2fr;gap:44px;margin-top:28px;align-items:start}
+.cred{list-style:none;display:grid;gap:20px}
 .cred li{display:flex;gap:12px;align-items:flex-start;font-size:1rem;color:var(--ink)}
 .cred li b{color:var(--grifo)}
 .cred .mk{flex:none;width:26px;height:26px;border-radius:50%;background:var(--forest);color:var(--gold-2);display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:900;margin-top:1px}
@@ -190,7 +190,9 @@ section{padding:70px 0}
 
 /* conditions */
 .cond{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:32px}
-.cond .c{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;box-shadow:0 8px 24px rgba(0,32,8,.06)}
+.cond .c{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;box-shadow:0 8px 24px rgba(0,32,8,.06);position:relative;transition:transform .25s cubic-bezier(.34,1.4,.64,1),box-shadow .25s ease,border-color .25s ease,background-color .25s ease}
+.cond .c:hover{transform:translateY(-6px) scale(1.02);z-index:2;border-color:var(--forest-2);background:#f4f9f3;box-shadow:0 18px 40px rgba(0,67,16,.20)}
+.cond .c.hl:hover{background:var(--forest);border-color:var(--grifo-dark);box-shadow:0 20px 44px rgba(0,48,11,.42)}
 .cond .c b{display:block;font-family:'Fraunces',serif;font-style:italic;font-size:1.62rem;color:var(--forest);margin-bottom:6px;line-height:1.1}
 .cond .c span{color:var(--mute);font-size:.9rem}
 .cond .c.hl{background:var(--forest);color:var(--sand)}
@@ -232,6 +234,13 @@ section{padding:70px 0}
 .vip-gap{flex:none;width:118px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 6px;background:rgba(0,0,0,.1);border-left:1px dashed rgba(227,197,114,.3);border-right:1px dashed rgba(227,197,114,.3)}
 .vip-gap b{font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;color:var(--gold-2);line-height:1}
 .vip-gap span{font-size:.7rem;color:#cfe0cc;text-align:center;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+/* hover de etapa: destaca só a etapa sob o mouse (sem mexer no layout) */
+.vip-node,.vip-gap{transition:background-color .28s ease}
+.vip-node b,.vip-gap b{transition:transform .28s cubic-bezier(.34,1.4,.64,1)}
+.vip-node--now:hover{background:linear-gradient(140deg,rgba(245,127,23,.36),rgba(245,127,23,.12))}
+.vip-node--geral:hover{background:rgba(247,245,238,.08)}
+.vip-gap:hover{background:rgba(227,197,114,.10)}
+.vip-node:hover b,.vip-gap:hover b{transform:scale(1.07)}
 .cost{margin-top:18px;font-size:.98rem;color:#e9f0e6;background:rgba(0,0,0,.16);border-radius:12px;padding:16px 18px}
 .cost b{color:var(--gold-2)}
 
@@ -298,6 +307,8 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   .hero__video{display:none}
   .split img,.amen img,.auth-grid img,.loc-map img{transition:none}
   .split img:hover,.amen img:hover,.auth-grid img:hover,.loc-map img:hover{transform:none}
+  .cond .c,.vip-node,.vip-gap,.vip-node b,.vip-gap b{transition:none}
+  .cond .c:hover,.vip-node:hover b,.vip-gap:hover b{transform:none}
 }
 </style>
 </head>
@@ -376,7 +387,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
 <!-- ====== URGENCY STRIP (posição original; o hero é dimensionado por viewport p/ a faixa ficar acima da dobra no desktop) ====== -->
 <div class="strip">
   <div class="wrap strip__in">
-    <span>🔑 <b>Fase VIP a partir de 15/07</b> — antes da abertura geral (<b>19/07</b>). Quem está na lista escolhe primeiro.</span>
+    <span>🔑 <b>Fase VIP de escolha a partir de 15/07</b> — antes da abertura geral (<b>19/07</b>). Quem está na lista escolhe primeiro.</span>
   </div>
 </div>
 
@@ -443,18 +454,16 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
 <section class="bg-sand">
   <div class="wrap">
     <p class="eyebrow">Projeto e procedência</p>
+    <h2 class="sec-title serif">Empreendimento da Urba (Grupo MRV&amp;CO), vendido pela Aprovar</h2>
+    <p class="sec-lead">Mais que um lote: um <b>endereço</b> com arquitetura e paisagismo assinados, portaria e uma vizinhança que escolheu morar perto da água.</p>
     <div class="auth-grid">
-      <div>
-        <h2 class="sec-title serif">Empreendimento da Urba (Grupo MRV&amp;CO), vendido pela Aprovar</h2>
-        <p class="sec-lead" style="margin-bottom:18px">Mais que um lote: um <b>endereço</b> com arquitetura e paisagismo assinados, portaria e uma vizinhança que escolheu morar perto da água.</p>
-        <ul class="cred">
+      <ul class="cred">
         <li><span class="mk">✦</span><span><b>Urba — Grupo MRV&amp;CO.</b> <b>Uma das maiores plataformas de moradia do Brasil</b> é a incorporadora do Botanique.</span></li>
         <li><span class="mk">✦</span><span><b>Arquitetura de Jhonny Rother</b> e <b>paisagismo/projeto de Eduardo Lara</b> — assinatura e identidade botânica.</span></li>
         <li><span class="mk">✦</span><span><b>Conceito validado por pesquisa quantitativa de mercado</b> (BRAIN).</span></li>
         <li><span class="mk">✦</span><span><b>441 lotes em 17 quadras</b>, de 250 a 347 m² — masterplan que integra <b>moradia, lazer e natureza</b>.</span></li>
         <li><span class="mk">✦</span><span><b>Venda pela Aprovar Negócios Imobiliários</b> — <b>+10 anos em Cuiabá</b> e centenas de famílias atendidas · imobiliária parceira na comercialização · CRECI 9770J.</span></li>
-        </ul>
-      </div>
+      </ul>
       <img src="img/17-masterplan.png" alt="Masterplan do Botanique Residence — 441 lotes em 17 quadras" loading="lazy" decoding="async">
     </div>
   </div>
