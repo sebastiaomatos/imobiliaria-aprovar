@@ -18,6 +18,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:image" content="img/01-vista-aerea-lago.jpg">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#004310">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#004310">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#00300b">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="img/01-vista-aerea-lago.jpg" fetchpriority="high">
@@ -26,7 +29,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 /* ===== Botanique Residence — Landing VIP (branding Aprovar) ===== */
 :root{
   --forest:#004310; --forest-2:#0a5a1d; --forest-deep:#00300b;
-  --orange:#F57F17; --orange-2:#ff9a33; --gold:#C8A24B; --gold-2:#E3C572;
+  --orange:#F57F17; --orange-2:#ff9a33; --gold:#C8A24B; --gold-2:#F3C24A;
   --sand:#F7F5EE; --cream:#fbf9f3; --ink:#23271f; --mute:#5f6459; --orange-ink:#B0480A;
   --wa:#25D366; --line:#e4e0d2; --white:#fff;
   --radius:16px; --shadow:0 16px 44px rgba(0,32,8,.18);
@@ -36,7 +39,7 @@ html{scroll-behavior:smooth}
 body{font-family:'Manrope',system-ui,Arial,sans-serif;color:var(--ink);background:var(--white);line-height:1.6;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
 h1,h2,h3,h4{line-height:1.14;font-weight:800;text-wrap:balance}
-.serif{font-family:'Fraunces',Georgia,serif;font-style:italic;font-weight:600}
+.serif{font-family:'Fraunces',Georgia,serif;font-style:normal;font-weight:600;letter-spacing:-.01em}
 img{max-width:100%;display:block}
 a{color:inherit}
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--gold-2);outline-offset:2px}
@@ -70,14 +73,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(118deg,rgba(0,42,12,.95) 32%,rgba(0,48,16,.78) 60%,rgba(0,48,16,.5))}
 .hero__grid{display:grid;grid-template-columns:1.08fr .92fr;gap:46px;align-items:center}
-.tagline{display:inline-flex;align-items:center;gap:8px;font-size:.74rem;letter-spacing:1.6px;text-transform:uppercase;color:var(--forest-deep);
-  background:linear-gradient(100deg,var(--gold-2),var(--gold));padding:7px 15px;border-radius:999px;margin-bottom:18px;font-weight:800}
+.tagline{display:inline-block;font-size:.76rem;letter-spacing:2.4px;text-transform:uppercase;
+  color:#bcd2bf;font-weight:700;margin-bottom:16px}
 .hero h1{font-size:clamp(2.1rem,4.7vw,3.45rem);margin-bottom:16px}
 .hero h1 b{color:var(--gold-2)}
 .lead{font-size:1.1rem;color:#e9f0e6;max-width:560px}
 .specs{list-style:none;display:flex;gap:14px 30px;margin:24px 0 26px;flex-wrap:wrap}
 .specs li{display:flex;flex-direction:column;min-width:0}
-.specs b{font-size:1.34rem;color:var(--gold-2);font-family:'Fraunces',serif;font-style:italic;line-height:1.1}
+.specs b{font-size:1.34rem;color:var(--gold-2);font-family:'Fraunces',serif;font-style:normal;font-weight:600;line-height:1.1}
 .specs span{font-size:.78rem;color:#c5d6c2;margin-top:2px}
 .hero__cta{display:flex;gap:14px;flex-wrap:wrap}
 .microtrust{margin-top:16px;font-size:.84rem;color:#cfe0cc}
@@ -237,7 +240,8 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
 /* sticky mobile CTA */
 .sticky-cta{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;
   padding:10px 14px calc(10px + env(safe-area-inset-bottom));
-  background:rgba(0,48,11,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(200,162,75,.28)}
+  background:rgba(0,48,11,.97);backdrop-filter:blur(8px);border-top:1px solid rgba(200,162,75,.28);
+  transform:translateY(110%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
 .sticky-cta .btn{width:100%;padding:15px}
 .sticky-cta small{display:block;text-align:center;color:#bcd2bf;font-size:.7rem;margin-top:6px}
 
@@ -275,6 +279,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   .vip-gap{width:92px}
   .foot__in{flex-direction:column;align-items:flex-start}
   .sticky-cta{display:block}
+  .sticky-cta.is-visible{transform:translateY(0)}
   .loc-map figcaption{font-size:.66rem;padding:9px 12px;line-height:1.32}
 }
 @media (prefers-reduced-motion:reduce){
@@ -312,7 +317,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   <div class="wrap hero__grid">
     <div>
       <!-- DATAS: VIP 15/07 (provisório) · geral 19/07. Ajuste aqui se a Urba confirmar outra data. -->
-      <span class="tagline">Botanique Residence · Cuiabá · Lista VIP da Aprovar (CRECI 9770J)</span>
+      <span class="tagline">Botanique Residence · Cuiabá</span>
       <h1 class="serif">Um lote de frente para o lago em Cuiabá, <b>a partir de R$ 312.500</b></h1>
       <p class="lead">Imagine acordar a poucos passos de um lago com pier, praia particular e clube de lazer completo, dentro de um condomínio fechado.<br><br>Na tabela de lançamento, os lotes saem a <b>R$ 1.250/m²</b> — e quem está na <b>Lista VIP</b> escolhe os melhores <b>antes da abertura geral</b>, a partir de 15/07.</p>
       <ul class="specs">
@@ -322,7 +327,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
         <li><b>15/07</b><span>você escolhe antes do geral</span></li>
       </ul>
       <div class="hero__cta">
-        <a class="btn btn--vip btn--lg" href="#cadastro">Quero meu lote na Lista VIP</a>
+        <a id="heroCta" class="btn btn--vip btn--lg" href="#cadastro">Quero meu lote na Lista VIP</a>
       </div>
       <p class="microtrust">⭐ Cadastro <b>gratuito e sem compromisso</b> · prioridade na escolha dos melhores lotes<br>Prefere tirar dúvidas antes? <a class="wa-link" href="https://wa.me/5565992326461" data-wa data-msg="Olá! Quero saber mais sobre a Lista VIP do Botanique Residence.">Falar no WhatsApp</a></p>
     </div>
@@ -679,6 +684,19 @@ if (maqueteFig){
   ajustar();
   window.addEventListener("resize", ajustar);
   window.addEventListener("load", ajustar); // re-mede após fontes/imagens
+})();
+
+/* Sticky CTA (mobile): só aparece DEPOIS que o 1º CTA do hero rola pra cima e some da tela. */
+(function(){
+  const sticky = document.querySelector(".sticky-cta"), ref = document.getElementById("heroCta");
+  if (!sticky || !ref || !("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((entries) => {
+    const e = entries[0];
+    // mostra apenas quando o CTA do hero já passou ACIMA da viewport (sumiu pra cima)
+    const passouPraCima = !e.isIntersecting && e.boundingClientRect.top < 0;
+    sticky.classList.toggle("is-visible", passouPraCima);
+  }, { threshold: 0 });
+  io.observe(ref);
 })();
 
 function getTracking(){
