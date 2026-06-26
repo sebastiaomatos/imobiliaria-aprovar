@@ -57,13 +57,23 @@ async function start() {
   await app.register(sensible);
 
   // CORS para o(s) domínio(s) da landing — o POST /cadastro é chamado do browser.
-  const allowList = (process.env.CADASTRO_ALLOWED_ORIGINS || '')
-    .split(',')
-    .map((s) => s.trim())
-    .filter(Boolean);
-  if (allowList.length === 0) {
-    app.log.warn('[cors] CADASTRO_ALLOWED_ORIGINS vazio — CORS aberto a qualquer origem. Defina o domínio da landing em produção.');
-  }
+  // Domínios de produção da landing SEMPRE permitidos (baseline) + os de
+  // CADASTRO_ALLOWED_ORIGINS — assim o /cadastro funciona no domínio próprio
+  // (imoveis.imobiliariaaprovar.com.br) e no netlify mesmo sem reconfigurar o env.
+  const BASELINE_ORIGINS = [
+    'https://imoveis.imobiliariaaprovar.com.br',
+    'https://imobiliaria-aprovar.netlify.app',
+  ];
+  const allowList = [
+    ...new Set([
+      ...BASELINE_ORIGINS,
+      ...(process.env.CADASTRO_ALLOWED_ORIGINS || '')
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    ]),
+  ];
+  app.log.info({ allowList }, '[cors] origens permitidas para /cadastro');
   await app.register(cors, {
     origin: allowList.length ? allowList : true, // true = reflete a origem (aberto) até configurar
     methods: ['GET', 'POST', 'OPTIONS'],
