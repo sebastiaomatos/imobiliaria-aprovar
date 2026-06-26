@@ -490,46 +490,6 @@
                 "consentSettings": {
                     "consentStatus": "NOT_SET"
                 }
-            },
-            {
-                "accountId": "6291192222",
-                "containerId": "217853264",
-                "tagId": "28",
-                "name": "Google Ads - Conversão Lead VIP",
-                "type": "awct",
-                "parameter": [
-                    {
-                        "type": "TEMPLATE",
-                        "key": "conversionId",
-                        "value": "437636295"
-                    },
-                    {
-                        "type": "TEMPLATE",
-                        "key": "conversionLabel",
-                        "value": "COLE_AQUI_O_LABEL_DA_CONVERSAO"
-                    },
-                    {
-                        "type": "BOOLEAN",
-                        "key": "enableConversionLinker",
-                        "value": "true"
-                    },
-                    {
-                        "type": "BOOLEAN",
-                        "key": "rdp",
-                        "value": "false"
-                    }
-                ],
-                "fingerprint": "1782490000000",
-                "firingTriggerId": [
-                    "11"
-                ],
-                "tagFiringOption": "ONCE_PER_EVENT",
-                "monitoringMetadata": {
-                    "type": "MAP"
-                },
-                "consentSettings": {
-                    "consentStatus": "NOT_SET"
-                }
             }
         ],
         "trigger": [
