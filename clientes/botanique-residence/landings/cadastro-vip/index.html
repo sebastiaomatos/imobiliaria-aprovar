@@ -79,14 +79,14 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .hero h1{font-size:clamp(2.1rem,4.7vw,3.45rem);margin-bottom:16px}
 .hero h1 b{color:var(--grifo-dark)}
 .lead{font-size:1.1rem;color:#e9f0e6;max-width:560px}
-.lead b{color:var(--grifo-dark)}
+.lead b{color:var(--gold-2)}
 .specs{list-style:none;display:flex;gap:14px 30px;margin:24px 0 26px;flex-wrap:wrap}
 .specs li{display:flex;flex-direction:column;min-width:0}
-.specs b{font-size:1.34rem;color:var(--grifo-dark);font-family:'Fraunces',serif;font-style:normal;font-weight:600;line-height:1.1}
+.specs b{font-size:1.34rem;color:var(--gold-2);font-family:'Fraunces',serif;font-style:normal;font-weight:600;line-height:1.1}
 .specs span{font-size:.78rem;color:#c5d6c2;margin-top:2px}
 .hero__cta{display:flex;gap:14px;flex-wrap:wrap}
 .microtrust{margin-top:16px;font-size:.84rem;color:#cfe0cc}
-.microtrust b{color:var(--grifo-dark)}
+.microtrust b{color:var(--gold-2)}
 
 /* form card */
 .card{background:var(--white);color:var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;border-top:5px solid var(--orange)}
@@ -113,16 +113,16 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 /* sections */
 section{padding:70px 0}
 .eyebrow{color:var(--orange-ink);font-weight:800;letter-spacing:2px;text-transform:uppercase;font-size:.78rem;margin-bottom:10px}
-.sec-title{font-size:clamp(1.7rem,3.4vw,2.45rem);color:var(--forest);margin-bottom:14px}
+.sec-title{font-size:clamp(1.7rem,3.4vw,2.45rem);color:var(--forest);margin-bottom:14px;text-wrap:pretty}
 .sec-lead{font-size:1.06rem;color:var(--mute)}
 .bg-sand{background:var(--sand)}
 .bg-forest{background:var(--forest);color:var(--sand)}
 .bg-forest .eyebrow{color:var(--gold-2)}
-.bg-forest .sec-title{color:var(--gold-2)}
+.bg-forest .sec-title{color:var(--grifo-dark)}
 .bg-forest .sec-lead{color:#cfe0cc}
 /* grifos de prosa: destaque cria hierarquia — verde no fundo claro, dourado no escuro */
 .sec-lead b,.card__sub b,.maquete-points li b{color:var(--grifo)}
-.bg-forest .sec-lead b,.final .sec-lead b,.investor p b,.investor li b,.vlist li b{color:var(--grifo-dark)}
+.bg-forest .sec-lead b,.final .sec-lead b,.investor p b,.investor li b,.vlist li b{color:var(--gold-2)}
 
 /* urgency strip */
 .strip{background:linear-gradient(100deg,var(--forest-deep),var(--forest-2));color:var(--sand);padding:22px 0}
@@ -209,7 +209,7 @@ section{padding:70px 0}
 .chips li{background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 15px;font-size:.9rem;font-weight:600;color:var(--forest);display:flex;gap:7px;align-items:center}
 .chips li::before{content:"📍";font-size:.85rem}
 .investor{margin-top:24px;background:var(--forest);color:var(--sand);border-radius:var(--radius);padding:24px 26px;border-left:5px solid var(--gold)}
-.investor h3{color:var(--gold-2);font-size:1.16rem;margin-bottom:8px}
+.investor h3{color:var(--grifo-dark);font-size:1.16rem;margin-bottom:8px}
 .investor p{color:#dbe7d8;font-size:.98rem}
 .investor ul{list-style:none;display:grid;gap:8px;margin:10px 0 12px}
 .investor li{display:flex;gap:10px;align-items:flex-start;color:#dbe7d8;font-size:.96rem;line-height:1.45}
@@ -233,11 +233,11 @@ section{padding:70px 0}
 .vip-gap b{font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;color:var(--gold-2);line-height:1}
 .vip-gap span{font-size:.7rem;color:#cfe0cc;text-align:center;margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
 .cost{margin-top:18px;font-size:.98rem;color:#e9f0e6;background:rgba(0,0,0,.16);border-radius:12px;padding:16px 18px}
-.cost b{color:var(--grifo-dark)}
+.cost b{color:var(--gold-2)}
 
 /* final cta */
 .final{background:linear-gradient(118deg,var(--forest-deep),var(--forest-2));color:var(--sand);text-align:center}
-.final .sec-title{color:var(--gold-2);max-width:880px;margin-left:auto;margin-right:auto}
+.final .sec-title{color:var(--grifo-dark);max-width:880px;margin-left:auto;margin-right:auto}
 .final .sec-lead{margin:0 auto 26px;color:#e9f0e6;max-width:820px}
 .final .hero__cta{justify-content:center}
 
@@ -365,7 +365,6 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
         <button type="submit" class="btn btn--vip btn--block btn--lg">Quero entrar grátis e escolher antes →</button>
         <ul class="reassure">
           <li>Cadastro 100% gratuito e sem compromisso de compra</li>
-          <li><b>Depois do cadastro:</b> você recebe o mapa de lotes no WhatsApp e um corretor humano da Aprovar fala com você só sobre o Botanique — sem robô, sem spam</li>
           <li>Aprovar Negócios Imobiliários: <b>+10 anos em Cuiabá</b> e centenas de famílias atendidas (CRECI 9770J)</li>
           <li>Seus dados protegidos conforme a LGPD; você sai da lista quando quiser</li>
         </ul>
@@ -535,7 +534,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
             <b>19/07</b><span>Abertura geral</span>
           </div>
         </div>
-        <p class="cost">São <b>441 lotes</b> — e os de frente para o lago, perto do pier e do clube, são minoria e os primeiros a sair. Quem deixa para 19/07 escolhe entre o que a Fase VIP deixou. <b>Entrar na lista hoje é gratuito; recuperar essa janela depois, não tem como.</b></p>
+        <p class="cost">São <b>441 lotes</b> — e os de frente para o lago, perto do pier e do clube, são minoria e os primeiros a sair. Quem deixa para 19/07 escolhe entre o que a Fase VIP deixou.<br><br><b>Entrar na lista hoje é gratuito; recuperar essa janela depois, não tem como.</b></p>
       </div>
     </div>
   </div>
