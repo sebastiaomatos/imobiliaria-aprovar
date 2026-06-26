@@ -1,193 +1,265 @@
-# Runbook manual — Meta Ads + Google Ads — Botanique VIP (Aprovar)
+# Runbook manual — Meta Ads + Google Ads — Botanique VIP (Aprovar) — v2
 
-> Tudo em **rascunho/PAUSADO**. Estratégia segue o `config-campanhas.md` (correção oficial: **poucos conjuntos amplos, diferenciar por criativo/copy** — não fragmentar). Conformidade: "a partir de", "sujeito a alteração", **CRECI 9770J**, sem promessa de valorização (só hedge factual), imagens ilustrativas.
-> Fontes auditadas no repo: `anuncios-copy.md`, `plano-de-midia-botanique.md`, `config-campanhas.md`.
-> Salvar em: `clientes/botanique-residence/midia-paga/runbook-manual-meta.md`
+> A peça-pipeline do projeto. Tudo em **rascunho/PAUSADO**. Estratégia: poucos conjuntos amplos, diferenciar por criativo/copy (config-campanhas.md). Copy abaixo está **pronta pra colar** (já com quebras de linha/emojis) — copie o bloco cinza inteiro.
+> Conformidade: **CRECI 9770J** sempre; "imagens ilustrativas (render)"; "valores sujeitos a alteração" só onde aparece preço; **nunca** prometer valorização. Fontes auditadas: `criativos/README.md`, `criativos/roteiros-videos.md`, `anuncios-copy.md`, `config-campanhas.md`.
 
-## 0. Convenções
+## INVENTÁRIO REAL DE CRIATIVOS (nomes exatos do repo)
+Base: `clientes/botanique-residence/criativos/`
 
-### 0.1 Nomenclatura padronizada (minúsculas, sem acento, hífens -> segura pra UTM)
-> Regra de ouro: o **nome do anúncio = valor do `utm_content`** (via macro). Por isso nada de espaço/acento nos nomes.
+**Estáticos** (`criativos/estaticos/`):
+- `c1-story-vip.png` — Story 9:16 — escassez/lista VIP (geral)
+- `c2-feed-vip.png` — Feed 1:1 — escassez/lista VIP (geral)
+- `c3-story-natureza.png` — Story 9:16 — estilo de vida/lago (família)
+- `c4-feed-oferta.png` — Feed 1:1 — oferta R$ 312.500 (geral) — mostra preço
+- `c5-feed-investidor.png` — Feed 1:1 — patrimônio tangível (investidor)
+- `c6-story-construir.png` — Story 9:16 — construir do seu jeito (construir)
 
-| Nível | Nome padrão |
+**Carrossel** (`criativos/carrossel/`) — publicar em ORDEM card1→card5 (4:5):
+- `card1.png` capa/gancho · `card2.png` natureza · `card3.png` lazer · `card4.png` condições (mostra preço) · `card5.png` CTA/VIP
+
+**Vídeos — usar a pasta `exports/`** (`criativos/videos/exports/`):
+- `naturalmente-9x16.mp4` — hook do lago (9:16) — Reels/Stories
+- `maquete-1080p.mp4` — showcase do masterplan (cortar p/ 15–20s se o conjunto pedir)
+- `filmagem-h264-creci.mp4` — prova/portaria real, **já com selo CRECI** (9:16) — retargeting
+- (fontes crus em `criativos/videos/` — NÃO subir os `.mov`/4K direto; use os exports)
+
+**Performance Max** (`criativos/performance-max/`):
+- `pmax-land.png` (1.91:1) · `pmax-sq.png` (1:1) · `pmax-port.png` (4:5)
+- ⚠️ **Faltam logos PMax** (1:1 1200×1200 e 4:1 1200×300) — usar `aprovar-pmax-logo-1x1.png` e `aprovar-pmax-logo-4x1.png` (já gerados; colocar em `_templates/branding/pmax/`).
+
+> ⚠️ Os PNG estão ~48 px mais estreitos que o slot exato (publicáveis; pra pixel-perfect re-renderizar das `fontes/`).
+
+---
+
+## GUIA DE CAMPOS (Meta Ads Manager, PT-BR) — onde cada coisa vai
+- **Campanha:** `Objetivo da campanha` · `Nome da campanha` · `Categorias especiais de anúncios` · `Orçamento da campanha Advantage` (deixar **DESLIGADO** = ABO).
+- **Conjunto:** `Nome do conjunto de anúncios` · `Local de conversão` · `Pixel`/`Evento de conversão` · `Meta de desempenho` · `Orçamento diário` · `Público` (`Locais`, `Idade`, `Públicos personalizados`, `Controles do Advantage+`) · `Posicionamentos` (Advantage+).
+- **Anúncio:** `Nome do anúncio` · `Identidade` (`Página do Facebook` + `Conta do Instagram`) · `Configuração do anúncio` → `Criar anúncio` · `Formato` (`Imagem ou vídeo único` / `Carrossel`) · `Mídia` → `Adicionar mídia` → `Adicionar imagem`/`Adicionar vídeo` (e `Editar por posicionamento` p/ subir 9:16 + 1:1) · `Texto principal` · `Título` · `Descrição` · `Chamada para ação` · `Destino` (`Site` → `URL do site`, ou `Formulário instantâneo`) · `Rastreamento` → `Parâmetros de URL do site`.
+
+## Nomenclatura (UTM-safe: minúsculas, sem acento, hífen)
+- Campanhas: `meta-bot-leads-cadastro-vip` · `meta-bot-msg-conversas` · `meta-bot-leads-retargeting` · `gads-bot-search` · `gads-bot-pmax`
+- Conjuntos: `meta-bot-leads-formulario` · `meta-bot-leads-site` · `meta-bot-msg-amplo` · `meta-bot-leads-rtg-site30d`
+- Anúncios: `ad-<angulo>-<formato>` (ex.: `ad-familia-story`, `ad-investidor-feed`, `ad-amplo-carrossel`, `ad-rtg-prova`)
+
+## UTM (cole sem o `?`) — Meta: Anúncio → Rastreamento → "Parâmetros de URL do site"
+| Campanha | UTM |
 |---|---|
-| Campanha A | `meta-bot-leads-cadastro-vip` |
-| - Conjunto Formulário | `meta-bot-leads-formulario` |
-| - Conjunto Site | `meta-bot-leads-site` |
-| Campanha B | `meta-bot-msg-conversas` |
-| - Conjunto | `meta-bot-msg-amplo` |
-| Campanha C | `meta-bot-leads-retargeting` |
-| - Conjunto | `meta-bot-leads-rtg-site30d` |
-| Anúncios | `ad-<angulo>-<criativo>-<formato>` -> ex.: `ad-familia-c3-story`, `ad-investidor-c5-feed`, `ad-amplo-carrossel` |
-| Google Search | `gads-bot-search` - grupos `ag-marca`, `ag-lote`, `ag-lago` |
-| Google PMax | `gads-bot-pmax` - grupo de recursos `rg-botanique` |
+| A-Site | `utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-cadastro-vip&utm_content={{ad.name}}&utm_term={{adset.name}}` |
+| A-Formulário | (sem URL — atribuição via `fonte=meta_form`) |
+| B-Conversas | (sem URL — atribuição via referral do CTWA) |
+| C-Retargeting | `utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-retargeting&utm_content={{ad.name}}&utm_term={{adset.name}}` |
+| Google Search | `utm_source=google&utm_medium=cpc&utm_campaign=botanique-search&utm_content={creative}&utm_term={keyword}` |
+| Google PMax | `utm_source=google&utm_medium=pmax&utm_campaign=botanique-pmax&utm_content={campaignid}` |
 
-### 0.2 UTM (boas práticas: tag fixa por campanha + macros dinâmicos)
-> **Onde colar** — Meta: nível **Anúncio -> Rastreamento -> "Parâmetros de URL do site"** (cole sem o `?`). Google: **Campanha -> Configurações -> Opções de URL da campanha -> "Sufixo do URL final"** (sem `?`). Mantenha o **auto-tagging (gclid) do Google ligado** — UTM é p/ a landing gravar `fonte`; gclid é p/ o GA4.
-
-| Campanha | String de UTM | Observação |
-|---|---|---|
-| **A — Site** | `utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-cadastro-vip&utm_content={{ad.name}}&utm_term={{adset.name}}` | macros preenchem sozinhas |
-| **A — Formulário** | (sem URL) | atribuição via `fonte=meta_form` (webhook) |
-| **B — Conversas** | (sem URL) | atribuição via referral do CTWA |
-| **C — Retargeting** | `utm_source=meta&utm_medium=paid_social&utm_campaign=botanique-retargeting&utm_content={{ad.name}}&utm_term={{adset.name}}` | |
-| **Google — Search** | `utm_source=google&utm_medium=cpc&utm_campaign=botanique-search&utm_content={creative}&utm_term={keyword}` | ValueTrack `{keyword}`/`{creative}` |
-| **Google — PMax** | `utm_source=google&utm_medium=pmax&utm_campaign=botanique-pmax&utm_content={campaignid}` | PMax não suporta `{keyword}` |
-
-### 0.3 Pré-requisitos (fazer antes)
-- Aceitar **Lead Ads ToS** (https://www.facebook.com/legal/leadgen/tos) e **Públicos Personalizados ToS** (https://www.facebook.com/customaudiences/app/tos/?act=1155564008436004).
-- **Pixel `1708075710023708`** disparando `Lead` no cadastro (Gerenciador de Eventos -> Testar eventos).
-- **Decisão CAPI:** plugar `metaCapi.js` (Claude Code) **ou** começar o conjunto Site otimizando por **Visualizações da página de destino** e migrar pra `Lead` com volume.
-- **Geo padrão (todas):** `Cuiabá, MT` + `Várzea Grande, MT` + raio **30 km** - "pessoas que moram aqui".
-- **Google:** importar a conversão **`lead_submit`** do GA4 (`G-GXQZBRTHHW`) em Ferramentas -> Conversões.
+## Pré-requisitos
+- Aceitar Lead Ads ToS (https://www.facebook.com/legal/leadgen/tos) + Públicos Personalizados ToS (https://www.facebook.com/customaudiences/app/tos/?act=1155564008436004).
+- Pixel `1708075710023708` disparando `Lead` (Gerenciador de Eventos → Testar eventos).
+- Decisão CAPI (plugar `metaCapi.js` OU otimizar Site por "Visualizações da página de destino" no início).
+- Geo padrão (todas): Cuiabá, MT + Várzea Grande, MT + raio 30 km · "moram aqui".
+- Google: importar a conversão `lead_submit` do GA4 (`G-GXQZBRTHHW`).
 
 ---
 
-## 1. META — Campanha A - `meta-bot-leads-cadastro-vip` (Leads, ABO, Habitação/BR)
+# 1. META — Campanha A · `meta-bot-leads-cadastro-vip`
+Campanha → `Objetivo`: **Leads** · `Nome`: `meta-bot-leads-cadastro-vip` · `Categorias especiais`: **Habitação** (país Brasil) · `Orçamento Advantage`: DESLIGADO.
 
-**Conjunto `meta-bot-leads-formulario` - R$ 20/dia** (conclui após Lead Ads ToS; entrega de leads depende da BM)
-- Local de conversão **Formulários instantâneos** - tipo **Maior intenção** (tela de revisão) - Meta **Maximizar leads**.
-- Formulário `968212722880024`: nome, telefone, e-mail **+ qualificadora "Seu objetivo? Morar / Investir / Construir"** + **consentimento LGPD + link** https://imobiliaria-aprovar.netlify.app/privacidade.html
-- Público AMPLO (geo padrão; 28-60 sugestão; PT; **Advantage+**) - Posicionamentos **Advantage+** - Lance **maior volume** -> depois **limite de custo** no CPL alvo.
+## Conjunto `meta-bot-leads-formulario` — R$ 20/dia ⚠️(após Lead Ads ToS; entrega depende da BM)
+`Local de conversão`: **Formulários instantâneos** · `Meta de desempenho`: **Maximizar número de leads** · `Orçamento diário`: **20,00** · `Público`: geo padrão, idade 28–60, **Advantage+** · `Posicionamentos`: **Advantage+**.
+Formulário (`Formulário instantâneo` → usar `968212722880024`): tipo **Maior intenção** · campos nome/telefone/e-mail + qualificadora **"Qual é o seu objetivo? Morar / Investir / Construir"** + consentimento LGPD + privacidade https://imobiliaria-aprovar.netlify.app/privacidade.html
 
-**Conjunto `meta-bot-leads-site` - R$ 15/dia**
-- Local de conversão **Site** - Pixel `1708075710023708` - evento `Lead` (ou LPV no início — ver 0.3) - Meta **Maximizar conversões** - mesmo público/posicionamentos.
-- URL https://imobiliaria-aprovar.netlify.app/ + UTM da tabela 0.2 (A-Site).
+## Conjunto `meta-bot-leads-site` — R$ 15/dia
+`Local de conversão`: **Site** · `Pixel`: `1708075710023708` · `Evento de conversão`: **Lead** (ou "Visualizações da página de destino" no início) · `Meta de desempenho`: **Maximizar número de conversões** · `Orçamento diário`: **15,00** · público/posicionamentos iguais · `Destino`→`URL do site`: `https://imobiliaria-aprovar.netlify.app/` + UTM (A-Site).
 
-**Anúncios (crie os mesmos nos 2 conjuntos; copie os textos abaixo):**
+## Anúncios da Campanha A (crie os mesmos nos 2 conjuntos)
+> Em cada anúncio: `Identidade` = Página **Imobiliária Aprovar** + Instagram vinculado · `Formato` conforme abaixo · suba a `Mídia` real · cole `Texto principal`/`Título`/`Descrição` · `CTA` **Cadastre-se** · No Site: `URL` + UTM; no Formulário: selecionar o form (sem URL). Use `Editar por posicionamento` p/ subir **9:16 + 1:1**.
 
-### `ad-familia-c3-story` / `ad-familia-c1-feed` / `ad-familia-c4-feed` (c3 lago, c1 VIP, c4 oferta — 9:16 e 1:1)
-- Texto 1: Imagina o fim de tarde: as crianças na faixa de areia, o pôr do sol no pier e a sua casa a poucos passos do lago. O Botanique Residence — condomínio fechado com lago, praia particular e um clube pronto (piscina com pool bar, quadras e pista de cooper de 1,4 km) — está chegando a Cuiabá. Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral.
-- Texto 2: Um lugar para a sua família viver perto da natureza, com segurança de condomínio fechado: lago com praia, piscina, pista de cooper, playground e pet place. Botanique Residence, em Cuiabá — lotes a partir de R$ 312.500. A lista VIP escolhe primeiro. Cadastre-se.
-- Títulos: `Lotes à beira de um lago em Cuiabá` / `Sua casa a poucos passos do lago` — Descrição: `Lista VIP aberta - CRECI 9770J`
+### `ad-familia-story` / `ad-familia-feed` / `ad-familia-video`
+Mídia: `criativos/estaticos/c3-story-natureza.png` (9:16) · `criativos/estaticos/c2-feed-vip.png` (1:1) · `criativos/videos/exports/naturalmente-9x16.mp4`
+`Texto principal`:
+```
+Imagina o fim de tarde: as crianças na faixa de areia, o pôr do sol no pier e a sua casa a poucos passos do lago. 🌅
 
-### `ad-investidor-c5-feed` / `ad-investidor-c1-story` (c5 patrimônio, c1 VIP)
-- Texto 1: Dinheiro parado perde valor. Terra em região nobre de Cuiabá continua sendo terra. O Botanique Residence — condomínio fechado com lago, pier e estrutura de clube (piscina, quadras, academia) — abre lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Garanta a melhor posição entrando na lista VIP antes da abertura geral.
-- Texto 2: Ativo real, no seu nome, em um dos endereços mais bem pensados de Cuiabá. Lotes de 250 a 347 m² no Botanique Residence, a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores lotes primeiro.
-- Texto 3: O Coxipó é uma das regiões que mais crescem em Cuiabá — perto da UFMT, do Shopping 3 Américas e de uma malha de comércio em expansão. Um lote em condomínio fechado aqui é patrimônio real, com potencial de valorização. Botanique Residence: lotes a partir de R$ 312.500, entrada de 10%. A lista VIP escolhe os melhores primeiro.
-- Títulos: `Seu patrimônio em terra, em Cuiabá` / `Lotes a partir de R$ 312.500` / `Coxipó: região em expansão` — Descrição: `Lista VIP - escolha primeiro`
+O Botanique Residence está chegando a Cuiabá — um condomínio fechado com lago, praia particular e clube pronto: piscina com pool bar, quadras e pista de cooper de 1,4 km.
 
-### `ad-construir-c6-story` / `ad-construir-c4-feed` (c6 construir, c4 oferta)
-- Texto 1: O terreno é seu. A casa, do seu jeito. No Botanique Residence — condomínio fechado com lago, praia e clube de lazer (piscina, quadras, academia, espaço gourmet) — você escolhe um lote de 250 a 347 m² para construir o lar dos seus sonhos. A partir de R$ 312.500, entrada de 10%, 24x sem juros. Lista VIP aberta: escolha o seu antes da abertura geral.
-- Títulos: `Seu lote para construir em Cuiabá` / `O terreno é seu. A casa, dos sonhos` — Descrição: `250-347 m² - entrada de 10%`
+Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros.
 
-### `ad-amplo-c2-feed` / `ad-amplo-c3-story` / `ad-amplo-carrossel` (c2 VIP feed, c3, carrossel)
-- Texto 1: Um condomínio fechado com lago, praia particular e estrutura de resort — 31 itens de lazer, do pier à pista de cooper de 1,4 km — chegou a Cuiabá. Botanique Residence: lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Entre na lista VIP e escolha seu lote antes da abertura geral.
-- Texto 2: Lago com praia, pier, piscina, pista de cooper de 1,4 km e um clube entregue pronto. Tudo dentro de um condomínio fechado em Cuiabá. Lotes a partir de R$ 312.500. Cadastre-se na lista VIP.
-- Títulos: `Lago, praia e lazer em Cuiabá` / `Condomínio fechado com lago` — Descrição: `Lista VIP aberta - CRECI 9770J`
+Entre na lista VIP e escolha seu lote antes da abertura geral. 👇
+```
+`Título`: `Lotes à beira de um lago em Cuiabá`
+`Descrição`: `Lista VIP aberta · CRECI 9770J`
 
-- **No Site:** CTA `Cadastre-se` + URL + UTM. **No Formulário:** CTA `Cadastre-se` + selecionar o form (sem URL).
-- **SOTA:** em cada anúncio use **Advantage+ Creative / "Personalizar por posicionamento"** e suba **9:16 + 1:1 (ou 4:5)** — não um formato só.
-- **Decisão (repo):** julgar por **custo-por-lead QUALIFICADO** (responde no WhatsApp/agenda), não CPL puro; após 5-7 dias migrar verba pro vencedor.
+### `ad-investidor-feed` / `ad-investidor-story`
+Mídia: `criativos/estaticos/c5-feed-investidor.png` (1:1) · `criativos/estaticos/c1-story-vip.png` (9:16)
+`Texto principal`:
+```
+Dinheiro parado perde valor. Terra em região nobre de Cuiabá continua sendo terra. 📍
 
----
+O Botanique Residence — condomínio fechado com lago, pier e estrutura de clube (piscina, quadras, academia) — abre lotes a partir de R$ 312.500, com entrada de 10% e 24x sem juros.
 
-## 2. META — Campanha B - `meta-bot-msg-conversas` (Engajamento, R$ 15) — trava sem WhatsApp na BM
-- Engajamento -> **Mensagens -> WhatsApp** `(65) 99232-6461` - otimizar **conversas iniciadas** - conjunto único `meta-bot-msg-amplo` (geo/idade da A) - Advantage+ - Lance maior volume.
+Um ativo real, no seu nome, em um dos endereços mais bem pensados da cidade.
 
-### `ad-msg-c1-story` / `ad-msg-c3-story` (c1, c3 + vídeo `naturalmente` 9:16) - CTA Enviar mensagem
-- Texto 1: Quer conhecer o Botanique Residence antes de todo mundo? Chama no WhatsApp - a gente te manda o mapa dos lotes, as condições de lançamento (entrada de 10%, 24x sem juros) e tira suas dúvidas na hora. Lotes a partir de R$ 312.500.
-- Texto 2: Lago com pier, praia particular, piscina, quadras e pista de cooper de 1,4 km — tudo em condomínio fechado em Cuiabá. Me chama no WhatsApp que eu te mostro os lotes disponíveis e monto a condição que cabe no seu plano.
-- Título: `Fale com a Aprovar no WhatsApp`
-- Saudação automática: Oi! Que bom seu interesse no Botanique. Me diz seu nome e seu objetivo (morar, investir ou construir) que eu já te mando o mapa de lotes e as condições.
+Garanta a melhor posição entrando na lista VIP antes da abertura geral.
+```
+`Título`: `Seu patrimônio em terra, em Cuiabá`
+`Descrição`: `Lista VIP · valores sujeitos a alteração · CRECI 9770J`
 
----
+### `ad-construir-story` / `ad-construir-feed`
+Mídia: `criativos/estaticos/c6-story-construir.png` (9:16) · `criativos/estaticos/c4-feed-oferta.png` (1:1)
+`Texto principal`:
+```
+O terreno é seu. A casa, do seu jeito. 🏡
 
-## 3. META — Campanha C - `meta-bot-leads-retargeting` (Leads, R$ 8) — Públicos ToS + Pixel coletando + restrição de Habitação
-- Conjunto único `meta-bot-leads-rtg-site30d`, **combinar**: Visitantes Landing **30d EXCLUINDO `lead_submit`** + Engajou IG/FB **365d** + Vídeo **25%+ 365d** - Advantage+ - Site/Pixel `Lead` - UTM C-Retargeting.
-- ATENÇÃO: **Habitação pode bloquear públicos personalizados/Lookalike** — confirme na criação; se travar, o RTG fica só no permitido.
+No Botanique Residence — condomínio fechado com lago, praia e clube de lazer (piscina, quadras, academia, espaço gourmet) — você escolhe um lote de 250 a 347 m² para construir o lar dos seus sonhos.
 
-### `ad-rtg-c4-feed` / `ad-rtg-c1-story` (c4 oferta, c1 VIP + vídeos `maquete`/`filmagem`)
-- Texto 1: Você viu o Botanique e o lago ficou na cabeça, né? A lista VIP ainda está aberta — e quem entra agora escolhe os melhores lotes (perto do lago e do lazer) antes da abertura geral. Lotes a partir de R$ 312.500, entrada de 10%. Garanta o seu.
-- Texto 2: Os melhores lotes do Botanique — os de frente pro lago — saem primeiro. Ainda dá tempo de entrar na lista VIP e escolher antes da abertura geral.
-- Títulos: `Ainda dá tempo de entrar na VIP` / `Os melhores lotes saem primeiro` — Descrição: `Escolha antes da abertura geral`
+A partir de R$ 312.500, entrada de 10%, 24x sem juros.
 
----
+Lista VIP aberta: escolha o seu antes da abertura geral.
+```
+`Título`: `Seu lote para construir em Cuiabá`
+`Descrição`: `250–347 m² · valores sujeitos a alteração · CRECI 9770J`
 
-## 4. Públicos exatos (Meta — reaproveitáveis)
-- **Geo padrão:** Cuiabá + Várzea Grande + 30 km - "moram aqui".
-- **Visitantes Landing 30d (sem cadastro):** fonte Pixel, 30d, **excluir** `lead_submit`.
-- **Converteram `lead_submit` 180d** (exclusão).
-- **Engajou IG/FB 365d** - **Vídeo 25%+ 365d** - **Lista VIP (e-mail, upload do Brevo)** — também semente de **Lookalike 1%** (criar quando houver ~100+ `lead_submit`).
-- **Posicionamentos:** Advantage+ em todas (com verba pequena, é o que entrega melhor).
+### `ad-amplo-carrossel` / `ad-amplo-video` / `ad-amplo-feed`
+Mídia: `Formato` **Carrossel** com `criativos/carrossel/card1.png`→`card5.png` (NESTA ORDEM) · ou vídeo `criativos/videos/exports/maquete-1080p.mp4` · ou `criativos/estaticos/c2-feed-vip.png` (1:1)
+`Texto principal`:
+```
+Um condomínio fechado com lago, praia particular e estrutura de resort chegou a Cuiabá. 🌳
 
----
+Do pier à pista de cooper de 1,4 km, com piscina, quadras e clube entregue pronto — um refúgio a poucos minutos da cidade.
 
-## 5. GOOGLE — Campanha 1 - `gads-bot-search` (Pesquisa)
-- Tipo **Pesquisa** - Meta **Leads** - **Rede: só Pesquisa** (DESMARCAR Display e parceiros).
-- **Orçamento R$ 15/dia** - Lances **Maximizar cliques** (semana 1) -> **Maximizar conversões** quando `lead_submit` tiver volume.
-- **Locais:** Cuiabá + região - alvo **"presença — pessoas que moram/estão regularmente"** - Idioma Português.
-- **Públicos:** adicionar **em Observação** (não restringir): "no mercado — imóveis".
-- **Sufixo do URL final** (0.2 Google-Search) - **Caminho de exibição (display):** `/lista-vip` (cosmético; URL final = landing raiz).
-- **Negativas:** aluguel, alugar, emprego, vaga, apartamento, usado, mobiliado, planta baixa grátis.
+Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros.
 
-**Grupos + palavras (correspondência de frase):**
-- `ag-marca`: "botanique residence", "botanique cuiabá", "botanique urba".
-- `ag-lote`: "lote condomínio fechado cuiabá", "terreno cuiabá", "loteamento fechado cuiabá", "comprar lote cuiabá".
-- `ag-lago`: "condomínio com lago cuiabá", "condomínio clube cuiabá".
+Entre na lista VIP e escolha seu lote antes da abertura geral. 👇
+```
+`Título`: `Lago, praia e lazer em Cuiabá`
+`Descrição`: `Lista VIP aberta · CRECI 9770J`
 
-**RSA (15 títulos / 4 descrições — cole):**
-Títulos: `Botanique Residence Cuiabá` / `Lotes em Condomínio Fechado` / `Lago e Praia Particular` / `Lotes a partir de R$312.500` / `Entrada de 10% - 24x s/ Juros` / `Clube de Lazer Completo` / `Lista VIP — Escolha Antes` / `Terrenos de 250 a 347 m²` / `Condomínio com Lago em Cuiabá` / `Lotes para Construir em Cuiabá` / `Pré-lançamento Botanique` / `Pista de Cooper e Piscina` / `Cadastre-se na Lista VIP` / `Aprovar - CRECI 9770J` / `Fale no WhatsApp Agora`
-Descrições: `Condomínio fechado com lago, praia e clube de lazer em Cuiabá. Lista VIP aberta.` / `Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Sujeito a disponibilidade.` / `Escolha seu lote antes da abertura geral. Cadastre-se na lista VIP.` / `Aprovar Negócios Imobiliários - CRECI 9770J - Atendimento no WhatsApp.`
+### `ad-oferta-feed`
+Mídia: `criativos/estaticos/c4-feed-oferta.png` (1:1)
+`Texto principal`:
+```
+Lote em condomínio fechado, à beira de um lago, em Cuiabá. 🌅
 
-**Extensões (recursos):**
-- Sitelinks: `Lista VIP` / `Condições de lançamento` / `Lazer e estrutura` / `Falar no WhatsApp`
-- Frases de destaque: `Lago e praia particular` / `Clube de lazer completo` / `Entrada de 10%` / `24x sem juros` / `Condomínio fechado`
-- Snippet estruturado (Comodidades): Lago / Praia / Piscina / Pista de cooper / Quadras / Pet place
+A partir de R$ 312.500 — entrada de 10% (R$ 31.250) e saldo em 24x SEM JUROS. Ou plano longo a partir de R$ 3.204/mês.
+
+A pré-venda começou e os melhores lotes vão primeiro para quem está na lista VIP.
+
+Cadastre-se e escolha antes da abertura geral. 👇
+```
+`Título`: `Lotes a partir de R$ 312.500`
+`Descrição`: `24x sem juros · valores sujeitos a alteração · CRECI 9770J`
 
 ---
 
-## 6. GOOGLE — Campanha 2 - `gads-bot-pmax` (Performance Max) — R$ 0 na Fase 0; liga na Fase 1 (R$ 10) / Fase 2 (R$ 15)
-- Meta de conversão **`lead_submit`** - Sufixo do URL final (0.2 PMax).
-- **Grupo de recursos `rg-botanique`:** assets PMax **1200x628, 1200x1200, 960x1200** + **logos 1:1 e 4:1** (`_templates/branding/pmax/`) + títulos/descrições abaixo.
-- **Sinais de público:** segmento personalizado "lote / condomínio fechado Cuiabá" + dados do site.
-- **Textos (cole):**
-  - Títulos (30): `Lotes com Lago em Cuiabá` / `Botanique Residence` / `Lista VIP Aberta` / `Entrada de 10%` / `Clube de Lazer Completo`
-  - Títulos longos (90): `Condomínio fechado com lago e praia particular em Cuiabá — lotes a partir de R$ 312.500` / `Entre na lista VIP do Botanique e escolha seu lote antes da abertura geral`
-  - Descrições (90): `Lotes de 250 a 347 m², entrada de 10% e 24x sem juros. Sujeito a disponibilidade.` / `Lago, pier, praia, piscina e pista de cooper. Cadastre-se na lista VIP. CRECI 9770J.` / (curta 60) `Condomínio fechado com lago em Cuiabá. Lista VIP.`
-  - Nome da empresa: `Aprovar Imobiliária`
+# 2. META — Campanha B · `meta-bot-msg-conversas` (R$ 15/dia) ⚠️ trava sem WhatsApp na BM
+Campanha → `Objetivo`: **Engajamento** · `Categorias especiais`: Habitação · CBO desligado.
+Conjunto `meta-bot-msg-amplo`: `Local de conversão`/`Tipo`: **Apps de mensagem → WhatsApp** `(65) 99232-6461` · `Meta de desempenho`: **Maximizar número de conversas** · `Orçamento diário`: **15,00** · público/posicionamentos da A.
 
-*(Opcional — Demand Gen `gads-bot-demandgen` no YouTube/Discover/Gmail quando os Reels estiverem prontos.)*
+### `ad-msg-story` / `ad-msg-feed`
+Mídia: `criativos/estaticos/c1-story-vip.png` + `criativos/videos/exports/naturalmente-9x16.mp4` · `criativos/estaticos/c2-feed-vip.png` · `CTA`: **Enviar mensagem**
+`Texto principal`:
+```
+Quer conhecer o Botanique Residence antes de todo mundo? 🌳
 
----
+Chama no WhatsApp 👉 a gente te manda o mapa dos lotes, as condições de lançamento (entrada de 10%, 24x sem juros) e tira suas dúvidas na hora.
 
-## 7. Mapa criativo -> posicionamento (proporção)
-| Criativo | Formato | Posicionamento |
-|---|---|---|
-| c1, c3, c6 (story) | 9:16 | Reels/Stories |
-| c2, c4, c5 (feed) | 1:1 | Feed |
-| carrossel | 4:5 | Feed/Explorar |
-| vídeo `naturalmente` (hook lago) | 16:9 -> reenquadrar 9:16 | Feed/Reels - A e B |
-| vídeo `maquete` (showcase) | 9:16 — cortar 15-20s + comprimir | Reels - engajados (A) e RTG (C) |
-| vídeo `filmagem` (prova) | 9:16 | RTG (C) - PENDENTE: corrigir céu magenta |
+Lotes a partir de R$ 312.500.
+```
+`Título`: `Fale com a Aprovar no WhatsApp`
+Mensagem de saudação automática (campo "Mensagem de saudação" no anúncio):
+```
+Oi! Que bom seu interesse no Botanique 🌳 Me diz seu nome e seu objetivo (morar, investir ou construir) que eu já te mando o mapa de lotes e as condições.
+```
 
 ---
 
-## 8. Reality-check de performance (SOTA, honesto)
-- **Fase de aprendizado é o gargalo:** ~R$58/dia no Meta + CPL de ticket alto (R$20-40) -> nenhum conjunto chega a ~50 conv/sem. Mitigação: **Formulário = motor de volume**; **Site otimiza por LPV no início**; RTG/CTWA gastam pouco até encher/destravar.
-- **CAPI ausente** degrada a otimização por `Lead` (só client-side) -> decidir 0.3.
-- **Hoje só a A-Site roda de fato** — Formulário (ToS+BM), B (BM) e C (ToS+Pixel) estão travados.
-- **Refresh criativo** quando a frequência passar de ~2,5.
+# 3. META — Campanha C · `meta-bot-leads-retargeting` (R$ 8/dia) ⚠️ Públicos ToS + Pixel coletando + restrição Habitação
+Campanha → `Objetivo`: **Leads** · `Categorias especiais`: Habitação · CBO desligado.
+Conjunto `meta-bot-leads-rtg-site30d`: `Local de conversão`: Site · `Pixel`/`Evento`: Lead · `Orçamento diário`: **8,00** · `Públicos personalizados`: **INCLUIR** "Visitantes Landing 30d" + "Engajou IG/FB 365d" + "Vídeo 25%+ 365d"; **EXCLUIR** "Converteram lead_submit 180d" · UTM (C-Retargeting).
+> Se Habitação bloquear os públicos personalizados/Lookalike, mantenha só o permitido.
 
-## 9. Ordem de montagem + status de bloqueios
-1. Apagar as 3 drafts da API (sem categoria) -> recriar manualmente **com Habitação**.
-2. Aceitar os 2 ToS - conferir Pixel/`Lead` - importar `lead_submit` no Google.
-3. Meta: A (form+site) -> B -> C, **tudo pausado**. Google: Search -> PMax (R$0), **tudo pausado**.
-4. Conferir orçamentos (A 35 - B 15 - C 8 - Search 15 - PMax 0), públicos, UTM (0.2), categoria especial.
-5. **Play** só após: landing publicada/testada + (idealmente) CAPI + webhook Praedium OK + data 15/07 confirmada.
+### `ad-rtg-oferta` / `ad-rtg-prova` / `ad-rtg-story`
+Mídia: `criativos/estaticos/c4-feed-oferta.png` · `criativos/videos/exports/filmagem-h264-creci.mp4` (já com selo CRECI) · `criativos/estaticos/c1-story-vip.png` · `CTA`: **Cadastre-se**
+`Texto principal`:
+```
+Você viu o Botanique e o lago ficou na cabeça, né? 🌅
 
-| Bloqueio | Destrava com |
+A lista VIP ainda está aberta — e quem entra agora escolhe os melhores lotes (perto do lago e do lazer) antes da abertura geral.
+
+Lotes a partir de R$ 312.500, entrada de 10%.
+
+Garanta o seu. 👇
+```
+`Título`: `Ainda dá tempo de entrar na VIP`
+`Descrição`: `Escolha antes da abertura geral · CRECI 9770J`
+
+---
+
+# 4. Públicos (Meta — Gerenciador de Públicos → Criar público → Público personalizado)
+- **Visitantes Landing 30d** — fonte **Site (Pixel `1708075710023708`)** · "Todos os visitantes" · 30 dias.
+- **Converteram lead_submit 180d** — fonte Pixel · evento **Lead** · 180 dias (exclusão).
+- **Engajou IG/FB 365d** — público de engajamento (conta IG + Página FB) · 365 dias.
+- **Vídeo 25%+ 365d** — público de vídeo · "assistiram 25%+" · 365 dias.
+- **Lista VIP (e-mail)** — upload do Brevo; semente de **Lookalike 1%** (criar com ~100+ leads).
+
+---
+
+# 5. GOOGLE — `gads-bot-search` (Pesquisa)
+`Objetivo`: Leads · `Tipo de campanha`: **Pesquisa** · `Redes`: **só Rede de Pesquisa** (DESMARCAR Display e parceiros de pesquisa) · `Orçamento`: **15,00/dia** · `Lances`: **Maximizar cliques** (semana 1) → **Maximizar conversões** (`lead_submit`) com volume · `Locais`: Cuiabá+região, opção **"Presença: pessoas que moram/estão regularmente"** · `Idiomas`: Português · `Públicos-alvo`: adicionar **em Observação** "No mercado: imóveis" · `Mais configurações → Opções de URL → Sufixo do URL final`: UTM (Google-Search) · `Caminho de exibição`: `lista-vip`.
+`Palavras-chave negativas`: aluguel, alugar, emprego, vaga, apartamento, usado, mobiliado.
+
+**Grupos de anúncios + palavras (frase):**
+- `ag-marca`: "botanique residence", "botanique cuiabá", "botanique urba"
+- `ag-lote`: "lote condomínio fechado cuiabá", "terreno cuiabá", "loteamento fechado cuiabá", "comprar lote cuiabá"
+- `ag-lago`: "condomínio com lago cuiabá", "condomínio clube cuiabá"
+
+**RSA — campo `Títulos` (15):** `Botanique Residence Cuiabá` · `Lotes em Condomínio Fechado` · `Lago e Praia Particular` · `Lotes a partir de R$312.500` · `Entrada de 10% · 24x s/ Juros` · `Clube de Lazer Completo` · `Lista VIP — Escolha Antes` · `Terrenos de 250 a 347 m²` · `Condomínio com Lago em Cuiabá` · `Lotes para Construir em Cuiabá` · `Pré-lançamento Botanique` · `Pista de Cooper e Piscina` · `Cadastre-se na Lista VIP` · `Aprovar · CRECI 9770J` · `Fale no WhatsApp Agora`
+**RSA — campo `Descrições` (4):** `Condomínio fechado com lago, praia e clube de lazer em Cuiabá. Lista VIP aberta.` · `Lotes a partir de R$ 312.500, entrada de 10% e 24x sem juros. Sujeito a disponibilidade.` · `Escolha seu lote antes da abertura geral. Cadastre-se na lista VIP.` · `Aprovar Negócios Imobiliários · CRECI 9770J · Atendimento no WhatsApp.`
+
+**Recursos (extensões):**
+- `Sitelinks`: Lista VIP · Condições de lançamento · Lazer e estrutura · Falar no WhatsApp
+- `Frases de destaque`: Lago e praia particular · Clube de lazer completo · Entrada de 10% · 24x sem juros · Condomínio fechado
+- `Snippets estruturados` (Comodidades): Lago · Praia · Piscina · Pista de cooper · Quadras · Pet place
+
+---
+
+# 6. GOOGLE — `gads-bot-pmax` (Performance Max) — R$ 0 na Fase 0; Fase 1 R$10 / Fase 2 R$15
+`Meta de conversão`: `lead_submit` · `Sufixo do URL final`: UTM (PMax).
+`Grupo de recursos` `rg-botanique`:
+- `Imagens`: `criativos/performance-max/pmax-land.png` (1.91:1) · `pmax-sq.png` (1:1) · `pmax-port.png` (4:5)
+- `Logotipos`: `aprovar-pmax-logo-1x1.png` (1:1) + `aprovar-pmax-logo-4x1.png` (4:1) — de `_templates/branding/pmax/`
+- `Títulos` (30): `Lotes com Lago em Cuiabá` · `Botanique Residence` · `Lista VIP Aberta` · `Entrada de 10%` · `Clube de Lazer Completo`
+- `Títulos longos` (90): `Condomínio fechado com lago e praia particular em Cuiabá — lotes a partir de R$ 312.500` · `Entre na lista VIP do Botanique e escolha seu lote antes da abertura geral`
+- `Descrições`: (90) `Lotes de 250 a 347 m², entrada de 10% e 24x sem juros. Sujeito a disponibilidade.` · `Lago, pier, praia, piscina e pista de cooper. Cadastre-se na lista VIP. CRECI 9770J.` · (60) `Condomínio fechado com lago em Cuiabá. Lista VIP.`
+- `Nome da empresa`: `Aprovar Imobiliária`
+- `Sinais de público`: segmento personalizado "lote / condomínio fechado Cuiabá" + dados do site.
+
+---
+
+# 7. MAPA MESTRE criativo → anúncio (todos os criativos usados)
+| Criativo (arquivo) | Vai para |
 |---|---|
+| `estaticos/c1-story-vip.png` | A `ad-investidor-story` · B `ad-msg-story` · C `ad-rtg-story` |
+| `estaticos/c2-feed-vip.png` | A `ad-familia-feed`/`ad-amplo-feed` · B `ad-msg-feed` |
+| `estaticos/c3-story-natureza.png` | A `ad-familia-story` |
+| `estaticos/c4-feed-oferta.png` | A `ad-oferta-feed`/`ad-construir-feed` · C `ad-rtg-oferta` |
+| `estaticos/c5-feed-investidor.png` | A `ad-investidor-feed` |
+| `estaticos/c6-story-construir.png` | A `ad-construir-story` |
+| `carrossel/card1..5.png` | A `ad-amplo-carrossel` (em ordem) |
+| `videos/exports/naturalmente-9x16.mp4` | A `ad-familia-video` · B `ad-msg-story` |
+| `videos/exports/maquete-1080p.mp4` | A `ad-amplo-video` |
+| `videos/exports/filmagem-h264-creci.mp4` | C `ad-rtg-prova` |
+| `performance-max/pmax-land/sq/port.png` | Google PMax |
+
+# 8. Status de bloqueios + gaps
+| Item | Situação |
+|---|---|
+| A-Site | ✅ pode rodar (criativos prontos) |
 | A-Formulário | Lead Ads ToS + Lead Access da BM |
 | B-Conversas | número WhatsApp vinculado à BM |
 | C-Retargeting | Públicos ToS + Pixel coletando + checar restrição Habitação |
-| A-Site | OK pode rodar (falta só o anúncio com criativo) |
+| Logos PMax | TODO: colocar `aprovar-pmax-logo-1x1/4x1.png` em `_templates/branding/pmax/` |
+| Vídeos | usar `exports/` (não os fontes crus); `maquete` cortar p/ 15–20s se necessário |
+| Dimensão dos PNG | ~48px estreitos; publicável; re-renderizar das `fontes/` p/ pixel-perfect |
 
----
-
-## IDs de referência (Aprovar / Botanique)
-- Página FB: `104610745886365` - Ad Account: `act_1155564008436004` - Pixel: `1708075710023708`
-- Form instantâneo: `968212722880024` - WhatsApp corretor: `(65) 99232-6461`
-- GA4: `G-GXQZBRTHHW` - GTM: `GTM-WKGMFK6B` - Google Ads: `962-696-9646`
-- Landing: https://imobiliaria-aprovar.netlify.app/ - Privacidade: https://imobiliaria-aprovar.netlify.app/privacidade.html
-- Empreendimento: 441 lotes, 250-347 m², a partir de R$ 312.500, entrada 10%, 24x sem juros (ou plano longo a partir de R$ 3.204/mês). Fase VIP 15/07 - Geral 19/07. Urba / Grupo MRV&CO. Aprovar CRECI 9770J.
+# IDs
+Página `104610745886365` · Ad Account `act_1155564008436004` · Pixel `1708075710023708` · Form `968212722880024` · WhatsApp `(65) 99232-6461` · GA4 `G-GXQZBRTHHW` · GTM `GTM-WKGMFK6B` · Google Ads `962-696-9646` · Landing https://imobiliaria-aprovar.netlify.app/ · CRECI 9770J · 441 lotes, 250–347 m², a partir de R$ 312.500, entrada 10%, 24x sem juros (ou a partir de R$ 3.204/mês). VIP 15/07 · Geral 19/07.
