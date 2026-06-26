@@ -92,6 +92,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{ou
 .form-card h2{font-size:1.32rem;color:var(--forest)}
 .form-card .vip-pill{display:inline-block;background:#fff3e0;color:#a85700;font-size:.7rem;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:10px}
 .card__sub{color:var(--mute);font-size:.9rem;margin:5px 0 16px}
+.form-micro{font-size:.8rem;color:var(--mute);text-align:center;margin:2px 0 10px}
 .form-card label{display:block;font-size:.84rem;font-weight:700;color:#4c5246;margin-bottom:12px}
 .form-card input,.form-card select{width:100%;margin-top:6px;padding:13px 14px;border:1.5px solid var(--line);
   border-radius:11px;font-size:1rem;font-family:inherit;background:var(--cream)}
@@ -120,7 +121,7 @@ section{padding:70px 0}
 .bg-forest .sec-lead{color:#cfe0cc}
 /* grifos de prosa: destaque cria hierarquia — verde no fundo claro, dourado no escuro */
 .sec-lead b,.card__sub b,.maquete-points li b{color:var(--grifo)}
-.bg-forest .sec-lead b,.final .sec-lead b,.investor p b,.vlist li b{color:var(--grifo-dark)}
+.bg-forest .sec-lead b,.final .sec-lead b,.investor p b,.investor li b,.vlist li b{color:var(--grifo-dark)}
 
 /* urgency strip */
 .strip{background:linear-gradient(100deg,var(--forest-deep),var(--forest-2));color:var(--sand);padding:22px 0}
@@ -209,6 +210,9 @@ section{padding:70px 0}
 .investor{margin-top:24px;background:var(--forest);color:var(--sand);border-radius:var(--radius);padding:24px 26px;border-left:5px solid var(--gold)}
 .investor h3{color:var(--gold-2);font-size:1.16rem;margin-bottom:8px}
 .investor p{color:#dbe7d8;font-size:.98rem}
+.investor ul{list-style:none;display:grid;gap:8px;margin:10px 0 12px}
+.investor li{display:flex;gap:10px;align-items:flex-start;color:#dbe7d8;font-size:.96rem;line-height:1.45}
+.investor li::before{content:"✦";color:var(--grifo-dark);flex:none;margin-top:1px}
 
 /* VIP crescendo (value stack + timeline) */
 .vstack{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:30px}
@@ -320,10 +324,10 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
   </video>
   <div class="wrap hero__grid">
     <div>
-      <!-- DATAS: VIP 15/07 (provisório) · geral 19/07. Ajuste aqui se a Urba confirmar outra data. -->
+      <!-- DATAS CONFIRMADAS: Fase VIP 15/07 · abertura geral 19/07. -->
       <span class="tagline">Botanique Residence · Cuiabá</span>
-      <h1 class="serif">Um lote de frente para o lago em Cuiabá, <b>a partir de R$ 312.500</b></h1>
-      <p class="lead">Imagine acordar a poucos passos de um <b>lago com pier</b>, <b>praia particular</b> e clube de lazer completo, dentro de um condomínio fechado.<br><br>Na tabela de lançamento, os lotes saem a <b>R$ 1.250/m²</b> — e quem está na <b>Lista VIP</b> escolhe os melhores <b>antes da abertura geral</b>, a partir de 15/07.</p>
+      <h1 class="serif">Escolha seu lote de frente para o lago, em Cuiabá, <b>antes de todo mundo</b></h1>
+      <p class="lead">Imagine acordar a poucos passos de um <b>lago com pier</b>, <b>praia particular</b> e clube de lazer completo, dentro de um condomínio fechado.<br><br>Os lotes saem a <b>R$ 1.250/m²</b> na tabela de lançamento — e quem entra na <b>Lista VIP</b>, de graça, escolhe os melhores <b>4 dias antes da abertura geral</b>, em 15/07.</p>
       <ul class="specs">
         <li><b class="nowrap">R$ 312.500</b><span>lote de 250 m² · a partir de</span></li>
         <li><b class="nowrap">R$ 31.250</b><span>entrada (10%)</span></li>
@@ -349,26 +353,19 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
           <input type="tel" name="telefone" placeholder="(65) 9 0000-0000" required aria-required="true" autocomplete="tel" inputmode="tel">
         </label>
         <label>E-mail
-          <input type="email" name="email" placeholder="voce@email.com" required aria-required="true" autocomplete="email" inputmode="email">
-        </label>
-        <label>Seu objetivo com o lote
-          <select name="intencao" required aria-required="true">
-            <option value="" selected disabled>Selecione…</option>
-            <option value="morar">Morar com a família</option>
-            <option value="investir">Investir / patrimônio</option>
-            <option value="construir">Construir do meu jeito</option>
-            <option value="explorar">Ainda decidindo / quero entender</option>
-          </select>
+          <input type="email" name="email" placeholder="voce@email.com" autocomplete="email" inputmode="email">
         </label>
         <label class="consent">
           <input type="checkbox" name="consentimento" required aria-required="true">
           <span>Sim! Autorizo a Aprovar (CRECI 9770J) a me enviar o material e falar comigo por <strong>WhatsApp</strong> e e-mail sobre o Botanique Residence. Sem spam — saio quando quiser. <a href="privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
         </label>
         <p class="form-err" id="formErr" role="alert" hidden>Confira os campos destacados — inclusive o aceite da Política de Privacidade.</p>
-        <button type="submit" class="btn btn--vip btn--block btn--lg">Quero entrar na Lista VIP →</button>
+        <p class="form-micro">Leva 30 segundos · sem compromisso de compra.</p>
+        <button type="submit" class="btn btn--vip btn--block btn--lg">Quero entrar grátis e escolher antes →</button>
         <ul class="reassure">
           <li>Cadastro 100% gratuito e sem compromisso de compra</li>
-          <li>Atendimento humano da Aprovar (CRECI 9770J) — a imobiliária parceira na venda</li>
+          <li><b>Depois do cadastro:</b> você recebe o mapa de lotes no WhatsApp e um corretor humano da Aprovar fala com você só sobre o Botanique — sem robô, sem spam</li>
+          <li>Aprovar Negócios Imobiliários: <b>+10 anos em Cuiabá</b> e centenas de famílias atendidas (CRECI 9770J)</li>
           <li>Seus dados protegidos conforme a LGPD; você sai da lista quando quiser</li>
         </ul>
       </form>
@@ -403,14 +400,14 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
     <h2 class="sec-title serif">Lazer completo, do lago à praça de food truck — tudo dentro do condomínio</h2>
     <p class="sec-lead">O lazer não fica na maquete: áreas sociais entregues equipadas, mobiliadas, decoradas e climatizadas, com portaria social e alameda comercial interna. É <b>clube de verdade</b>, pronto para o primeiro dia — e o <b>melhor lote</b> para aproveitar tudo isso, você <b>escolhe antes</b>, na Fase VIP.</p>
     <div class="amen">
-      <figure><img src="img/06-piscina.jpg" alt="Piscina" loading="lazy" decoding="async"><figcaption>Piscina &amp; pool bar</figcaption></figure>
-      <figure><img src="img/07-pista-cooper-pergolado.jpg" alt="Pista de cooper com pergolado" loading="lazy" decoding="async"><figcaption>Pista de cooper (1,4 km)</figcaption></figure>
-      <figure><img src="img/11-quadra-tenis.jpg" alt="Quadra de tênis" loading="lazy" decoding="async"><figcaption>Quadra de tênis</figcaption></figure>
-      <figure><img src="img/08-playground.jpg" alt="Playground" loading="lazy" decoding="async"><figcaption>Playground</figcaption></figure>
-      <figure><img src="img/09-pet-place.jpg" alt="Pet place" loading="lazy" decoding="async"><figcaption>Pet place</figcaption></figure>
-      <figure><img src="img/10-redario.jpg" alt="Redário" loading="lazy" decoding="async"><figcaption>Redário</figcaption></figure>
-      <figure><img src="img/12-area-piquenique.jpg" alt="Área de piquenique" loading="lazy" decoding="async"><figcaption>Área de piquenique</figcaption></figure>
-      <figure><img src="img/13-praca-food-truck.jpg" alt="Praça de food truck" loading="lazy" decoding="async"><figcaption>Praça de food truck</figcaption></figure>
+      <figure><img src="img/06-piscina.jpg" alt="Piscina" loading="lazy" decoding="async"><figcaption>Piscina &amp; pool bar — o domingo sem precisar viajar</figcaption></figure>
+      <figure><img src="img/07-pista-cooper-pergolado.jpg" alt="Pista de cooper com pergolado" loading="lazy" decoding="async"><figcaption>Pista de cooper (1,4 km) — sua corrida ao amanhecer, dentro de casa</figcaption></figure>
+      <figure><img src="img/11-quadra-tenis.jpg" alt="Quadra de tênis" loading="lazy" decoding="async"><figcaption>Quadra de tênis — o jogo de sábado que vira tradição</figcaption></figure>
+      <figure><img src="img/08-playground.jpg" alt="Playground" loading="lazy" decoding="async"><figcaption>Playground — as tardes em que ninguém quer entrar</figcaption></figure>
+      <figure><img src="img/09-pet-place.jpg" alt="Pet place" loading="lazy" decoding="async"><figcaption>Pet place — o passeio do pet sem sair do condomínio</figcaption></figure>
+      <figure><img src="img/10-redario.jpg" alt="Redário" loading="lazy" decoding="async"><figcaption>Redário — a tarde de domingo sem hora pra acabar</figcaption></figure>
+      <figure><img src="img/12-area-piquenique.jpg" alt="Área de piquenique" loading="lazy" decoding="async"><figcaption>Área de piquenique — o almoço ao ar livre que vira rotina</figcaption></figure>
+      <figure><img src="img/13-praca-food-truck.jpg" alt="Praça de food truck" loading="lazy" decoding="async"><figcaption>Praça de food truck — o jantar de sexta sem pegar o carro</figcaption></figure>
     </div>
     <p class="sec-lead" style="margin-top:22px;font-size:.92rem;color:#aec3ab">Mais: salão de festas, churrasqueiras, academia, sauna e wellness com sala de massagem. Imagens meramente ilustrativas (renders).</p>
   </div>
@@ -449,12 +446,13 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
     <div class="auth-grid">
       <div>
         <h2 class="sec-title serif">Empreendimento da Urba (Grupo MRV&amp;CO), vendido pela Aprovar</h2>
+        <p class="sec-lead" style="margin-bottom:18px">Mais que um lote: um <b>endereço</b> com arquitetura e paisagismo assinados, portaria e uma vizinhança que escolheu morar perto da água.</p>
         <ul class="cred">
         <li><span class="mk">✦</span><span><b>Urba — Grupo MRV&amp;CO.</b> <b>Uma das maiores plataformas de moradia do Brasil</b> é a incorporadora do Botanique.</span></li>
         <li><span class="mk">✦</span><span><b>Arquitetura de Jhonny Rother</b> e <b>paisagismo/projeto de Eduardo Lara</b> — assinatura e identidade botânica.</span></li>
         <li><span class="mk">✦</span><span><b>Conceito validado por pesquisa quantitativa de mercado</b> (BRAIN).</span></li>
         <li><span class="mk">✦</span><span><b>441 lotes em 17 quadras</b>, de 250 a 347 m² — masterplan que integra <b>moradia, lazer e natureza</b>.</span></li>
-        <li><span class="mk">✦</span><span><b>Venda pela Aprovar Negócios Imobiliários</b> — imobiliária parceira na comercialização · <b>CRECI 9770J</b>.</span></li>
+        <li><span class="mk">✦</span><span><b>Venda pela Aprovar Negócios Imobiliários</b> — <b>+10 anos em Cuiabá</b> e centenas de famílias atendidas · imobiliária parceira na comercialização · CRECI 9770J.</span></li>
         </ul>
       </div>
       <img src="img/17-masterplan.png" alt="Masterplan do Botanique Residence — 441 lotes em 17 quadras" loading="lazy" decoding="async">
@@ -496,7 +494,13 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
     </figure>
     <div class="investor">
       <h3>Para quem pensa em patrimônio: terra em região que cresce</h3>
-      <p>Não prometemos número de valorização — e desconfie de quem promete. O fato: o Coxipó é uma das regiões em expansão de Cuiabá, vizinha de polos como UFMT e Shopping 3 Américas. Um lote em condomínio fechado bem estruturado aqui é um <b>ativo real, no seu nome</b>, com <b>alto potencial de valorização</b> à medida que a região se desenvolve — uma expectativa apoiada no contexto, não uma promessa de retorno. Marque "investir" no cadastro e a Aprovar prepara a leitura da região e dos melhores lotes para o seu objetivo.</p>
+      <p>Não prometemos número de valorização — e desconfie de quem promete. O fato:</p>
+      <ul>
+        <li><b>Terra de verdade, no seu nome</b> — um ativo real, não um papel.</li>
+        <li><b>Coxipó: região em expansão</b>, vizinha de polos como UFMT e Shopping 3 Américas.</li>
+        <li><b>Alto potencial de valorização</b> conforme a região se desenvolve — sem promessa de retorno.</li>
+      </ul>
+      <p>Na Lista VIP, a Aprovar prepara a leitura da região e dos melhores lotes para quem pensa em investir.</p>
     </div>
   </div>
 </section>
@@ -510,7 +514,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
     <div class="vstack">
       <ul class="vlist">
         <li><span class="mk">1</span><span><b>Escolha antecipada:</b> você seleciona os melhores lotes (frente para o lago, ao lado do clube, na quadra e metragem que quiser) a partir de 15/07 — <b>antes da abertura geral</b>.</span></li>
-        <li><span class="mk">2</span><span><b>As condições de lançamento na mão:</b> tabela a R$ 1.250/m², <b>entrada de 10%</b> e as duas formas de pagar o saldo — até 24x sem juros (pré-fixado) <b>ou</b> o plano longo a partir de R$ 3.204/mês (até 180x). Planos distintos.</span></li>
+        <li><span class="mk">2</span><span><b>As condições de lançamento na mão:</b> tabela a R$ 1.250/m², <b>entrada de 10%</b> e as duas formas de pagar o saldo — até 24x sem juros (pré-fixado) <b>ou</b> o plano longo a partir de R$ 3.204/mês (até 180x).</span></li>
         <li><span class="mk">3</span><span><b>Mapa de lotes e de localização</b> enviados direto para você, <b>antes de irem ao público</b>.</span></li>
         <li><span class="mk">4</span><span><b>Atendimento prioritário e humano</b> com um corretor da Aprovar (CRECI 9770J), que monta a condição que cabe no seu plano: <b>morar, investir ou construir</b>.</span></li>
         <li><span class="mk">5</span><span><b>Aviso em primeira mão</b> da abertura da Fase VIP — você não descobre tarde demais. Tudo <b>gratuito e sem compromisso</b>.</span></li>
@@ -530,7 +534,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
             <b>19/07</b><span>Abertura geral</span>
           </div>
         </div>
-        <p class="cost">São <b>441 lotes</b> — e os de frente para o lago, perto do pier e do clube, são minoria e os primeiros a sair. Quem deixa para 19/07 escolhe entre o que a Fase VIP deixou. <b>Entrar na lista hoje é gratuito; recuperar essa janela depois, não tem como.</b> <span style="opacity:.8">(Datas provisórias, a confirmar.)</span></p>
+        <p class="cost">São <b>441 lotes</b> — e os de frente para o lago, perto do pier e do clube, são minoria e os primeiros a sair. Quem deixa para 19/07 escolhe entre o que a Fase VIP deixou. <b>Entrar na lista hoje é gratuito; recuperar essa janela depois, não tem como.</b></p>
       </div>
     </div>
   </div>
@@ -555,7 +559,7 @@ footer{background:#021f08;color:#a9c2ac;padding:34px 0 110px;font-size:.88rem}
       <a href="https://imobiliariaaprovar.com.br" target="_blank" rel="noopener" aria-label="Aprovar Negócios Imobiliários — site oficial"><img class="foot-logo" src="img/aprovar-logo.png" alt="Aprovar Negócios Imobiliários · CRECI 9770J" width="197" height="44"></a>
       <a class="btn btn--wa" href="https://wa.me/5565992326461" data-wa data-msg="Olá! Vim pela página do Botanique Residence.">WhatsApp (65) 99232-6461</a>
     </div>
-    <p class="foot__legal">Botanique Residence é um empreendimento da Urba (Grupo MRV&amp;CO). A Aprovar Negócios Imobiliários atua como imobiliária parceira na comercialização (CRECI 9770J) e não é a incorporadora. Imagens meramente ilustrativas (renders). Preços, metragens e condições "a partir de", referentes à tabela de lançamento, sujeitos a alteração sem aviso prévio e à disponibilidade de estoque. "24x sem juros" e o plano longo (a partir de R$ 3.204/mês, 180x com IPCA + juros) são planos distintos. Datas (15/07 VIP · 19/07 geral) provisórias, a confirmar. Esta página não constitui oferta. Não há promessa de valorização.</p>
+    <p class="foot__legal">Botanique Residence é um empreendimento da Urba (Grupo MRV&amp;CO). A Aprovar Negócios Imobiliários atua como imobiliária parceira na comercialização (CRECI 9770J) e não é a incorporadora. Imagens meramente ilustrativas (renders). Preços, metragens e condições "a partir de", referentes à tabela de lançamento, sujeitos a alteração sem aviso prévio e à disponibilidade de estoque. "24x sem juros" e o plano longo (a partir de R$ 3.204/mês, 180x com IPCA + juros) são planos distintos. Datas de lançamento: 15/07 (Fase VIP) e 19/07 (abertura geral). Esta página não constitui oferta. Não há promessa de valorização.</p>
   </div>
 </footer>
 
@@ -749,8 +753,8 @@ form.addEventListener("submit", async (e) => {
   const payload = { ...data, consentimento: true, whatsapp_optin: true, empreendimento: "Botanique Residence", lista: "VIP", ...TRACKING, ts: new Date().toISOString() };
 
   // Mensagem de WhatsApp (usada no sucesso e como recuperação se o POST falhar).
-  const msg = `Oi! Sou ${data.nome}. Quero entrar na Lista VIP do Botanique Residence (objetivo: ${data.intencao || "a definir"}). `
-            + `Meu WhatsApp: ${data.telefone} · e-mail: ${data.email}.`;
+  const msg = `Oi! Sou ${data.nome}. Quero entrar na Lista VIP do Botanique Residence. `
+            + `Meu WhatsApp: ${data.telefone}` + (data.email ? ` · e-mail: ${data.email}` : "") + ".";
 
   // A conversão (lead_submit) só conta com CONFIRMAÇÃO de sucesso do servidor.
   let enviado = false;
@@ -767,7 +771,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   if (enviado){
-    track("lead_submit", { intencao: data.intencao, empreendimento: "Botanique", lista: "VIP", ...(CONFIG.formEndpoint ? {} : { via: "whatsapp_only" }) });
+    track("lead_submit", { empreendimento: "Botanique", lista: "VIP", ...(CONFIG.formEndpoint ? {} : { via: "whatsapp_only" }) });
     formErr.hidden = true;
     if (CONFIG.redirectToWhatsAppAfterForm) window.open(waLink(msg), "_blank", "noopener");
     form.reset();
