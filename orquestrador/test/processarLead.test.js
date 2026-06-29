@@ -5,7 +5,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { processarLead } from '../src/services/processarLead.js';
-import { criarDbFake, criarIntegracoesFake, ehM0Ativa, ehNotificacaoCorretor } from './_fakes.js';
+import { criarDbFake, criarIntegracoesFake, ehM0Ativa, ehM0Materiais, ehNotificacaoCorretor } from './_fakes.js';
 
 process.env.CORRETOR_WHATSAPP = '5565992326461';
 delete process.env.M0_ATIVA_ENABLED; // default = 'true'
@@ -123,6 +123,49 @@ test('M0 ativa: lead com opt-out → não envia M0', async () => {
   const { integr, deps } = ambiente([{ phone: '65999990000', whatsapp_optout_em: '2026-06-20T00:00:00.000Z', optout: true, whatsapp_optin: true }]);
   await processarLead(leadSite(), { deps, log: silencioso });
   assert.equal(integr.calls.zapi.filter(ehM0Ativa).length, 0);
+});
+
+// ----------------------- Fluxo "materiais" (LP nova) ----------------------- //
+
+test("fluxo materiais: fonte 'lp-botanique-nova' → M0 de materiais + lista VIP_B + telefone p/ Brevo", async () => {
+  process.env.BREVO_LIST_ID_VIP_B = '99';
+  process.env.BOTANIQUE_MAPA_URL = 'https://aprovar/mapa.pdf';
+  process.env.BOTANIQUE_TABELA_URL = 'https://aprovar/tabela.pdf';
+  try {
+    const { db, integr, deps } = ambiente();
+    await processarLead(leadSite({ fonte: 'lp-botanique-nova', brevoListId: undefined }), { deps, log: silencioso });
+
+    const m0 = integr.calls.zapi.filter(ehM0Ativa);
+    assert.equal(m0.length, 1, 'M0 ativa enviada 1x');
+    assert.ok(ehM0Materiais(m0[0]), 'usa a variante de materiais');
+    assert.match(m0[0].message, /https:\/\/aprovar\/mapa\.pdf/, 'mapa preenchido');
+    assert.match(m0[0].message, /https:\/\/aprovar\/tabela\.pdf/, 'tabela preenchida');
+
+    assert.equal(integr.calls.brevoAdd[0].listId, '99', 'lista Brevo VIP_B');
+    assert.equal(integr.calls.brevoAdd[0].telefone, '65999990000', 'telefone passado ao Brevo');
+
+    // As mensagens seguintes (R1..R5b) permanecem idênticas.
+    assert.deepEqual(db._agendamentos.map((a) => a.etapa), ['R1', 'R2', 'R3', 'R4', 'R5a', 'R5b']);
+  } finally {
+    delete process.env.BREVO_LIST_ID_VIP_B;
+    delete process.env.BOTANIQUE_MAPA_URL;
+    delete process.env.BOTANIQUE_TABELA_URL;
+  }
+});
+
+test('fluxo materiais: fonte comum → mantém M0_ATIVA original + lista VIP (fluxo inalterado)', async () => {
+  process.env.BREVO_LIST_ID_VIP = '7';
+  try {
+    const { integr, deps } = ambiente();
+    await processarLead(leadSite({ brevoListId: undefined }), { deps, log: silencioso }); // fonte VIP padrão
+    const m0 = integr.calls.zapi.filter(ehM0Ativa);
+    assert.equal(m0.length, 1);
+    assert.equal(ehM0Materiais(m0[0]), false, 'NÃO usa a variante de materiais');
+    assert.match(m0[0].message, /Que bom te ter na lista VIP/i, 'usa a M0_ATIVA original');
+    assert.equal(integr.calls.brevoAdd[0].listId, '7', 'lista VIP original (não VIP_B)');
+  } finally {
+    delete process.env.BREVO_LIST_ID_VIP;
+  }
 });
 
 // ----------------------- Régua R1..R5b (LP/Meta) ----------------------- //

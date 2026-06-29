@@ -23,6 +23,12 @@ import { MENSAGENS, preencher, aplicar, montarAgenda, AGENDA_RECUPERACAO } from 
 
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
+// Fontes cujo PRIMEIRO contato entrega os materiais (mapa + tabela) por WhatsApp/
+// e-mail — variante M0_ATIVA_MATERIAIS + lista Brevo própria. Demais fontes seguem
+// inalteradas (M0_ATIVA + lista VIP original). Set p/ permitir futuras LPs sem if-else.
+const FONTES_FLUXO_MATERIAIS = new Set(['lp-botanique-nova']);
+function ehFluxoMateriais(lead) { return FONTES_FLUXO_MATERIAIS.has(lead?.fonte); }
+
 /** Só dígitos (mesma normalização que o /cadastro sempre usou no telefone). */
 export function soDigitos(valor) {
   return String(valor || '').replace(/\D/g, '');
@@ -118,7 +124,8 @@ async function enviarCrmEListas(lead, telefone, emailValido, opts = {}) {
   let brevoRes = { ok: true, pulado: true, motivo: 'sem_email' };
   if (emailValido) {
     try {
-      brevoRes = await _brevo.adicionarContato(emailValido, lead?.nome ?? null, lead?.brevoListId ?? process.env.BREVO_LIST_ID_VIP);
+      const listId = lead?.brevoListId ?? (ehFluxoMateriais(lead) ? process.env.BREVO_LIST_ID_VIP_B : process.env.BREVO_LIST_ID_VIP);
+      brevoRes = await _brevo.adicionarContato(emailValido, lead?.nome ?? null, listId, telefone);
     } catch (err) {
       log.warn?.(`[processarLead] Brevo falhou: ${err?.message || err}`);
       brevoRes = { ok: false, erro: err?.message || String(err) };
@@ -148,7 +155,12 @@ async function enviarM0Ativa(lead, row, telefone, opts = {}) {
     return { enviada: false, motivo: 'em_atendimento' };
   }
 
-  const r = await _zapi.sendText(telefone, preencher(MENSAGENS.M0_ATIVA, lead?.nome));
+  // Fonte da LP nova → entrega os materiais (mapa + tabela) já no 1º contato;
+  // demais fontes mantêm a M0_ATIVA original (fluxo inalterado).
+  const texto = ehFluxoMateriais(lead)
+    ? aplicar(MENSAGENS.M0_ATIVA_MATERIAIS, { nome: lead?.nome, mapa: process.env.BOTANIQUE_MAPA_URL, tabela: process.env.BOTANIQUE_TABELA_URL })
+    : preencher(MENSAGENS.M0_ATIVA, lead?.nome);
+  const r = await _zapi.sendText(telefone, texto);
   if (r?.ok) {
     try { await _db.updateLead(telefone, { m0_ativa_enviada: true }); } catch (err) {
       log.warn?.(`[M0 ativa] enviada mas falhei ao marcar m0_ativa_enviada: ${err?.message || err}`);

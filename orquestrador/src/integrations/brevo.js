@@ -5,14 +5,33 @@
 // fetch nativo do Node.
 
 /**
- * Cria/atualiza um contato no Brevo e o adiciona a uma lista.
+ * Converte um telefone brasileiro para E.164 ("+55DDDNUMERO"). Aceita número já com
+ * DDI (55…) ou nacional (DDD + número) — neste caso prefixa o 55. Retorna `null`
+ * quando não é um BR válido (12–13 dígitos com DDI): assim o atributo SMS apenas
+ * deixa de ser enviado, sem derrubar a criação do contato.
+ * @param {string|number} telefone
+ * @returns {string|null}
+ */
+export function telefoneParaE164BR(telefone) {
+  const d = String(telefone ?? '').replace(/\D/g, '');
+  const comDDI = d.startsWith('55') ? d : (d.length === 10 || d.length === 11 ? '55' + d : d);
+  // BR em E.164: 55 + DDD(2) + número(8 fixo | 9 móvel) = 12 ou 13 dígitos.
+  if (!comDDI.startsWith('55') || comDDI.length < 12 || comDDI.length > 13) return null;
+  return '+' + comDDI;
+}
+
+/**
+ * Cria/atualiza um contato no Brevo e o adiciona a uma lista. Mapeia os atributos
+ * REAIS do Brevo: FIRSTNAME (1ª palavra do nome), LASTNAME (o resto) e SMS (telefone
+ * em E.164). Cada atributo só é enviado quando tem valor.
  * @param {string} email E-mail do lead.
- * @param {string} nome  Nome do lead (vira o atributo NOME).
+ * @param {string} nome  Nome completo (FIRSTNAME = 1ª palavra; LASTNAME = o resto).
  * @param {string|number} [listId] ID da lista; default BREVO_LIST_ID (use
- *   BREVO_LIST_ID_VIP para o cadastro da landing).
+ *   BREVO_LIST_ID_VIP / BREVO_LIST_ID_VIP_B para os cadastros das landings).
+ * @param {string|number} [telefone] Telefone do lead (formato BR livre) → atributo SMS.
  * @returns {Promise<{ok:boolean, status?:number, data?:any, pulado?:boolean, erro?:string}>}
  */
-export async function adicionarContato(email, nome, listId = process.env.BREVO_LIST_ID) {
+export async function adicionarContato(email, nome, listId = process.env.BREVO_LIST_ID, telefone = null) {
   const { BREVO_API_KEY } = process.env;
 
   // Defensivo: sem credencial/lista, não tentamos (e não quebramos o fluxo).
@@ -27,8 +46,16 @@ export async function adicionarContato(email, nome, listId = process.env.BREVO_L
     return { ok: false, erro: 'email_ausente' };
   }
 
+  // Atributos reais do Brevo. Só inclui o que tiver valor (no updateEnabled, mandar
+  // vazio sobrescreveria um campo já preenchido do contato).
+  const partesNome = String(nome ?? '').trim().split(/\s+/).filter(Boolean);
+  const sms = telefoneParaE164BR(telefone);
+  const attributes = {};
+  if (partesNome.length) attributes.FIRSTNAME = partesNome[0];
+  if (partesNome.length > 1) attributes.LASTNAME = partesNome.slice(1).join(' ');
+  if (sms) attributes.SMS = sms;
+
   try {
-    // TODO VALIDAR: confirmar o nome do atributo (NOME) e o id da lista no painel do Brevo.
     const resp = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
       headers: {
@@ -38,7 +65,7 @@ export async function adicionarContato(email, nome, listId = process.env.BREVO_L
       },
       body: JSON.stringify({
         email,
-        attributes: { NOME: nome },
+        attributes,
         listIds: [Number(listId)],
         updateEnabled: true,
       }),

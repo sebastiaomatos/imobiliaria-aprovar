@@ -23,6 +23,17 @@ export const MENSAGENS = {
     'Oi, {{nome}}! 👋 Aqui é a assistente virtual da Aprovar Negócios Imobiliários (CRECI 9770J), parceira na venda do Botanique Residence. Que bom te ter na lista VIP! 🌳\n\n' +
     'Posso te enviar agora o mapa dos lotes disponíveis e as condições de lançamento (entrada de 10%, 24x sem juros)? Pra eu te ajudar melhor: você pensa em morar, investir ou construir?\n\n' +
     'Se preferir falar com um corretor humano, é só pedir que eu chamo. E se não quiser mais receber mensagens, responda SAIR que eu paro na hora. 🙂',
+  // M0 ATIVA — variante "materiais" para a LP NOVA (fonte 'lp-botanique-nova'), que
+  // promete entregar os materiais (mapa + tabela) já no PRIMEIRO contato. Tokens
+  // {{nome}}/{{mapa}}/{{tabela}} preenchidos via aplicar(). Mantém COFECI 1.551/2025
+  // (IA se identifica, CRECI visível, oferece corretor humano) e LGPD (opt-out por SAIR).
+  M0_ATIVA_MATERIAIS:
+    'Oi, {{nome}}! 👋 Aqui é a assistente virtual da Aprovar Negócios Imobiliários (CRECI 9770J), parceira na venda do Botanique Residence. 🌳\n\n' +
+    'Como você pediu, aqui estão seus materiais:\n' +
+    '🗺️ Mapa dos 441 lotes: {{mapa}}\n' +
+    '💰 Tabela de preços de lançamento: {{tabela}}\n\n' +
+    'Os lotes de frente pro lago e perto do clube são poucos — e quem está com a gente *escolhe primeiro, a partir de 15/07*, antes da abertura geral (19/07). 🔑\n\n' +
+    'Pra eu já separar os melhores lotes pro seu perfil: você pensa em *morar*, *investir* ou *construir*? Se preferir falar com um corretor humano, é só pedir. E se não quiser mais receber mensagens, responda *SAIR* que eu paro na hora. 🙂',
   // Notificação interna ao corretor de TODO lead novo (site/Meta). Tokens via aplicar().
   NOTIFICACAO_CORRETOR:
     '🔔 Novo lead VIP — Botanique\n' +

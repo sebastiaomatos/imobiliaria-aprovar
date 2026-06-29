@@ -110,7 +110,7 @@ export function criarIntegracoesFake({ zapiOk = true } = {}) {
       async enviarLead(p) { calls.praedium.push(p); return { ok: true }; },
     },
     brevo: {
-      async adicionarContato(email, nome, listId) { calls.brevoAdd.push({ email, nome, listId }); return { ok: true }; },
+      async adicionarContato(email, nome, listId, telefone) { calls.brevoAdd.push({ email, nome, listId, telefone }); return { ok: true }; },
       async desinscrever(email) { calls.brevoDesinscrever.push({ email }); return { ok: true }; },
     },
     metaCapi: {
@@ -121,4 +121,6 @@ export function criarIntegracoesFake({ zapiOk = true } = {}) {
 
 /** Helpers p/ inspecionar os envios do Z-API. */
 export const ehM0Ativa = (m) => /assistente virtual da Aprovar Neg/i.test(m.message);
+// Variante "materiais" da M0 ativa (LP nova). Também casa com ehM0Ativa (mesmo cabeçalho).
+export const ehM0Materiais = (m) => /aqui estão seus materiais/i.test(m.message);
 export const ehNotificacaoCorretor = (m) => /Novo lead VIP/i.test(m.message);
