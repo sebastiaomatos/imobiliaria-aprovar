@@ -52,6 +52,7 @@ imobiliaria-aprovar/
 │   ├── whatsapp/   Fluxo da régua de WhatsApp (JSON + descrição)
 │   ├── captacao/   Lado proprietário: follow-up + prompts de laudo (AI Listings)
 │   ├── copy/       Banco de copy (CSV) + ad-copy + referência
+│   ├── vendas/     Playbook de técnicas de venda (enciclopédia de copy/persuasão/fechamento)
 │   ├── criativos/  Storyboards, estáticos e logos
 │   ├── branding/   Logos oficiais (transparentes) + kit PMax
 │   └── planilha/   Planilha de gestão de tráfego e funil

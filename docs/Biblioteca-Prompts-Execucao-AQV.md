@@ -2,6 +2,8 @@
 
 > Como usar: cada bloco é um prompt **copia-e-cola**. Os marcados com 🟦 são para rodar no **Claude Code / Cowork** (dentro da pasta do projeto, onde já estão a apostila, o playbook, o banco de copy, as landings, as réguas e a planilha). Os 🟩 são **ações na plataforma** (Meta, Google, Brevo, Railway, Praedium) — o texto serve de checklist e de prompt para um assistente te guiar passo a passo. Os 🟧 são **decisões suas**.
 >
+> **Enciclopédia de técnica fina (invocar sob demanda):** sempre que um prompt 🟦 for escrever copy, anúncio, e-mail, mensagem de WhatsApp ou tratar objeção/fechamento, consulte o [`_templates/vendas/playbook-tecnicas-de-venda.md`](../_templates/vendas/playbook-tecnicas-de-venda.md) — frameworks (Schwartz, Sugarman/Hopkins/Caples/Ogilvy, Cialdini, Kahneman, Hormozi, SPIN/Sandler/Voss, Jeff Walker) operacionalizados com exemplos do Botanique, banco de objeções, folha de diagnóstico e guardrails de conformidade.
+>
 > Faça na ordem. A numeração já respeita as dependências. Não pule a Fase 1.6 (teste ponta a ponta) antes de gastar em mídia.
 
 ---
